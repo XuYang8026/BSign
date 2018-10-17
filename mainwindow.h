@@ -9,6 +9,8 @@
 #include <QDir>
 #include "QMessageBox"
 #include "QStandardPaths"
+#include "file.h"
+#include "http.h"
 
 namespace Ui {
 class MainWindow;
@@ -27,11 +29,17 @@ public:
     QString ipaPath;
     QString mobileProvisionPath;
     QStringList ccNames;
+    //MachO文件名
+    QString machOFileName;
+    QString appName;
+    QString yololibPath = "/tmp/yololib";
+    QString libisigntooldylibPath = "/tmp/libisigntoolhook.dylib";
 
 private:
     Ui::MainWindow *ui;
     QProcess *process = new QProcess(this);
     QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    void initial();
 
 private slots:
     void on_selectIpaButton_clicked();

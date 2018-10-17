@@ -70,12 +70,12 @@
       </widget>
      </item>
      <item row="4" column="0" colspan="2">
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="setExpaire">
        <property name="text">
         <string>设置过期时间</string>
        </property>
        <property name="checkable">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -153,7 +153,7 @@
         </size>
        </property>
        <property name="readOnly">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
