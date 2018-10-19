@@ -32,7 +32,7 @@ public:
     //MachO文件名
     QString machOFileName;
     QString appName;
-    QString yololibPath = "/tmp/yololib";
+    QString optoolPath = "/tmp/optool";
     QString libisigntooldylibPath = "/tmp/libisigntoolhook.dylib";
 
 private:

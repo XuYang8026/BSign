@@ -4,18 +4,22 @@
 #include <stdio.h>
 
 void MainWindow::initial(){
-    QMessageBox::critical(NULL, "title", "comment");
-    bool exist=isFileExist(this->yololibPath);
+
+    bool exist=isFileExist(this->optoolPath);
     if(!exist){
+        QMessageBox::critical(NULL, "title", "程序初始化");
         Http *iHttp = new Http(this);
-        iHttp->getFileDownload("http://tiger-public.oss-cn-beijing.aliyuncs.com/yololib",yololibPath);
+        iHttp->getFileDownload("http://tiger-public.oss-cn-beijing.aliyuncs.com/optool",optoolPath);
+
+    }else{
+        QString cmd = "chmod +x "+optoolPath;
+        int flag=system(cmd.toLocal8Bit().data());
+        if (flag!=0){
+            QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
+            return;
+        }
     }
-    QString cmd = "chmod +x "+yololibPath;
-    int flag=system(cmd.toLocal8Bit().data());
-    if (flag!=0){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限，请重新启动客户端");
-        return;
-    }
+
     exist=isFileExist(this->libisigntooldylibPath);
     qDebug() << exist;
 }
@@ -41,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     locationLabel->setAlignment(Qt::AlignCenter);
     this->statusBar()->addWidget(locationLabel);
     connect(ui->signButton, SIGNAL(clicked()), this,SLOT(signIpa()));
-//    QMessageBox::about(NULL, "About", "About this <font color='red'>application</font>");
     this->initial();
 
 }
@@ -112,11 +115,12 @@ void MainWindow::signIpa(){
     p->start("/bin/bash",matchOParams);
     p->waitForFinished();
     this->machOFileName = p->readAllStandardOutput().trimmed();
+    this->appName=this->machOFileName+".app";
     delete p;
     ui->execResult->appendPlainText("machOFileName is "+machOFileName);
 
     //删除原来签名文件
-    QString cmd="rm -rf "+tmp+"Payload/*.app/_CodeSignature";
+    QString cmd="rm -rf "+tmp+"Payload/"+this->appName+"/_CodeSignature";
     qDebug() << "执行命令："+cmd;
     int flag = system(cmd.toLocal8Bit().data());
     if(flag!=0){
@@ -138,7 +142,7 @@ void MainWindow::signIpa(){
     //修改BundleId
     QString bundleId = ui->bundleId->text();
     if(!bundleId.isEmpty()&&ui->updateBundleIdRadioButton->isChecked()){
-        cmd="plutil -replace CFBundleIdentifier -string "+bundleId+" "+tmp+"Payload/*.app/info.plist";
+        cmd="plutil -replace CFBundleIdentifier -string "+bundleId+" "+tmp+"Payload/"+this->appName+"/info.plist";
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
@@ -162,7 +166,7 @@ void MainWindow::signIpa(){
             ui->execResult->appendPlainText("修改BundleId失败");
             return;
         }
-        cmd="plutil -replace CFBundleIdentifier -string "+mpBundleId+" "+tmp+"Payload/*.app/info.plist";
+        cmd="plutil -replace CFBundleIdentifier -string "+mpBundleId+" "+tmp+"Payload/"+this->appName+"/info.plist";
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
@@ -171,7 +175,16 @@ void MainWindow::signIpa(){
         }
     }
 
-    cmd="cp "+mobileProvisionPath+" "+tmp+"Payload/*.app/embedded.mobileprovision";
+    QFile file(tmp+"Payload/"+this->appName+"/embedded.mobileprovision");
+    if(!file.exists()){
+        file.open(QIODevice::WriteOnly | QIODevice::Text );
+        QTextStream in(&file);
+        in << "";
+        file.flush();
+        file.close();
+    }
+
+    cmd="cp "+mobileProvisionPath+" "+tmp+"Payload/"+this->appName+"/embedded.mobileprovision";
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
         ui->execResult->appendPlainText("复制mobileprovision文件失败");
@@ -191,14 +204,7 @@ void MainWindow::signIpa(){
             fileNames.append(fileinfo.fileName());
         }
         this->appName=fileNames[0];
-        cmd="mkdir -p "+tmp+"Payload/"+this->appName+"/Frameworks/";
-        qDebug() << "执行命令："+cmd;
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("签名失败！");
-            return;
-        }
-        cmd="cp "+this->parentPath+"/libisigntoolhook.dylib "+tmp+"Payload/"+this->appName+"/Frameworks/libisigntoolhook.dylib";
+        cmd="cp "+this->parentPath+"/libisigntoolhook.dylib "+tmp+"Payload/"+this->appName+"/libisigntoolhook.dylib";
         qDebug() << "执行命令："+cmd;
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
@@ -212,19 +218,15 @@ void MainWindow::signIpa(){
             ui->execResult->appendPlainText("签名失败！");
             return;
         }
-//        cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+tmp+"Payload/"+this->appName+"/Frameworks/libisigntoolhook.dylib"+"\"";
-//        flag=system(cmd.toLocal8Bit().data());
-//        if(flag!=0){
-//            ui->execResult->appendPlainText("植入代码重签名失败");
-//            return;
-//        }
-    }
-
-
-
-    if(ui->setExpaire->isChecked()){
+        cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+tmp+"Payload/"+this->appName+"/libisigntoolhook.dylib"+"\"";
+        flag=system(cmd.toLocal8Bit().data());
+        if(flag!=0){
+            ui->execResult->appendPlainText("植入代码重签名失败");
+            return;
+        }
         ui->execResult->appendPlainText("开始注入代码");
-        cmd="cd "+tmp+"Payload/"+this->appName+";"+this->yololibPath+" "+machOFileName+" Frameworks/libisigntoolhook.dylib";
+        cmd="cd "+tmp+"Payload/"+this->appName+";"+this->optoolPath+" install -c load -p \"@executable_path/libisigntoolhook.dylib\" -t "+machOFileName;
+//        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
         qDebug() << "执行命令："+cmd;
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
@@ -235,7 +237,7 @@ void MainWindow::signIpa(){
     }
 
     QString ccName=ui->ccNames->currentText();
-    cmd="/usr/bin/codesign -f --entitlements \"" + tmp+"entitlements.plist\""+ " -s \"" + ccName + "\" " + tmp+"Payload/*.app";
+    cmd="/usr/bin/codesign -f --entitlements \"" + tmp+"entitlements.plist\""+ " -s \"" + ccName + "\" " + tmp+"Payload/"+this->appName;
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
@@ -251,6 +253,7 @@ void MainWindow::signIpa(){
         ui->execResult->appendPlainText("打包失败！");
         return;
     }
+
     cmd="rm -rf "+tmp;
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());

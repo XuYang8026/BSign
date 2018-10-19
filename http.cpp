@@ -25,7 +25,7 @@ void Http::getFileDownload(QString fileUrl,QString downFilePath){
 
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/octet-stream");
-        QNetworkReply *reply = this->manager->get(request);
+        this->reply = this->manager->get(request);
 
         connect((QObject *)reply, SIGNAL(readyRead()), this, SLOT(readContent()));
         connect(this->manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
@@ -34,6 +34,7 @@ void Http::getFileDownload(QString fileUrl,QString downFilePath){
 void Http::readContent()    //下载时向本地文件中写入数据
 {
     file->write(reply->readAll());
+
 }
 void Http::replyFinished(QNetworkReply*)    //删除指针，更新和关闭文件
 {
@@ -42,10 +43,12 @@ void Http::replyFinished(QNetworkReply*)    //删除指针，更新和关闭文�
             reply->deleteLater();
             file->flush();
             file->close();
+
         }
         else
         {
-//            QMessageBox::critical(NULL, tr("Error"), "Failed!!!");
+            QMessageBox::critical(NULL, tr("Error"), "文件下载失败");
+
         }
 }
 void Http::loadError(QNetworkReply::NetworkError)    //传输中的错误输出

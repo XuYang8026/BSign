@@ -12,6 +12,7 @@
 #include <QSslConfiguration>
 #include <QSslCertificate>
 #include <QByteArray>
+#include <QMessageBox>
 
 class Http:public QObject
 {
