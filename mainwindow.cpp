@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "QDateTime"
-#include <stdio.h>
 
 void MainWindow::initial(){
 
@@ -28,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
     this->setWindowTitle("欢迎使用Isign-tool");
     QProcess *process = new QProcess;
@@ -40,13 +40,14 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << result;
     this->ccNames=result.split("\n");
     ui->ccNames->addItems(this->ccNames);
-    QLabel *locationLabel = new QLabel("author:Jackson      QQ:3536391351");
+    QDateTime time=QDateTime::fromTime_t(expireTime);
+    QLabel *locationLabel = new QLabel("有效期："+time.toString("yyyy-MM-dd hh:mm:ss")+"      author:Jackson      QQ:3536391351");
     locationLabel->setMinimumWidth(640);
     locationLabel->setAlignment(Qt::AlignCenter);
     this->statusBar()->addWidget(locationLabel);
     connect(ui->signButton, SIGNAL(clicked()), this,SLOT(signIpa()));
     this->initial();
-
+    this->validate();
 }
 
 MainWindow::~MainWindow()
@@ -218,6 +219,7 @@ void MainWindow::signIpa(){
             ui->execResult->appendPlainText("签名失败！");
             return;
         }
+        //注意 第三方库要单独重签名
         cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+tmp+"Payload/"+this->appName+"/libisigntoolhook.dylib"+"\"";
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
@@ -246,6 +248,12 @@ void MainWindow::signIpa(){
     }
 
     QString newIPA=ipaName.split(".")[0]+"_resigned.ipa";
+    QFile isResigned(this->parentPath+"/"+newIPA);
+    if(isResigned.exists()){
+        qDebug() << "delete old sign package";
+        isResigned.remove();
+    }
+
     cmd="cd "+tmp+";zip -qr ../"+newIPA+" Payload";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
@@ -260,6 +268,39 @@ void MainWindow::signIpa(){
     ui->execResult->appendPlainText("签名完成！");
     QMessageBox::about(NULL, tr(""),"签名完成！新包地址："+parentPath+"/"+newIPA);
 
+}
+
+void MainWindow::validate(){
+        //    获取当前时间
+        Http *iHttp = new Http(NULL);
+        QString respData = iHttp->get("http://60.205.185.248").trimmed();
+
+        QJsonParseError jsonError;
+        QJsonDocument parseDoc = QJsonDocument::fromJson(respData.toLocal8Bit(),&jsonError);
+        if(jsonError.error != QJsonParseError::NoError){
+            QMessageBox::warning(this, tr("QMessageBox::information()"),"无效数据");
+            exit(0);
+        }
+        QString time;
+        if(parseDoc.isObject()){
+            QJsonObject jsonObj = parseDoc.object();
+            QJsonValue jsonTime=jsonObj.take("time");
+            time=jsonTime.toString();
+            QJsonValue jsonSign=jsonObj.take("sign");
+            QString sign=jsonSign.toString();
+            imd5 md5;
+            if(md5.encode(time,"44a160d3f98c8a913ca192c7a6222790")!=sign){
+                QMessageBox::warning(this, tr("QMessageBox::information()"),"无效数据");
+                exit(0);
+            }
+        }
+
+        QDateTime timestamp = QDateTime::fromString(time,"yyyy-MM-dd hh:mm:ss");
+        qDebug() << timestamp.toTime_t();
+        if(timestamp.toTime_t()>expireTime){
+            QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:3536391351");
+            exit(0);
+        }
 }
 
 

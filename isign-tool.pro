@@ -28,12 +28,20 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     file.cpp \
-    http.cpp
+    http.cpp \
+    logindialog.cpp \
+    expirepage.cpp \
+    imd5.cpp
 
 HEADERS += \
         mainwindow.h \
     file.h \
-    http.h
+    http.h \
+    logindialog.h \
+    expirepage.h \
+    imd5.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    logindialog.ui \
+    expirepage.ui

@@ -11,6 +11,16 @@
 #include "QStandardPaths"
 #include "file.h"
 #include "http.h"
+#include "logindialog.h"
+#include "imd5.h"
+#include "http.h"
+#include "expirepage.h"
+#include "QJsonParseError"
+#include "QJsonDocument"
+#include "QJsonObject"
+
+//软件到期时间
+const int expireTime = 1540137600;
 
 namespace Ui {
 class MainWindow;
@@ -37,9 +47,11 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    LoginDialog *loginDialog;
     QProcess *process = new QProcess(this);
     QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     void initial();
+    void validate();
 
 private slots:
     void on_selectIpaButton_clicked();
