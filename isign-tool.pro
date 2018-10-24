@@ -27,19 +27,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    file.cpp \
     http.cpp \
     logindialog.cpp \
     expirepage.cpp \
-    imd5.cpp
+    imd5.cpp \
+    ithread.cpp
 
 HEADERS += \
         mainwindow.h \
-    file.h \
     http.h \
     logindialog.h \
     expirepage.h \
-    imd5.h
+    imd5.h \
+    ithread.h
 
 FORMS += \
         mainwindow.ui \

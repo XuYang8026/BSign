@@ -9,18 +9,17 @@
 #include <QDir>
 #include "QMessageBox"
 #include "QStandardPaths"
-#include "file.h"
 #include "http.h"
 #include "logindialog.h"
 #include "imd5.h"
-#include "http.h"
 #include "expirepage.h"
 #include "QJsonParseError"
 #include "QJsonDocument"
 #include "QJsonObject"
+#include "ithread.h"
 
 //软件到期时间
-const int expireTime = 1540137600;
+const int expireTime = 1571759929;
 
 namespace Ui {
 class MainWindow;
@@ -37,6 +36,7 @@ public:
     QString tmp;
     QString ipaName;
     QString ipaPath;
+    QString bundleId;
     QString mobileProvisionPath;
     QStringList ccNames;
     //MachO文件名
@@ -44,6 +44,7 @@ public:
     QString appName;
     QString optoolPath = "/tmp/optool";
     QString libisigntooldylibPath = "/tmp/libisigntoolhook.dylib";
+    Ui::MainWindow* getUI();
 
 private:
     Ui::MainWindow *ui;
@@ -52,6 +53,7 @@ private:
     QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     void initial();
     void validate();
+//    void readMachOFileNameAndAppNameAndBundleId(QString plistPath);
 
 private slots:
     void on_selectIpaButton_clicked();
@@ -59,6 +61,7 @@ private slots:
     void readProcessData();
     void signIpa();
     void on_clearLog_clicked();
+    void setBundleId(QString bundleId);
 };
 
 #endif // MAINWINDOW_H

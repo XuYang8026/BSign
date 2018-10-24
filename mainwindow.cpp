@@ -1,11 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "QDateTime"
 
 void MainWindow::initial(){
 
-    bool exist=isFileExist(this->optoolPath);
-    if(!exist){
+    QFile optoolFile(this->optoolPath);
+    if(!optoolFile.exists()){
         QMessageBox::critical(NULL, "title", "程序初始化");
         Http *iHttp = new Http(this);
         iHttp->getFileDownload("http://tiger-public.oss-cn-beijing.aliyuncs.com/optool",optoolPath);
@@ -18,9 +17,9 @@ void MainWindow::initial(){
             return;
         }
     }
-
-    exist=isFileExist(this->libisigntooldylibPath);
-    qDebug() << exist;
+    //检测libisigntooldylib是否存在
+    QDir libisigntooldylibDir(this->libisigntooldylibPath);
+    qDebug() << libisigntooldylibDir.exists();
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -33,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QProcess *process = new QProcess;
     QStringList shellOptions;
     shellOptions << "-c";
-    shellOptions << "   security find-identity -v | awk 'NR!=1{print p}{p=$0}' | awk -F '\"' '{print $2}'";
+    shellOptions << "security find-identity -v | awk 'NR!=1{print p}{p=$0}' | awk -F '\"' '{print $2}'";
     process->start("/bin/bash",shellOptions);
     process->waitForFinished();
     QString result = process->readAllStandardOutput();
@@ -59,8 +58,15 @@ void MainWindow::on_selectIpaButton_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("ipa(*.ipa)"));
     qDebug() << "选择文件路径："+filePath;
-    ipaPath=filePath;
+    ipaPath=filePath.trimmed();
     ui->filePath->setText(filePath);
+
+    if(ipaPath!=""){
+        IThread *ithread = new IThread;
+        ithread->filePath=ipaPath;
+        connect(ithread,SIGNAL(send(QString)),this,SLOT(setBundleId(QString)));
+        ithread->start();
+    }
 }
 
 
@@ -142,7 +148,7 @@ void MainWindow::signIpa(){
     }
     //修改BundleId
     QString bundleId = ui->bundleId->text();
-    if(!bundleId.isEmpty()&&ui->updateBundleIdRadioButton->isChecked()){
+    if(!bundleId.isEmpty() && ui->bundleId->text()!=this->bundleId && ui->updateBundleIdRadioButton->isChecked()){
         cmd="plutil -replace CFBundleIdentifier -string "+bundleId+" "+tmp+"Payload/"+this->appName+"/info.plist";
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
@@ -308,3 +314,9 @@ void MainWindow::on_clearLog_clicked()
 {
     ui->execResult->setPlainText("");
 }
+
+void MainWindow::setBundleId(QString bundleId){
+    this->ui->bundleId->setText(bundleId);
+    this->bundleId=bundleId;
+}
+
