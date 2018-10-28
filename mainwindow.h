@@ -17,9 +17,7 @@
 #include "QJsonDocument"
 #include "QJsonObject"
 #include "ithread.h"
-
-//软件到期时间
-const int expireTime = 1571759929;
+#include "dialogsignrecord.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,12 +30,16 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    QString sn;//mac序列号
+    QString currentTime;
+    QString expireTime;
     QString parentPath;
     QString tmp;
     QString ipaName;
     QString ipaPath;
     QString bundleId;
     QString mobileProvisionPath;
+    QString uuid;
     QStringList ccNames;
     //MachO文件名
     QString machOFileName;
@@ -62,6 +64,7 @@ private slots:
     void signIpa();
     void on_clearLog_clicked();
     void setBundleId(QString bundleId);
+    void on_sign_record_clicked();
 };
 
 #endif // MAINWINDOW_H

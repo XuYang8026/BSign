@@ -14,6 +14,9 @@
 #include <QByteArray>
 #include <QMessageBox>
 
+//const QString HTTP_SERVER="https://isign.yz-ss.top";
+const QString HTTP_SERVER="http://127.0.0.1:8080";
+
 class Http:public QObject
 {
     Q_OBJECT

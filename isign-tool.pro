@@ -31,7 +31,8 @@ SOURCES += \
     logindialog.cpp \
     expirepage.cpp \
     imd5.cpp \
-    ithread.cpp
+    ithread.cpp \
+    dialogsignrecord.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,9 +40,11 @@ HEADERS += \
     logindialog.h \
     expirepage.h \
     imd5.h \
-    ithread.h
+    ithread.h \
+    dialogsignrecord.h
 
 FORMS += \
         mainwindow.ui \
     logindialog.ui \
-    expirepage.ui
+    expirepage.ui \
+    dialogsignrecord.ui

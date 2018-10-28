@@ -1,25 +1,41 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-void MainWindow::initial(){
+QString readSN(){
+    QStringList snParams;
+    snParams << "-c";
+    snParams << "ioreg -rd1 -c IOPlatformExpertDevice |  awk '/IOPlatformSerialNumber/ { print $3; }'";
+    QProcess *p = new QProcess;
+    p->start("/bin/bash",snParams);
+    p->waitForFinished();
+    QString sn=p->readAllStandardOutput().trimmed().replace("\"","");
+    return sn;
+}
 
+void MainWindow::initial(){
     QFile optoolFile(this->optoolPath);
     if(!optoolFile.exists()){
         QMessageBox::critical(NULL, "title", "程序初始化");
         Http *iHttp = new Http(this);
         iHttp->getFileDownload("http://tiger-public.oss-cn-beijing.aliyuncs.com/optool",optoolPath);
 
-    }else{
-        QString cmd = "chmod +x "+optoolPath;
-        int flag=system(cmd.toLocal8Bit().data());
-        if (flag!=0){
-            QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
-            return;
-        }
+    }
+    //授予可执行权限
+    QString cmd = "chmod +x "+optoolPath;
+    int flag=system(cmd.toLocal8Bit().data());
+    if (flag!=0){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
+        return;
     }
     //检测libisigntooldylib是否存在
     QDir libisigntooldylibDir(this->libisigntooldylibPath);
-    qDebug() << libisigntooldylibDir.exists();
+    if(!libisigntooldylibDir.exists()){
+        Http *iHttp = new Http(this);
+        iHttp->getFileDownload("http://public.count321.cn/libisigntoolhook.dylib",this->libisigntooldylibPath);
+    }
+
+
+    ui->expaire->setDateTime(QDateTime::currentDateTime());
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -39,14 +55,18 @@ MainWindow::MainWindow(QWidget *parent) :
     qDebug() << result;
     this->ccNames=result.split("\n");
     ui->ccNames->addItems(this->ccNames);
-    QDateTime time=QDateTime::fromTime_t(expireTime);
-    QLabel *locationLabel = new QLabel("有效期："+time.toString("yyyy-MM-dd hh:mm:ss")+"      author:Jackson      QQ:3536391351");
-    locationLabel->setMinimumWidth(640);
-    locationLabel->setAlignment(Qt::AlignCenter);
-    this->statusBar()->addWidget(locationLabel);
+
+    this->sn=readSN();
+    qDebug() << "mac 序列号 ==> "+sn;
+
     connect(ui->signButton, SIGNAL(clicked()), this,SLOT(signIpa()));
     this->initial();
     this->validate();
+
+    QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"      author:Jackson      QQ:3536391351");
+    locationLabel->setMinimumWidth(640);
+    locationLabel->setAlignment(Qt::AlignCenter);
+    this->statusBar()->addWidget(locationLabel);
 }
 
 MainWindow::~MainWindow()
@@ -139,6 +159,25 @@ void MainWindow::signIpa(){
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     qDebug() << flag;
+
+    //读取UUID
+    QStringList readUUIDParams;
+    readUUIDParams << "-c";
+    readUUIDParams << "/usr/libexec/PlistBuddy -c 'Print:UUID' "+tmp+"entitlements_full.plist";
+    QProcess *uuidProcess=new QProcess;
+    uuidProcess->start("/bin/bash",readUUIDParams);
+    uuidProcess->waitForFinished();
+    uuid = uuidProcess->readAllStandardOutput().trimmed();
+    qDebug() << "UUID ====> "+uuid;
+
+    cmd="echo "+uuid+" > "+tmp+"Payload/"+appName+"/uuid";
+    qDebug() << "执行命令："+cmd;
+    flag = system(cmd.toLocal8Bit().data());
+    if(flag!=0){
+        ui->execResult->appendPlainText("写入uuid文件失败");
+        return;
+    }
+
     cmd="/usr/libexec/PlistBuddy -x -c 'Print:Entitlements' "+tmp+"entitlements_full.plist > "+tmp+"entitlements.plist";
     qDebug() << "执行命令："+cmd;
     flag = system(cmd.toLocal8Bit().data());
@@ -146,6 +185,7 @@ void MainWindow::signIpa(){
         ui->execResult->appendPlainText("生成plist文件失败");
         return;
     }
+
     //修改BundleId
     QString bundleId = ui->bundleId->text();
     if(!bundleId.isEmpty() && ui->bundleId->text()!=this->bundleId && ui->updateBundleIdRadioButton->isChecked()){
@@ -211,7 +251,7 @@ void MainWindow::signIpa(){
             fileNames.append(fileinfo.fileName());
         }
         this->appName=fileNames[0];
-        cmd="cp "+this->parentPath+"/libisigntoolhook.dylib "+tmp+"Payload/"+this->appName+"/libisigntoolhook.dylib";
+        cmd="cp "+this->libisigntooldylibPath+" "+tmp+"Payload/"+this->appName+"/libisigntoolhook.dylib";
         qDebug() << "执行命令："+cmd;
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
@@ -271,6 +311,20 @@ void MainWindow::signIpa(){
     cmd="rm -rf "+tmp;
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
+
+    if(ui->setExpaire->isChecked()){
+        Http *http = new Http(NULL);
+        int expireTimeStamp=ui->expaire->dateTime().toTime_t();
+
+        QString url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&warningMessage="+ui->warning_message->text()+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn;
+        qDebug() << "请求url："+url;
+        QString result=http->get(url);
+        if(result!="true"){
+            QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
+            return;
+        }
+    }
+
     ui->execResult->appendPlainText("签名完成！");
     QMessageBox::about(NULL, tr(""),"签名完成！新包地址："+parentPath+"/"+newIPA);
 
@@ -279,7 +333,7 @@ void MainWindow::signIpa(){
 void MainWindow::validate(){
         //    获取当前时间
         Http *iHttp = new Http(NULL);
-        QString respData = iHttp->get("http://60.205.185.248").trimmed();
+        QString respData = iHttp->get(HTTP_SERVER+"/deviceInfo?device="+this->sn).trimmed();
 
         QJsonParseError jsonError;
         QJsonDocument parseDoc = QJsonDocument::fromJson(respData.toLocal8Bit(),&jsonError);
@@ -287,23 +341,29 @@ void MainWindow::validate(){
             QMessageBox::warning(this, tr("QMessageBox::information()"),"无效数据");
             exit(0);
         }
-        QString time;
         if(parseDoc.isObject()){
             QJsonObject jsonObj = parseDoc.object();
             QJsonValue jsonTime=jsonObj.take("time");
-            time=jsonTime.toString();
+            this->currentTime=jsonTime.toString();
+            qDebug() << "系统时间:"+currentTime;
+            QJsonValue jsonExpireTime=jsonObj.take("expireTime");
+            this->expireTime=jsonExpireTime.toString();
+            qDebug() << "有效时间:"+expireTime;
             QJsonValue jsonSign=jsonObj.take("sign");
             QString sign=jsonSign.toString();
+            qDebug() << "sign:"+sign;
             imd5 md5;
-            if(md5.encode(time,"44a160d3f98c8a913ca192c7a6222790")!=sign){
+            qDebug() << md5.encode(expireTime,"44a160d3f98c8a913ca192c7a6222790");
+            if(md5.encode(expireTime,"44a160d3f98c8a913ca192c7a6222790")!=sign){
                 QMessageBox::warning(this, tr("QMessageBox::information()"),"无效数据");
                 exit(0);
             }
         }
 
-        QDateTime timestamp = QDateTime::fromString(time,"yyyy-MM-dd hh:mm:ss");
+        QDateTime timestamp = QDateTime::fromString(this->currentTime,"yyyy-MM-dd hh:mm:ss");
+        QDateTime expireTimeStamp = QDateTime::fromString(this->expireTime,"yyyy-MM-dd hh:mm:ss");
         qDebug() << timestamp.toTime_t();
-        if(timestamp.toTime_t()>expireTime){
+        if(timestamp.toTime_t() > expireTimeStamp.toTime_t()){
             QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:3536391351");
             exit(0);
         }
@@ -320,3 +380,11 @@ void MainWindow::setBundleId(QString bundleId){
     this->bundleId=bundleId;
 }
 
+
+void MainWindow::on_sign_record_clicked()
+{
+    DialogSignRecord *sr=new DialogSignRecord(this);
+    sr->sn=this->sn;
+    sr->setWindowTitle("签名记录");
+    sr->show();
+}

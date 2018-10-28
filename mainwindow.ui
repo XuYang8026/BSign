@@ -14,32 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="clearLog">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>500</y>
-      <width>94</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>清除日志</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="signButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>500</y>
-      <width>190</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>开始签名</string>
-    </property>
-   </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
@@ -66,6 +40,9 @@
        </property>
        <property name="displayFormat">
         <string>yyyy-MM-dd hh:mm:ss</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -148,12 +125,15 @@
       </widget>
      </item>
      <item row="4" column="5">
-      <widget class="QLineEdit" name="lineEdit_3">
+      <widget class="QLineEdit" name="warning_message">
        <property name="minimumSize">
         <size>
          <width>0</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="text">
+        <string>签名已到期</string>
        </property>
        <property name="readOnly">
         <bool>false</bool>
@@ -222,6 +202,39 @@
         </widget>
        </item>
       </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>500</y>
+      <width>286</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="signButton">
+       <property name="text">
+        <string>开始签名</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="clearLog">
+       <property name="text">
+        <string>清除日志</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="sign_record">
+       <property name="text">
+        <string>签名记录</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
