@@ -65,6 +65,7 @@ private slots:
     void on_clearLog_clicked();
     void setBundleId(QString bundleId);
     void on_sign_record_clicked();
+//    void on_fenfa_platform_clicked();
 };
 
 #endif // MAINWINDOW_H

@@ -5,7 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += core network
+QT       += network
+#QT       += webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,7 +33,9 @@ SOURCES += \
     expirepage.cpp \
     imd5.cpp \
     ithread.cpp \
-    dialogsignrecord.cpp
+    dialogsignrecord.cpp \
+    ifile.cpp \
+    common.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +44,9 @@ HEADERS += \
     expirepage.h \
     imd5.h \
     ithread.h \
-    dialogsignrecord.h
+    dialogsignrecord.h \
+    ifile.h \
+    common.h
 
 FORMS += \
         mainwindow.ui \

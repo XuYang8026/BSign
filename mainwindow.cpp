@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "ifile.h"
+#include "common.h"
+#include "QDesktopWidget"
+
 QString readSN(){
     QStringList snParams;
     snParams << "-c";
@@ -238,6 +242,12 @@ void MainWindow::signIpa(){
         return;
     }
 
+    QFileInfoList fil=GetFileList(tmp+"Payload/"+this->appName);
+
+    for(QFileInfo fi : fil){
+        qDebug() << fi.absolutePath()+"/"+fi.fileName();
+    }
+
     if (ui->setExpaire->isChecked()){
         QDir dir(tmp+"Payload");
         QFileInfoList fileInfos = dir.entryInfoList();
@@ -265,6 +275,7 @@ void MainWindow::signIpa(){
             ui->execResult->appendPlainText("签名失败！");
             return;
         }
+
         //注意 第三方库要单独重签名
         cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+tmp+"Payload/"+this->appName+"/libisigntoolhook.dylib"+"\"";
         flag=system(cmd.toLocal8Bit().data());
@@ -312,17 +323,20 @@ void MainWindow::signIpa(){
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
 
+    QString warningMessage=ui->warning_message->text();
+    int expireTimeStamp=ui->expaire->dateTime().toTime_t();
+    QString url;
     if(ui->setExpaire->isChecked()){
-        Http *http = new Http(NULL);
-        int expireTimeStamp=ui->expaire->dateTime().toTime_t();
-
-        QString url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&warningMessage="+ui->warning_message->text()+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn;
-        qDebug() << "请求url："+url;
-        QString result=http->get(url);
-        if(result!="true"){
-            QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
-            return;
-        }
+        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText();
+    }else{
+        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText();
+    }
+    Http *http = new Http(NULL);
+    qDebug() << "请求url："+url;
+    QString result=http->get(url);
+    if(result!="true"){
+        QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
+        return;
     }
 
     ui->execResult->appendPlainText("签名完成！");
@@ -388,3 +402,17 @@ void MainWindow::on_sign_record_clicked()
     sr->setWindowTitle("签名记录");
     sr->show();
 }
+
+//void MainWindow::on_fenfa_platform_clicked()
+//{
+//    QWebEngineView *webView = new QWebEngineView;
+//    webView->setWindowTitle("飞鹰分发");
+//    QUrl url=QUrl::fromUserInput("http://www.eagleff.top");
+//    webView->setUrl(url);
+//    QDesktopWidget * desktopWidget = QApplication::desktop();
+//    int width=desktopWidget->availableGeometry().width();
+//    int height=desktopWidget->availableGeometry().height();
+//    webView->setMinimumHeight(height);
+//    webView->setMinimumWidth(width);
+//    webView->show();
+//}

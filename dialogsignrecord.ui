@@ -17,16 +17,35 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>80</y>
+     <y>130</y>
      <width>991</width>
-     <height>451</height>
+     <height>401</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>691</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+     <underline>false</underline>
+    </font>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;过期时间、过期提示语可 双击 直接编辑，编辑完成后 &amp;quot;回车&amp;quot; 提示保存&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#fc0107;&quot;&gt;同一包名 多条记录 若要编辑 请选择 距离当前最近的一条记录（默认按照签名时间倒序排列）&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>13</x>
+     <x>14</x>
      <y>10</y>
      <width>981</width>
      <height>46</height>
@@ -47,7 +66,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit">
+     <widget class="QLineEdit" name="bundleId">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -65,22 +84,27 @@
        </size>
       </property>
       <property name="text">
-       <string>证书名称：</string>
+       <string>选择证书：</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="lineEdit_2">
+     <widget class="QComboBox" name="ccNames">
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>28</height>
+        <height>34</height>
        </size>
       </property>
+      <item>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="search">
       <property name="minimumSize">
        <size>
         <width>0</width>

@@ -20,9 +20,11 @@ public:
 
 private:
     Ui::DialogSignRecord *ui;
+    void tableDataReload();
 
 private slots:
     void cellChange(int row,int colum);
+    void on_search_clicked();
 };
 
 #endif // DIALOGSIGNRECORD_H
