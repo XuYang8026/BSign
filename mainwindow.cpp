@@ -327,9 +327,9 @@ void MainWindow::signIpa(){
     int expireTimeStamp=ui->expaire->dateTime().toTime_t();
     QString url;
     if(ui->setExpaire->isChecked()){
-        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText();
+        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+this->appName;
     }else{
-        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText();
+        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+this->appName;
     }
     Http *http = new Http(NULL);
     qDebug() << "请求url："+url;

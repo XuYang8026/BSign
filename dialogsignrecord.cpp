@@ -15,13 +15,13 @@ DialogSignRecord::DialogSignRecord(QWidget *parent) :
     ui(new Ui::DialogSignRecord)
 {
     ui->setupUi(this);
-    ui->tableWidget->setColumnCount(5);
+    ui->tableWidget->setColumnCount(6);
     QString device=Common::readSN();
     this->sn=device;
     QStringList ccNames=Common::readCert();
     ui->ccNames->addItems(ccNames);
     QStringList header;
-    header << "bundle id" << "证书名称" << "过期时间" << "过期提示语" << "签名时间";
+    header  << "bundle id" << "证书名称" << "过期时间" << "过期提示语" << "签名时间"<< "app名称";
     ui->tableWidget->setHorizontalHeaderLabels(header);
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -133,6 +133,10 @@ void DialogSignRecord::tableDataReload(){
         item4->setFlags(Qt::ItemIsEnabled);
         item4->setText(obj["CreateTime"].toString());
         ui->tableWidget->setItem(row,4,item4);
+        QTableWidgetItem *item5=new QTableWidgetItem();
+        item5->setFlags(Qt::ItemIsEnabled);
+        item5->setText(obj["AppName"].toString());
+        ui->tableWidget->setItem(row,5,item5);
     }
     connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChange(int,int)));
 }
