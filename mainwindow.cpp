@@ -109,7 +109,7 @@ void MainWindow::readProcessData(){
 
 void MainWindow::signIpa(){
 
-    if(ipaPath.isEmpty()||mobileProvisionPath.isEmpty()||ui->ccNames->currentText().isEmpty()){
+    if(ipaPath.isEmpty()||mobileProvisionPath.isEmpty()||ui->ccNames->currentText()=="请选择证书"||ui->ccNames->currentText().isEmpty()){
         QMessageBox::warning(this, tr("QMessageBox::information()"),"ipa路径或mobileprovision路径或证书名称不能为空");
         return;
     }
@@ -147,9 +147,17 @@ void MainWindow::signIpa(){
     p->waitForFinished();
     this->machOFileName = p->readAllStandardOutput().trimmed();
     this->appName=this->machOFileName+".app";
-    delete p;
+
     ui->execResult->appendPlainText("machOFileName is "+machOFileName);
 
+    //读取应用打包名称
+    QStringList deployAppNameParams;
+    deployAppNameParams << "-c";
+    deployAppNameParams << "/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "+tmp+"Payload/*.app/Info.plist";
+    p->start("/bin/bash",deployAppNameParams);
+    p->waitForFinished();
+    this->deployAppName=p->readAllStandardOutput().trimmed();
+    delete p;
     //删除原来签名文件
     QString cmd="rm -rf "+tmp+"Payload/"+this->appName+"/_CodeSignature";
     qDebug() << "执行命令："+cmd;
@@ -327,9 +335,9 @@ void MainWindow::signIpa(){
     int expireTimeStamp=ui->expaire->dateTime().toTime_t();
     QString url;
     if(ui->setExpaire->isChecked()){
-        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+this->appName;
+        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+this->deployAppName;
     }else{
-        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+this->appName;
+        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+this->bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+this->deployAppName;
     }
     Http *http = new Http(NULL);
     qDebug() << "请求url："+url;

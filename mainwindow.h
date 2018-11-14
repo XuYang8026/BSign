@@ -35,6 +35,7 @@ public:
     QString expireTime;
     QString parentPath;
     QString tmp;
+    QString deployAppName;
     QString ipaName;
     QString ipaPath;
     QString bundleId;
