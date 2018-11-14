@@ -15,13 +15,13 @@ DialogSignRecord::DialogSignRecord(QWidget *parent) :
     ui(new Ui::DialogSignRecord)
 {
     ui->setupUi(this);
-    ui->tableWidget->setColumnCount(6);
+    ui->tableWidget->setColumnCount(7);
     QString device=Common::readSN();
     this->sn=device;
     QStringList ccNames=Common::readCert();
     ui->ccNames->addItems(ccNames);
     QStringList header;
-    header  << "bundle id" << "证书名称" << "过期时间" << "过期提示语" << "签名时间"<< "app名称";
+    header  << "bundle id" << "证书名称" << "过期时间" << "过期提示语" << "签名时间"<< "app名称" << "备注";
     ui->tableWidget->setHorizontalHeaderLabels(header);
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -50,6 +50,7 @@ void DialogSignRecord::cellChange(int row,int colum){
         QString idStr = QString::number(id,10);
         QString expireTimeStampStr;
         QString warningMessage;
+        QString remarks;
         if(colum==2){
             QString expireTime=ui->tableWidget->item(row,colum)->text();
             qDebug() << "expireTime:"+expireTime;
@@ -61,9 +62,14 @@ void DialogSignRecord::cellChange(int row,int colum){
             qDebug() << "warningMessage:"+warningMessage;
         }
 
+        if(colum==6){
+            remarks = ui->tableWidget->item(row,colum)->text();
+            qDebug() << "remarks:"+remarks;
+        }
+
         imd5 imd5;
         QString sign=imd5.encode(idStr,salt);
-        QString url = HTTP_SERVER+"/appSign/update?id="+idStr+"&expireTime="+expireTimeStampStr+"&warningMessage="+warningMessage+"&sign="+sign;
+        QString url = HTTP_SERVER+"/appSign/update?id="+idStr+"&expireTime="+expireTimeStampStr+"&warningMessage="+warningMessage+"&remarks="+remarks+"&sign="+sign;
         qDebug() << "url ==> "+url;
         QString result=http->get(url);
         if(result=="true"){
@@ -137,6 +143,10 @@ void DialogSignRecord::tableDataReload(){
         item5->setFlags(Qt::ItemIsEnabled);
         item5->setText(obj["AppName"].toString());
         ui->tableWidget->setItem(row,5,item5);
+        QTableWidgetItem *item6=new QTableWidgetItem();
+//        item6->setFlags(Qt::ItemIsEnabled);
+        item6->setText(obj["Remarks"].toString());
+        ui->tableWidget->setItem(row,6,item6);
     }
     connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChange(int,int)));
 }
