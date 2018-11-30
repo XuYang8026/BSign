@@ -251,16 +251,17 @@ void MainWindow::signIpa(){
     }
 
     QFileInfoList fil=GetFileList(tmp+"Payload/"+this->appName);
-    //NIB 文件重签名
-    for(QFileInfo fi : fil){
 
-        if(fi.suffix()=="nib"){
-//            nibFilePathList << fi.absolutePath()+"/"+fi.fileName();
-            cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+fi.absolutePath()+"/"+fi.fileName()+"\"";
-            flag=system(cmd.toLocal8Bit().data());
-            if(flag!=0){
-                ui->execResult->appendPlainText("nib重签名失败");
-                return;
+    //NIB 文件重签名
+    if(ui->clickNibSign->isChecked()){
+        for(QFileInfo fi : fil){
+            if(fi.suffix()=="nib"){
+                cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+fi.absolutePath()+"/"+fi.fileName()+"\"";
+                flag=system(cmd.toLocal8Bit().data());
+                if(flag!=0){
+                    ui->execResult->appendPlainText("nib重签名失败");
+                    return;
+                }
             }
         }
     }
