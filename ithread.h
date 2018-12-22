@@ -11,7 +11,7 @@
 #include "QProcess"
 #include "QDebug"
 #include "QStringList"
-//#include "mainwindow.h"
+#include "ipainfo.h"
 
 
 class IThread:public QThread
@@ -22,7 +22,7 @@ public:
     QString filePath;
     void run();
 signals:
-    void send(QString bundleId);
+    void send(IpaInfo *ipaInfo);
 };
 
 #endif // ITHREAD_H

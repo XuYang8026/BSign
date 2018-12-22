@@ -18,6 +18,7 @@
 #include "QJsonObject"
 #include "ithread.h"
 #include "dialogsignrecord.h"
+#include "ipainfo.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,17 +35,17 @@ public:
     QString currentTime;
     QString expireTime;
     QString parentPath;
-    QString tmp;
-    QString deployAppName;
-    QString ipaName;
-    QString ipaPath;
-    QString bundleId;
+//    QString tmp;
+//    QString deployAppName;
+//    QString ipaName;
+//    QString ipaPath;
+//    QString bundleId;
     QString mobileProvisionPath;
     QString uuid;
     QStringList ccNames;
     //MachO文件名
-    QString machOFileName;
-    QString appName;
+//    QString machOFileName;
+//    QString appName;
     QString optoolPath = "/tmp/optool";
     QString libisigntooldylibPath = "/tmp/libisigntoolhook.dylib";
     Ui::MainWindow* getUI();
@@ -54,6 +55,7 @@ private:
     LoginDialog *loginDialog;
     QProcess *process = new QProcess(this);
     QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    IpaInfo *ipaInfo;
     void initial();
     void validate();
 //    void readMachOFileNameAndAppNameAndBundleId(QString plistPath);
@@ -64,7 +66,7 @@ private slots:
     void readProcessData();
     void signIpa();
     void on_clearLog_clicked();
-    void setBundleId(QString bundleId);
+    void setIpaInfo(IpaInfo *ipaInfo);
     void on_sign_record_clicked();
 //    void on_fenfa_platform_clicked();
 };

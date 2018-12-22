@@ -36,9 +36,25 @@ void IThread::run(){
     p->start("/bin/bash",bundleIdParams);
     p->waitForFinished();
     QString bundleId = p->readAllStandardOutput();
+//    system(("rm -rf "+tmp).toLocal8Bit().data());
+    //读取应用打包名称
+    QStringList deployAppNameParams;
+    deployAppNameParams << "-c";
+    deployAppNameParams << "/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "+tmp+"Payload/*.app/Info.plist";
+    p->start("/bin/bash",deployAppNameParams);
+    p->waitForFinished();
+    QString deployAppName=p->readAllStandardOutput().trimmed();
+    p->close();
     delete p;
-    system(("rm -rf "+tmp).toLocal8Bit().data());
-    emit send(bundleId.trimmed());
-    this->wait();
+    IpaInfo *ipaInfo = new IpaInfo;
+    ipaInfo->appName=appName;
+    ipaInfo->deployAppName=deployAppName;
+    ipaInfo->bundleId=bundleId.trimmed();
+    ipaInfo->ipaName=ipaName;
+    ipaInfo->ipaPath=fileInfo.absolutePath();
+    ipaInfo->machOFileName=machOFileName;
+    ipaInfo->tmpPath=tmp;
+    emit send(ipaInfo);
+//    this->wait();
 }
 

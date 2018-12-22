@@ -36,7 +36,8 @@ SOURCES += \
     ithread.cpp \
     dialogsignrecord.cpp \
     ifile.cpp \
-    common.cpp
+    common.cpp \
+    ipainfo.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -47,7 +48,8 @@ HEADERS += \
     ithread.h \
     dialogsignrecord.h \
     ifile.h \
-    common.h
+    common.h \
+    ipainfo.h
 
 FORMS += \
         mainwindow.ui \

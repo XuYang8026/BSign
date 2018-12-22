@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>691</width>
-    <height>590</height>
+    <width>689</width>
+    <height>585</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -213,6 +213,13 @@
        </property>
       </widget>
      </item>
+     <item row="5" column="2">
+      <widget class="QPushButton" name="special_file_sign">
+       <property name="text">
+        <string>标记特殊文件</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -220,7 +227,7 @@
      <rect>
       <x>10</x>
       <y>500</y>
-      <width>408</width>
+      <width>671</width>
       <height>35</height>
      </rect>
     </property>
@@ -234,6 +241,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="clearLog">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="text">
         <string>清除日志</string>
        </property>
@@ -254,7 +264,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>691</width>
+     <width>689</width>
      <height>22</height>
     </rect>
    </property>
