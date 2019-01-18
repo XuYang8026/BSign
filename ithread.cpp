@@ -46,6 +46,11 @@ void IThread::run(){
     QString deployAppName=p->readAllStandardOutput().trimmed();
     p->close();
     delete p;
+
+    if(deployAppName.isEmpty()){
+        deployAppName=appName.split(".")[0];
+    }
+
     IpaInfo *ipaInfo = new IpaInfo;
     ipaInfo->appName=appName;
     ipaInfo->deployAppName=deployAppName;

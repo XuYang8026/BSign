@@ -308,6 +308,8 @@ void MainWindow::signIpa(){
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
 
+    ui->filePath->setText("");
+
     QString warningMessage=ui->warning_message->text();
     int expireTimeStamp=ui->expaire->dateTime().toTime_t();
     QString url;
@@ -327,7 +329,7 @@ void MainWindow::signIpa(){
 //    ui->execResult->appendPlainText("签名完成！");
 //    QMessageBox::about(NULL, tr(""),"签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
     ui->execResult->appendPlainText("签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
-    ui->filePath->setText("");
+
 }
 
 void MainWindow::validate(){
