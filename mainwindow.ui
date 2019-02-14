@@ -19,8 +19,8 @@
      <rect>
       <x>12</x>
       <y>15</y>
-      <width>669</width>
-      <height>471</height>
+      <width>868</width>
+      <height>511</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -214,9 +214,22 @@
       </widget>
      </item>
      <item row="5" column="2">
-      <widget class="QPushButton" name="special_file_sign">
+      <widget class="QCheckBox" name="clickFrameworkSign">
        <property name="text">
-        <string>标记特殊文件</string>
+        <string>重签framework</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QCheckBox" name="clickDylibSign">
+       <property name="text">
+        <string>重签dylib</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

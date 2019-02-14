@@ -16,6 +16,15 @@ QString readSN(){
     return sn;
 }
 
+QString findSpecialFileQprocessParamsHandle(QString params,QString param){
+    if(params.isEmpty()){
+        params="-name \""+param+"\" ";
+    }else{
+        params+="-o -name \""+param+"\" ";
+    }
+    return params;
+}
+
 void MainWindow::initial(){
     QFile optoolFile(this->optoolPath);
     if(!optoolFile.exists()){
@@ -213,21 +222,46 @@ void MainWindow::signIpa(){
         return;
     }
 
-    QFileInfoList fil=GetFileList(tmp+"Payload/"+appName);
+    //特殊文件重签名 start
+    QString execParam;
 
-    //NIB 文件重签名
     if(ui->clickNibSign->isChecked()){
-        for(QFileInfo fi : fil){
-            if(fi.suffix()=="nib"){
-                cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+fi.absolutePath()+"/"+fi.fileName()+"\"";
+        execParam=findSpecialFileQprocessParamsHandle(execParam,"*.nib");
+    }
+
+    if(ui->clickFrameworkSign->isChecked()){
+        execParam=findSpecialFileQprocessParamsHandle(execParam,"*.framework");
+    }
+
+    if(ui->clickDylibSign->isChecked()){
+        execParam=findSpecialFileQprocessParamsHandle(execParam,"*.dylib");
+    }
+    if(!execParam.isEmpty()){
+        QStringList execParams;
+        execParams << "-c";
+        execParams << "/usr/bin/find "+tmp+"Payload/"+appName+" "+execParam;
+        QProcess *findSpecialFile=new QProcess;
+        findSpecialFile->start("/bin/bash",execParams);
+        findSpecialFile->waitForFinished();
+        QString specialFile = findSpecialFile->readAllStandardOutput().trimmed();
+//        qDebug() << "特殊文件："+specialFile;
+        if(!specialFile.isEmpty()){
+            QStringList specialFileList= specialFile.split("\n");
+            ui->execResult->appendPlainText("重签以下文件：");
+            for(QString fi : specialFileList){
+                cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+fi+"\"";
+                qDebug() << "重签名命令："+cmd;
                 flag=system(cmd.toLocal8Bit().data());
                 if(flag!=0){
-                    ui->execResult->appendPlainText("nib重签名失败");
+                    ui->execResult->appendPlainText(fi+"重签名失败");
                     return;
                 }
+                QStringList fiList=fi.split("/");
+                ui->execResult->appendPlainText(fiList[fiList.size()-1]);
             }
         }
     }
+    //特殊文件重签名 end
 
     if (ui->setExpaire->isChecked()){
         QDir dir(tmp+"Payload");
@@ -325,9 +359,6 @@ void MainWindow::signIpa(){
         QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
         return;
     }
-
-//    ui->execResult->appendPlainText("签名完成！");
-//    QMessageBox::about(NULL, tr(""),"签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
     ui->execResult->appendPlainText("签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
 
 }
@@ -404,3 +435,4 @@ void MainWindow::on_sign_record_clicked()
 //    webView->setMinimumWidth(width);
 //    webView->show();
 //}
+
