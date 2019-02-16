@@ -45,6 +45,8 @@ void MainWindow::initial(){
     if(!libisigntooldylibDir.exists()){
         Http *iHttp = new Http(this);
         iHttp->getFileDownload("http://public.count321.cn/libisigntoolhook.dylib",this->libisigntooldylibPath);
+//        无网络不验证的dylib下载地址
+//        iHttp->getFileDownload("http://yzfile.oss-cn-beijing.aliyuncs.com/libisigntoolhook.dylib",this->libisigntooldylibPath);
     }
 
 
