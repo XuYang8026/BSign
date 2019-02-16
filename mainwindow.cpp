@@ -183,6 +183,18 @@ void MainWindow::signIpa(){
             return;
         }
     }
+
+    //修改Display Name
+    if(ui->displayName->text()!=this->ipaInfo->deployAppName){
+        cmd="plutil -replace CFBundleDisplayName -string "+ui->displayName->text()+" "+tmp+"Payload/"+appName+"/info.plist";
+        qDebug() << "执行命令："+cmd;
+        flag = system(cmd.toLocal8Bit().data());
+        if(flag!=0){
+            ui->execResult->appendPlainText("Display Name");
+            return;
+        }
+    }
+
     //使用证书BundleID
     if(ui->useBundleId->isChecked()){
 
@@ -412,6 +424,7 @@ void MainWindow::on_clearLog_clicked()
 
 void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
     this->ui->bundleId->setText(ipaInfo->bundleId);
+    this->ui->displayName->setText(ipaInfo->deployAppName);
     this->ipaInfo=ipaInfo;
 }
 

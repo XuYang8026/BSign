@@ -24,159 +24,7 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="4" column="2">
-      <widget class="QDateTimeEdit" name="expaire">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="specialValueText">
-        <string/>
-       </property>
-       <property name="keyboardTracking">
-        <bool>true</bool>
-       </property>
-       <property name="displayFormat">
-        <string>yyyy-MM-dd hh:mm:ss</string>
-       </property>
-       <property name="calendarPopup">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0" colspan="2">
-      <widget class="QCheckBox" name="setExpaire">
-       <property name="text">
-        <string>设置过期时间</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0" colspan="6">
-      <widget class="QPlainTextEdit" name="execResult"/>
-     </item>
-     <item row="3" column="4" colspan="2">
-      <widget class="QRadioButton" name="useBundleId">
-       <property name="text">
-        <string>使用描述文件中的Bundle ID</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0" colspan="2">
-      <widget class="QLabel" name="label">
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>执行日志：</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="6">
-      <widget class="QComboBox" name="ccNames">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <item>
-        <property name="text">
-         <string>请选择证书</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="1" column="3" colspan="3">
-      <widget class="QLineEdit" name="provisionFilePath">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="placeholderText">
-        <string>文件路径不能含有特殊字符</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3" colspan="2">
-      <widget class="QLabel" name="label_4">
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>APP过期后弹窗提醒：</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="5">
-      <widget class="QLineEdit" name="warning_message">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>签名已到期</string>
-       </property>
-       <property name="readOnly">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3" colspan="3">
-      <widget class="QLineEdit" name="filePath">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="dragEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="placeholderText">
-        <string>文件路径不能含有特殊字符</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="3">
-      <widget class="QPushButton" name="provisionButton">
-       <property name="text">
-        <string>选择.mobileprovision文件</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="3">
-      <widget class="QPushButton" name="selectIpaButton">
-       <property name="text">
-        <string>选择ipa文件</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0" colspan="4">
+     <item row="6" column="0" colspan="4">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QRadioButton" name="updateBundleIdRadioButton">
@@ -203,7 +51,7 @@
        </item>
       </layout>
      </item>
-     <item row="5" column="0">
+     <item row="8" column="0">
       <widget class="QCheckBox" name="clickNibSign">
        <property name="text">
         <string>重签nib文件</string>
@@ -213,7 +61,7 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="2">
+     <item row="8" column="2">
       <widget class="QCheckBox" name="clickFrameworkSign">
        <property name="text">
         <string>重签framework</string>
@@ -223,13 +71,191 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="3">
+     <item row="8" column="3">
       <widget class="QCheckBox" name="clickDylibSign">
        <property name="text">
         <string>重签dylib</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="3" colspan="2">
+      <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>APP过期后弹窗提醒：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="2">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>执行日志：</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="QPushButton" name="selectIpaButton">
+       <property name="text">
+        <string>选择ipa文件</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
+      <widget class="QDateTimeEdit" name="expaire">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="specialValueText">
+        <string/>
+       </property>
+       <property name="keyboardTracking">
+        <bool>true</bool>
+       </property>
+       <property name="displayFormat">
+        <string>yyyy-MM-dd hh:mm:ss</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="3">
+      <widget class="QPushButton" name="provisionButton">
+       <property name="text">
+        <string>选择.mobileprovision文件</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="5">
+      <widget class="QLineEdit" name="warning_message">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>签名已到期</string>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0" colspan="2">
+      <widget class="QCheckBox" name="setExpaire">
+       <property name="text">
+        <string>设置过期时间</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3" colspan="3">
+      <widget class="QLineEdit" name="provisionFilePath">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>文件路径不能含有特殊字符</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3" colspan="3">
+      <widget class="QLineEdit" name="filePath">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="dragEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>文件路径不能含有特殊字符</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="4" colspan="2">
+      <widget class="QRadioButton" name="useBundleId">
+       <property name="text">
+        <string>使用描述文件中的Bundle ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="6">
+      <widget class="QComboBox" name="ccNames">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>请选择证书</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="10" column="0" colspan="6">
+      <widget class="QPlainTextEdit" name="execResult"/>
+     </item>
+     <item row="5" column="0" colspan="2">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>应用名称变更</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2" colspan="4">
+      <widget class="QLineEdit" name="displayName">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="readOnly">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
