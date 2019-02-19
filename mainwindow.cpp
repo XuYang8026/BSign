@@ -142,7 +142,7 @@ void MainWindow::signIpa(){
         return;
     }
     //生成plist文件
-    cmd = "/usr/bin/security cms -D -i "+mobileProvisionPath+" > "+tmp+"entitlements_full.plist";
+    cmd = "/usr/bin/security cms -D -i \""+mobileProvisionPath+"\" > "+tmp+"entitlements_full.plist";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     qDebug() << flag;
@@ -229,7 +229,7 @@ void MainWindow::signIpa(){
         file.close();
     }
 
-    cmd="cp "+mobileProvisionPath+" "+tmp+"Payload/"+appName+"/embedded.mobileprovision";
+    cmd="cp \""+mobileProvisionPath+"\" "+tmp+"Payload/"+appName+"/embedded.mobileprovision";
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
         ui->execResult->appendPlainText("复制mobileprovision文件失败");
@@ -340,7 +340,7 @@ void MainWindow::signIpa(){
         isResigned.remove();
     }
 
-    cmd="cd "+tmp+";zip -qr ../"+newIPA+" Payload";
+    cmd="cd "+tmp+";zip -qr ../\""+newIPA+"\" Payload";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
@@ -352,7 +352,7 @@ void MainWindow::signIpa(){
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
 
-    cmd="mv /tmp/"+newIPA+" "+ipaInfo->ipaPath+"/";
+    cmd="mv /tmp/\""+newIPA+"\" \""+ipaInfo->ipaPath+"/\"";
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
 

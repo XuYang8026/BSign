@@ -17,7 +17,7 @@ void IThread::run(){
     QString zipFile = ipaName.split(".")[0]+".zip";
     QFile::rename(tmp+ipaName,tmp+zipFile);
 
-    QString cmd = "unzip "+tmp+zipFile+" -d "+tmp;
+    QString cmd = "unzip \""+tmp+zipFile+"\" -d "+tmp;
     system(cmd.toLocal8Bit().data());
     QString plistPath=tmp+"Payload/*.app/Info.plist";
     QStringList matchOParams;

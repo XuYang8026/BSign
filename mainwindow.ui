@@ -182,7 +182,7 @@
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>文件路径不能含有特殊字符</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -204,7 +204,7 @@
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>文件路径不能含有特殊字符</string>
+        <string>待签名IPA路径</string>
        </property>
       </widget>
      </item>
@@ -236,7 +236,7 @@
      <item row="5" column="0" colspan="2">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>应用名称变更</string>
+        <string>应用名(可变更)</string>
        </property>
       </widget>
      </item>
@@ -256,6 +256,9 @@
        </property>
        <property name="readOnly">
         <bool>false</bool>
+       </property>
+       <property name="placeholderText">
+        <string>变更应用名称</string>
        </property>
       </widget>
      </item>
