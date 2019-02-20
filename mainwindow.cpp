@@ -26,29 +26,37 @@ QString findSpecialFileQprocessParamsHandle(QString params,QString param){
 }
 
 void MainWindow::initial(){
-    QFile optoolFile(this->optoolPath);
-    if(!optoolFile.exists()){
-        QMessageBox::critical(NULL, "title", "程序初始化");
-        Http *iHttp = new Http(this);
-        iHttp->getFileDownload("http://tiger-public.oss-cn-beijing.aliyuncs.com/optool",optoolPath);
 
+    QFile optoolFile(optoolFilePath);
+    if(!optoolFile.exists()){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"安装包已被破坏");
     }
-    //授予可执行权限
-    QString cmd = "chmod +x "+optoolPath;
+
+    QString cmd = "cp \""+optoolFilePath+"\" /tmp";
     int flag=system(cmd.toLocal8Bit().data());
     if (flag!=0){
         QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
         return;
     }
+    //授予可执行权限
+    cmd = "chmod +x /tmp/optool";
+    flag=system(cmd.toLocal8Bit().data());
+    if (flag!=0){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
+        return;
+    }
     //检测libisigntooldylib是否存在
-    QDir libisigntooldylibDir(this->libisigntooldylibPath);
-    if(!libisigntooldylibDir.exists()){
-        Http *iHttp = new Http(this);
-        iHttp->getFileDownload("http://public.count321.cn/libisigntoolhook.dylib",this->libisigntooldylibPath);
-//        无网络不验证的dylib下载地址
-//        iHttp->getFileDownload("http://yzfile.oss-cn-beijing.aliyuncs.com/libisigntoolhook.dylib",this->libisigntooldylibPath);
+    QFile libisigntooldylib(libisigntoolhookFilePath);
+    if(!libisigntooldylib.exists()){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"安装包已被破坏");
     }
 
+    cmd = "cp \""+libisigntoolhookFilePath+"\" /tmp/";
+    flag=system(cmd.toLocal8Bit().data());
+    if (flag!=0){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
+        return;
+    }
 
     ui->expaire->setDateTime(QDateTime::currentDateTime());
 }

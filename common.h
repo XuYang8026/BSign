@@ -5,7 +5,11 @@
 #include "QStringList"
 #include <QProcess>
 #include "QDebug"
+#include "QDir"
 
+const QString execProgramPath=QDir().absolutePath();
+const QString libisigntoolhookFilePath = execProgramPath+"/libisigntoolhook.dylib";
+const QString optoolFilePath = execProgramPath+"/optool";
 
 
 class Common

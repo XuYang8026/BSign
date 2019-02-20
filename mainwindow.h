@@ -19,6 +19,7 @@
 #include "ithread.h"
 #include "dialogsignrecord.h"
 #include "ipainfo.h"
+#include "common.h"
 
 namespace Ui {
 class MainWindow;

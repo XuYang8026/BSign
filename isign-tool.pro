@@ -37,7 +37,9 @@ SOURCES += \
     dialogsignrecord.cpp \
     ifile.cpp \
     common.cpp \
-    ipainfo.cpp
+    ipainfo.cpp \
+    signutil.cpp \
+    signconfig.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -49,10 +51,16 @@ HEADERS += \
     dialogsignrecord.h \
     ifile.h \
     common.h \
-    ipainfo.h
+    ipainfo.h \
+    signutil.h \
+    signconfig.h
 
 FORMS += \
         mainwindow.ui \
     logindialog.ui \
     expirepage.ui \
     dialogsignrecord.ui
+
+DISTFILES +=
+
+RESOURCES +=
