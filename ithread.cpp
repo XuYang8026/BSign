@@ -19,6 +19,15 @@ void IThread::run(){
 
     QString cmd = "unzip \""+tmp+zipFile+"\" -d "+tmp;
     system(cmd.toLocal8Bit().data());
+
+    QDir dir(tmp);
+    QFileInfoList file_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for(QFileInfo fileInfo:file_list){
+        QString floderName=fileInfo.fileName();
+        QString cmd = "mv \""+tmp+floderName+"\" "+tmp+"Payload";
+        system(cmd.toLocal8Bit().data());
+    }
+
     QString plistPath=tmp+"Payload/*.app/Info.plist";
     QStringList matchOParams;
     matchOParams << "-c";
