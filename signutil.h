@@ -13,18 +13,19 @@
 #include "QStringList"
 #include "signconfig.h"
 
-class SignUtil
+typedef void (*CallBackPrint) (QString info);
+
+class SignUtil : public QObject
 {
+    Q_OBJECT
 public:
-    explicit SignUtil();
+    SignUtil();
 
     QString mobileProvisionPath;
     IpaInfo *ipaInfo;
     void readIpaInfo(QString filePath);
-    bool sign(IpaInfo *ipaInfo,SignConfig *signConfig);
-
-signals:
-    void signPrint(QString info);
+    bool sign(IpaInfo *ipaInfo,SignConfig *signConfig,CallBackPrint cbp);
+    QString findSpecialFileQprocessParamsHandle(QString params,QString param);
 };
 
 #endif // SIGNUTIL_H

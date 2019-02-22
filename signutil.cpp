@@ -1,6 +1,6 @@
 #include "signutil.h"
 
-QString findSpecialFileQprocessParamsHandle(QString params,QString param){
+QString SignUtil::findSpecialFileQprocessParamsHandle(QString params,QString param){
     if(params.isEmpty()){
         params="-name \""+param+"\" ";
     }else{
@@ -9,10 +9,6 @@ QString findSpecialFileQprocessParamsHandle(QString params,QString param){
     return params;
 }
 
-SignUtil::SignUtil()
-{
-
-}
 
 void SignUtil::readIpaInfo(QString filePath){
     QDateTime time = QDateTime::currentDateTime();   //获取当前时间
@@ -83,7 +79,7 @@ void SignUtil::readIpaInfo(QString filePath){
     this->ipaInfo=ipaInfo;
 }
 
-bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
+bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig,CallBackPrint cbp){
     QString tmp=ipaInfo->tmpPath;
     QString appName=ipaInfo->appName;
     QString bundleId=ipaInfo->bundleId;
@@ -91,14 +87,13 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     QString ipaName=ipaInfo->ipaName;
     QString deployAppName=ipaInfo->deployAppName;
 
-    emit signPrint("machOFileName is "+machOFileName);
-
+    cbp("machOFileName is "+machOFileName);
     //删除原来签名文件
     QString cmd="rm -rf "+tmp+"Payload/"+appName+"/_CodeSignature";
     qDebug() << "执行命令："+cmd;
     int flag = system(cmd.toLocal8Bit().data());
     if(flag!=0){
-        emit signPrint("删除原来签名文件失败");
+        cbp("删除原来签名文件失败");
         return false;
     }
     //生成plist文件
@@ -121,7 +116,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     qDebug() << "执行命令："+cmd;
     flag = system(cmd.toLocal8Bit().data());
     if(flag!=0){
-        emit signPrint("写入uuid文件失败");
+        cbp("写入uuid文件失败");
         return false;
     }
 
@@ -129,17 +124,17 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     qDebug() << "执行命令："+cmd;
     flag = system(cmd.toLocal8Bit().data());
     if(flag!=0){
-        emit signPrint("生成plist文件失败");
+        cbp("生成plist文件失败");
         return false;
     }
 
     //修改BundleId
     if(signConfig->bundleId!=ipaInfo->bundleId){
         cmd="plutil -replace CFBundleIdentifier -string "+signConfig->bundleId+" "+tmp+"Payload/"+appName+"/info.plist";
-        qDebug() << "执行命令："+cmd;
+//        qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit signPrint("修改BundleId失败");
+            cbp("修改BundleId失败");
             return false;
         }
     }
@@ -150,7 +145,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit signPrint("Display Name Update Fail");
+            cbp("Display Name Update Fail");
             return false;
         }
     }
@@ -168,14 +163,14 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         QString mpBundleId=p->readAllStandardOutput().trimmed();
         qDebug() << "证书BundleID："+mpBundleId;
         if(mpBundleId.isEmpty()){
-            emit signPrint("修改BundleId失败");
+            cbp("修改BundleId失败");
             return false;
         }
         cmd="plutil -replace CFBundleIdentifier -string "+mpBundleId+" "+tmp+"Payload/"+appName+"/info.plist";
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit signPrint("修改BundleId失败");
+            cbp("修改BundleId失败");
             return false;
         }
     }
@@ -192,7 +187,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     cmd="cp \""+mobileProvisionPath+"\" "+tmp+"Payload/"+appName+"/embedded.mobileprovision";
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
-        emit signPrint("复制mobileprovision文件失败");
+        cbp("复制mobileprovision文件失败");
         return false;
     }
 
@@ -220,17 +215,17 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         QString specialFile = findSpecialFile->readAllStandardOutput().trimmed();
         if(!specialFile.isEmpty()){
             QStringList specialFileList= specialFile.split("\n");
-            emit signPrint("重签以下文件：");
+            cbp("重签以下文件：");
             for(QString fi : specialFileList){
                 cmd="/usr/bin/codesign --force --sign \""+signConfig->ccName+"\" \""+fi+"\"";
                 qDebug() << "重签名命令："+cmd;
                 flag=system(cmd.toLocal8Bit().data());
                 if(flag!=0){
-                    emit signPrint(fi+"重签名失败");
+//                    cbp(fi+"重签名失败");
                     return false;
                 }
                 QStringList fiList=fi.split("/");
-                emit signPrint(fiList[fiList.size()-1]);
+                cbp(fiList[fiList.size()-1]);
             }
         }
     }
@@ -253,14 +248,14 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         qDebug() << "执行命令："+cmd;
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit signPrint("植入代码迁移失败");
+            cbp("植入代码迁移失败");
             return false;
         }
         cmd="chmod +x "+tmp+"Payload/"+appName+"/"+machOFileName;
         qDebug() << "执行命令："+cmd;
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit signPrint("签名失败！");
+            cbp("签名失败！");
             return false;
         }
 
@@ -268,26 +263,26 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         cmd="/usr/bin/codesign --force --sign \""+signConfig->ccName+"\" \""+tmp+"Payload/"+appName+"/libisigntoolhook.dylib"+"\"";
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit signPrint("植入代码重签名失败");
+            cbp("植入代码重签名失败");
             return false;
         }
-        emit signPrint("开始注入代码");
+        cbp("开始注入代码");
         cmd="cd "+tmp+"Payload/"+appName+";"+"/tmp/optool install -c load -p \"@executable_path/libisigntoolhook.dylib\" -t "+machOFileName;
 //        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
         qDebug() << "执行命令："+cmd;
         flag=system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit signPrint("代码注入失败！");
+            cbp("代码注入失败！");
             return false;
         }
-        emit signPrint("代码注入成功");
+        cbp("代码注入成功");
     }
 
     cmd="/usr/bin/codesign -f --entitlements \"" + tmp+"entitlements.plist\""+ " -s \"" + signConfig->ccName + "\" " + tmp+"Payload/"+appName;
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
-        emit signPrint("签名失败！");
+        cbp("签名失败！");
         return false;
     }
 
@@ -302,7 +297,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
-        emit signPrint("打包失败！");
+        cbp("打包失败！");
         return false;
     }
 
@@ -313,6 +308,6 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     cmd="mv /tmp/\""+newIPA+"\" \""+ipaInfo->ipaPath+"/\"";
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
-    emit signPrint("签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
+    cbp("签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
     return true;
 }
