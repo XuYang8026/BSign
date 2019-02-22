@@ -68,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     this->setWindowTitle("欢迎使用Isign-tool");
+    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
+    setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     QProcess *process = new QProcess;
     QStringList shellOptions;
     shellOptions << "-c";
