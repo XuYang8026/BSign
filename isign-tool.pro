@@ -39,7 +39,8 @@ SOURCES += \
     common.cpp \
     ipainfo.cpp \
     signutil.cpp \
-    signconfig.cpp
+    signconfig.cpp \
+    test.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -53,7 +54,8 @@ HEADERS += \
     common.h \
     ipainfo.h \
     signutil.h \
-    signconfig.h
+    signconfig.h \
+    test.h
 
 FORMS += \
         mainwindow.ui \

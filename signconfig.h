@@ -8,11 +8,13 @@ class SignConfig
 public:
     SignConfig();
 
+    QString mobileProvisionPath;
+
     QString bundleId;
 
     QString displayName;
 
-    bool useMobileProvsion = false;
+    bool useMobileProvsionBundleId = false;
 
     bool signNib = false;
 
@@ -23,6 +25,10 @@ public:
     QString expireTime;
 
     QString ccName;
+
+    QString warningMessage;
+    //证书UUID
+    QString ccUuid;
 };
 
 #endif // SIGNCONFIG_H

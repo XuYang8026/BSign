@@ -139,240 +139,47 @@ void MainWindow::signIpa(){
     QString ipaName=ipaInfo->ipaName;
     QString deployAppName=ipaInfo->deployAppName;
 
-    ui->execResult->appendPlainText("machOFileName is "+machOFileName);
-
-    //删除原来签名文件
-    QString cmd="rm -rf "+tmp+"Payload/"+appName+"/_CodeSignature";
-    qDebug() << "执行命令："+cmd;
-    int flag = system(cmd.toLocal8Bit().data());
-    if(flag!=0){
-        ui->execResult->appendPlainText("删除原来签名文件失败");
-        return;
-    }
-    //生成plist文件
-    cmd = "/usr/bin/security cms -D -i \""+mobileProvisionPath+"\" > "+tmp+"entitlements_full.plist";
-    qDebug() << "执行命令："+cmd;
-    flag=system(cmd.toLocal8Bit().data());
-    qDebug() << flag;
-
-    //读取UUID
-    QStringList readUUIDParams;
-    readUUIDParams << "-c";
-    readUUIDParams << "/usr/libexec/PlistBuddy -c 'Print:UUID' "+tmp+"entitlements_full.plist";
-    QProcess *uuidProcess=new QProcess;
-    uuidProcess->start("/bin/bash",readUUIDParams);
-    uuidProcess->waitForFinished();
-    uuid = uuidProcess->readAllStandardOutput().trimmed();
-    qDebug() << "UUID ====> "+uuid;
-
-    cmd="echo "+uuid+" > "+tmp+"Payload/"+appName+"/uuid";
-    qDebug() << "执行命令："+cmd;
-    flag = system(cmd.toLocal8Bit().data());
-    if(flag!=0){
-        ui->execResult->appendPlainText("写入uuid文件失败");
-        return;
-    }
-
-    cmd="/usr/libexec/PlistBuddy -x -c 'Print:Entitlements' "+tmp+"entitlements_full.plist > "+tmp+"entitlements.plist";
-    qDebug() << "执行命令："+cmd;
-    flag = system(cmd.toLocal8Bit().data());
-    if(flag!=0){
-        ui->execResult->appendPlainText("生成plist文件失败");
-        return;
-    }
-
-    //修改BundleId
-    if(ui->bundleId->text()!=bundleId && ui->updateBundleIdRadioButton->isChecked()){
-        cmd="plutil -replace CFBundleIdentifier -string "+bundleId+" "+tmp+"Payload/"+appName+"/info.plist";
-        qDebug() << "执行命令："+cmd;
-        flag = system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("修改BundleId失败");
-            return;
-        }
-    }
-
-    //修改Display Name
-    if(ui->displayName->text()!=this->ipaInfo->deployAppName){
-        cmd="plutil -replace CFBundleDisplayName -string "+ui->displayName->text()+" "+tmp+"Payload/"+appName+"/info.plist";
-        qDebug() << "执行命令："+cmd;
-        flag = system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("Display Name");
-            return;
-        }
-    }
-
-    //使用证书BundleID
+    SignConfig *signConfig = new SignConfig;
+    signConfig->bundleId=ui->bundleId->text();
     if(ui->useBundleId->isChecked()){
-
-        QProcess *p = new QProcess;
-        QStringList args;
-        args.append("-c");
-        args.append("/usr/libexec/PlistBuddy "+tmp+"entitlements.plist "+"-c print | grep application-identifier | awk '{print $3}'");
-        p->start("/bin/bash",args);
-        p->waitForFinished();
-        //读取证书BundleID
-        QString mpBundleId=p->readAllStandardOutput().trimmed();
-        qDebug() << "证书BundleID："+mpBundleId;
-        if(mpBundleId.isEmpty()){
-            ui->execResult->appendPlainText("修改BundleId失败");
-            return;
-        }
-        cmd="plutil -replace CFBundleIdentifier -string "+mpBundleId+" "+tmp+"Payload/"+appName+"/info.plist";
-        qDebug() << "执行命令："+cmd;
-        flag = system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("修改BundleId失败");
-            return;
-        }
+        signConfig->useMobileProvsionBundleId=true;
     }
-
-    QFile file(tmp+"Payload/"+appName+"/embedded.mobileprovision");
-    if(!file.exists()){
-        file.open(QIODevice::WriteOnly | QIODevice::Text );
-        QTextStream in(&file);
-        in << "";
-        file.flush();
-        file.close();
+    signConfig->mobileProvisionPath=mobileProvisionPath;
+    signConfig->displayName=ui->displayName->text();
+    signConfig->ccName=ui->ccNames->currentText();
+    if(ui->setExpaire->isChecked()){
+        signConfig->expireTime=QString::number(ui->expaire->dateTime().toTime_t(),10);
+        signConfig->warningMessage=ui->warning_message->text();
     }
-
-    cmd="cp \""+mobileProvisionPath+"\" "+tmp+"Payload/"+appName+"/embedded.mobileprovision";
-    flag=system(cmd.toLocal8Bit().data());
-    if(flag!=0){
-        ui->execResult->appendPlainText("复制mobileprovision文件失败");
-        return;
-    }
-
-    //特殊文件重签名 start
-    QString execParam;
 
     if(ui->clickNibSign->isChecked()){
-        execParam=findSpecialFileQprocessParamsHandle(execParam,"*.nib");
+        signConfig->signNib=true;
     }
 
     if(ui->clickFrameworkSign->isChecked()){
-        execParam=findSpecialFileQprocessParamsHandle(execParam,"*.framework");
+        signConfig->signFramwork=true;
     }
 
     if(ui->clickDylibSign->isChecked()){
-        execParam=findSpecialFileQprocessParamsHandle(execParam,"*.dylib");
-    }
-    if(!execParam.isEmpty()){
-        QStringList execParams;
-        execParams << "-c";
-        execParams << "/usr/bin/find "+tmp+"Payload/"+appName+" "+execParam;
-        QProcess *findSpecialFile=new QProcess;
-        findSpecialFile->start("/bin/bash",execParams);
-        findSpecialFile->waitForFinished();
-        QString specialFile = findSpecialFile->readAllStandardOutput().trimmed();
-//        qDebug() << "特殊文件："+specialFile;
-        if(!specialFile.isEmpty()){
-            QStringList specialFileList= specialFile.split("\n");
-            ui->execResult->appendPlainText("重签以下文件：");
-            for(QString fi : specialFileList){
-                cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+fi+"\"";
-                qDebug() << "重签名命令："+cmd;
-                flag=system(cmd.toLocal8Bit().data());
-                if(flag!=0){
-                    ui->execResult->appendPlainText(fi+"重签名失败");
-                    return;
-                }
-                QStringList fiList=fi.split("/");
-                ui->execResult->appendPlainText(fiList[fiList.size()-1]);
-            }
-        }
-    }
-    //特殊文件重签名 end
-
-    if (ui->setExpaire->isChecked()){
-        QDir dir(tmp+"Payload");
-        QFileInfoList fileInfos = dir.entryInfoList();
-        QStringList fileNames;
-        foreach(QFileInfo fileinfo, fileInfos)
-        {
-            QString filter = fileinfo.suffix();    //后缀名
-            if(filter != "app"){
-                continue;
-            }
-            fileNames.append(fileinfo.fileName());
-        }
-        appName=fileNames[0];
-        cmd="cp "+this->libisigntooldylibPath+" "+tmp+"Payload/"+appName+"/libisigntoolhook.dylib";
-        qDebug() << "执行命令："+cmd;
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("植入代码迁移失败");
-            return;
-        }
-        cmd="chmod +x "+tmp+"Payload/"+appName+"/"+machOFileName;
-        qDebug() << "执行命令："+cmd;
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("签名失败！");
-            return;
-        }
-
-        //注意 第三方库要单独重签名
-        cmd="/usr/bin/codesign --force --sign \""+ui->ccNames->currentText()+"\" \""+tmp+"Payload/"+appName+"/libisigntoolhook.dylib"+"\"";
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("植入代码重签名失败");
-            return;
-        }
-        ui->execResult->appendPlainText("开始注入代码");
-        cmd="cd "+tmp+"Payload/"+appName+";"+this->optoolPath+" install -c load -p \"@executable_path/libisigntoolhook.dylib\" -t "+machOFileName;
-//        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
-        qDebug() << "执行命令："+cmd;
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            ui->execResult->appendPlainText("代码注入失败！");
-            return;
-        }
-        ui->execResult->appendPlainText("代码注入成功");
+        signConfig->signDylib=true;
     }
 
-    QString ccName=ui->ccNames->currentText();
-    cmd="/usr/bin/codesign -f --entitlements \"" + tmp+"entitlements.plist\""+ " -s \"" + ccName + "\" " + tmp+"Payload/"+appName;
-    qDebug() << "执行命令："+cmd;
-    flag=system(cmd.toLocal8Bit().data());
-    if(flag!=0){
-        ui->execResult->appendPlainText("签名失败！");
-        return;
-    }
-
-    QString newIPA=ipaName.split(".")[0]+"_resigned.ipa";
-    QFile isResigned(this->parentPath+"/"+newIPA);
-    if(isResigned.exists()){
-        qDebug() << "delete old sign package";
-        isResigned.remove();
-    }
-
-    cmd="cd "+tmp+";zip -qr ../\""+newIPA+"\" Payload";
-    qDebug() << "执行命令："+cmd;
-    flag=system(cmd.toLocal8Bit().data());
-    if(flag!=0){
-        ui->execResult->appendPlainText("打包失败！");
-        return;
-    }
-
-    cmd="rm -rf "+tmp;
-    qDebug() << "执行命令："+cmd;
-    system(cmd.toLocal8Bit().data());
-
-    cmd="mv /tmp/\""+newIPA+"\" \""+ipaInfo->ipaPath+"/\"";
-    qDebug() << "执行命令："+cmd;
-    system(cmd.toLocal8Bit().data());
-
+    SignUtil *signUtil = new SignUtil(this);
+    connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
+    bool res=signUtil->sign(ipaInfo,signConfig);
     ui->filePath->setText("");
+
+    if(!res){
+        return;
+    }
 
     QString warningMessage=ui->warning_message->text();
     int expireTimeStamp=ui->expaire->dateTime().toTime_t();
     QString url;
     if(ui->setExpaire->isChecked()){
-        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+deployAppName;
+        url=HTTP_SERVER+"/appSign?uuid="+signConfig->ccUuid+"&bundleId="+bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+deployAppName;
     }else{
-        url=HTTP_SERVER+"/appSign?uuid="+this->uuid+"&bundleId="+bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+deployAppName;
+        url=HTTP_SERVER+"/appSign?uuid="+signConfig->ccUuid+"&bundleId="+bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+deployAppName;
     }
     Http *http = new Http(NULL);
     qDebug() << "请求url："+url;
@@ -381,8 +188,6 @@ void MainWindow::signIpa(){
         QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
         return;
     }
-    ui->execResult->appendPlainText("签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
-
 }
 
 void MainWindow::validate(){
@@ -445,6 +250,9 @@ void MainWindow::on_sign_record_clicked()
     sr->show();
 }
 
+void MainWindow::execPrint(QString content){
+    this->ui->execResult->appendPlainText(content);
+}
 //void MainWindow::on_fenfa_platform_clicked()
 //{
 //    QWebEngineView *webView = new QWebEngineView;

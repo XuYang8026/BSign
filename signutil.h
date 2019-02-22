@@ -1,9 +1,9 @@
 #ifndef SIGNUTIL_H
 #define SIGNUTIL_H
 
+#include <QObject>
 #include "ipainfo.h"
 #include "QString"
-#include "QObject"
 #include "QDateTime"
 #include "QDir"
 #include "QFileInfo"
@@ -15,17 +15,17 @@
 
 typedef void (*CallBackPrint) (QString info);
 
-class SignUtil : public QObject
+class SignUtil:public QObject
 {
-    Q_OBJECT
+Q_OBJECT
 public:
-    SignUtil();
-
-    QString mobileProvisionPath;
+    explicit SignUtil(QObject *parent = nullptr);
     IpaInfo *ipaInfo;
     void readIpaInfo(QString filePath);
-    bool sign(IpaInfo *ipaInfo,SignConfig *signConfig,CallBackPrint cbp);
+    bool sign(IpaInfo *ipaInfo,SignConfig *signConfig);
     QString findSpecialFileQprocessParamsHandle(QString params,QString param);
+signals:
+    void execPrint(QString content);
 };
 
 #endif // SIGNUTIL_H
