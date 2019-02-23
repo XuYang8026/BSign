@@ -1,5 +1,46 @@
 #include "signutil.h"
 
+bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QString ccName){
+    QFileInfo fileInfo(dylibFilePath);
+    QString dylibFileName=fileInfo.fileName();
+    fileInfo=QFileInfo(machOFilePath);
+    QString machOAbstractPath=fileInfo.absolutePath();
+    QString cmd="cp "+dylibFilePath+" "+machOAbstractPath+"/"+dylibFileName;
+    qDebug() << "执行命令："+cmd;
+    int flag=system(cmd.toLocal8Bit().data());
+    if(flag!=0){
+        emit execPrint("植入代码迁移失败");
+        return false;
+    }
+    cmd="chmod +x "+machOFilePath;
+    qDebug() << "执行命令："+cmd;
+    flag=system(cmd.toLocal8Bit().data());
+    if(flag!=0){
+        emit execPrint("签名失败！");
+        return false;
+    }
+
+    //注意 第三方库要单独重签名
+    cmd="/usr/bin/codesign --force --sign \""+ccName+"\" \""+machOAbstractPath+"/"+dylibFileName+"\"";
+    flag=system(cmd.toLocal8Bit().data());
+    if(flag!=0){
+        emit execPrint("植入代码重签名失败");
+        return false;
+    }
+    emit execPrint("开始注入代码");
+    fileInfo=QFileInfo(machOFilePath);
+    cmd="cd "+machOAbstractPath+";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t "+fileInfo.fileName();
+//        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
+    qDebug() << "执行命令："+cmd;
+    flag=system(cmd.toLocal8Bit().data());
+    if(flag!=0){
+        emit execPrint("代码注入失败！");
+        return false;
+    }
+    emit execPrint("代码注入成功");
+    return true;
+}
+
 SignUtil::SignUtil(QObject *parent) : QObject(parent)
 {
 
@@ -168,16 +209,17 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         QString mpBundleId=p->readAllStandardOutput().trimmed();
         qDebug() << "证书BundleID："+mpBundleId;
         if(mpBundleId.isEmpty()){
-            emit execPrint("修改BundleId失败");
+            emit execPrint("读取证书BundleId失败");
             return false;
         }
         cmd="plutil -replace CFBundleIdentifier -string "+mpBundleId+" "+tmp+"Payload/"+appName+"/info.plist";
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
-            emit execPrint("修改BundleId失败");
+            emit execPrint("修改证书BundleId失败");
             return false;
         }
+        ipaInfo->bundleId=mpBundleId;
     }
 
     QFile file(tmp+"Payload/"+appName+"/embedded.mobileprovision");
@@ -226,7 +268,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
                 qDebug() << "重签名命令："+cmd;
                 flag=system(cmd.toLocal8Bit().data());
                 if(flag!=0){
-//                    emit execPrint(fi+"重签名失败");
+                    emit execPrint(fi+"重签名失败");
                     return false;
                 }
                 QStringList fiList=fi.split("/");
@@ -237,50 +279,17 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     //特殊文件重签名 end
 
     if (!signConfig->expireTime.isEmpty()){
-        QDir dir(tmp+"Payload");
-        QFileInfoList fileInfos = dir.entryInfoList();
-        QStringList fileNames;
-        foreach(QFileInfo fileinfo, fileInfos)
-        {
-            QString filter = fileinfo.suffix();    //后缀名
-            if(filter != "app"){
-                continue;
-            }
-            fileNames.append(fileinfo.fileName());
-        }
-        appName=fileNames[0];
-        cmd="cp /tmp/libisigntoolhook.dylib "+tmp+"Payload/"+appName+"/libisigntoolhook.dylib";
-        qDebug() << "执行命令："+cmd;
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            emit execPrint("植入代码迁移失败");
+        bool injection=dylibInjection(libisigntoolhookFilePath,tmp+"Payload/"+appName+"/"+appName.split(".")[0],signConfig->ccName);
+        if(!injection){
             return false;
         }
-        cmd="chmod +x "+tmp+"Payload/"+appName+"/"+machOFileName;
-        qDebug() << "执行命令："+cmd;
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            emit execPrint("签名失败！");
-            return false;
-        }
+    }
 
-        //注意 第三方库要单独重签名
-        cmd="/usr/bin/codesign --force --sign \""+signConfig->ccName+"\" \""+tmp+"Payload/"+appName+"/libisigntoolhook.dylib"+"\"";
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            emit execPrint("植入代码重签名失败");
+    if(signConfig->useAppCount){
+        bool injection=dylibInjection(libisigntoolappcountFilePath,tmp+"Payload/"+appName+"/"+appName.split(".")[0],signConfig->ccName);
+        if(!injection){
             return false;
         }
-        emit execPrint("开始注入代码");
-        cmd="cd "+tmp+"Payload/"+appName+";"+"/tmp/optool install -c load -p \"@executable_path/libisigntoolhook.dylib\" -t "+machOFileName;
-//        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
-        qDebug() << "执行命令："+cmd;
-        flag=system(cmd.toLocal8Bit().data());
-        if(flag!=0){
-            emit execPrint("代码注入失败！");
-            return false;
-        }
-        emit execPrint("代码注入成功");
     }
 
     cmd="/usr/bin/codesign -f --entitlements \"" + tmp+"entitlements.plist\""+ " -s \"" + signConfig->ccName + "\" " + tmp+"Payload/"+appName;

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>libisigntoolappcount.dylib</file>
+        <file>libisigntoolhook.dylib</file>
+        <file>optool</file>
+    </qresource>
+</RCC>

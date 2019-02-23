@@ -27,35 +27,29 @@ QString findSpecialFileQprocessParamsHandle(QString params,QString param){
 
 void MainWindow::initial(){
 
-    QFile optoolFile(optoolFilePath);
-    if(!optoolFile.exists()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"安装包已被破坏");
-    }
-
-    QString cmd = "cp \""+optoolFilePath+"\" /tmp";
+    //授予可执行权限
+    QString cmd = "rm -rf "+libisigntoolappcountFilePath+" "+optoolFilePath+" "+libisigntoolhookFilePath;
     int flag=system(cmd.toLocal8Bit().data());
     if (flag!=0){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
-        return;
-    }
-    //授予可执行权限
-    cmd = "chmod +x /tmp/optool";
-    flag=system(cmd.toLocal8Bit().data());
-    if (flag!=0){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
-        return;
-    }
-    //检测libisigntooldylib是否存在
-    QFile libisigntooldylib(libisigntoolhookFilePath);
-    if(!libisigntooldylib.exists()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"安装包已被破坏");
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"重要组件执行权限失败");
     }
 
-    cmd = "cp \""+libisigntoolhookFilePath+"\" /tmp/";
-    flag=system(cmd.toLocal8Bit().data());
-    if (flag!=0){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件执行权限\n尝试重启客户端");
-        return;
+    bool libisigntoolappcountCopy=QFile::copy(":/libisigntoolappcount.dylib",libisigntoolappcountFilePath);
+
+    if(!libisigntoolappcountCopy){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件");
+    }
+
+    bool optoolCopy=QFile::copy(":/optool",optoolFilePath);
+
+    if(!optoolCopy){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件");
+    }
+
+    bool libisigntoolhookCopy=QFile::copy(":/libisigntoolhook.dylib",libisigntoolhookFilePath);
+
+    if(!libisigntoolhookCopy){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件");
     }
 
     ui->expaire->setDateTime(QDateTime::currentDateTime());
@@ -83,7 +77,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->sn=readSN();
     qDebug() << "mac 序列号 ==> "+sn;
-
     connect(ui->signButton, SIGNAL(clicked()), this,SLOT(signIpa()));
     this->initial();
     this->validate();
@@ -136,7 +129,7 @@ void MainWindow::signIpa(){
     }
     QString tmp=ipaInfo->tmpPath;
     QString appName=ipaInfo->appName;
-    QString bundleId=ipaInfo->bundleId;
+
     QString machOFileName=ipaInfo->machOFileName;
     QString ipaName=ipaInfo->ipaName;
     QString deployAppName=ipaInfo->deployAppName;
@@ -166,6 +159,10 @@ void MainWindow::signIpa(){
         signConfig->signDylib=true;
     }
 
+    if(ui->openAppUseCount->isChecked()){
+        signConfig->useAppCount=true;
+    }
+
     SignUtil *signUtil = new SignUtil(this);
     connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
     bool res=signUtil->sign(ipaInfo,signConfig);
@@ -174,7 +171,7 @@ void MainWindow::signIpa(){
     if(!res){
         return;
     }
-
+    QString bundleId=ipaInfo->bundleId;
     QString warningMessage=ui->warning_message->text();
     int expireTimeStamp=ui->expaire->dateTime().toTime_t();
     QString url;

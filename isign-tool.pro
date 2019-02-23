@@ -65,4 +65,5 @@ FORMS += \
 
 DISTFILES +=
 
-RESOURCES +=
+RESOURCES += \
+    dylib.qrc

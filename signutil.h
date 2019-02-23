@@ -12,6 +12,7 @@
 #include "QDebug"
 #include "QStringList"
 #include "signconfig.h"
+#include "common.h"
 
 typedef void (*CallBackPrint) (QString info);
 
@@ -24,6 +25,7 @@ public:
     void readIpaInfo(QString filePath);
     bool sign(IpaInfo *ipaInfo,SignConfig *signConfig);
     QString findSpecialFileQprocessParamsHandle(QString params,QString param);
+    bool dylibInjection(QString dylibPath,QString machOFilePath,QString ccName);
 signals:
     void execPrint(QString content);
 };

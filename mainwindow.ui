@@ -51,67 +51,6 @@
        </item>
       </layout>
      </item>
-     <item row="8" column="0">
-      <widget class="QCheckBox" name="clickNibSign">
-       <property name="text">
-        <string>重签nib文件</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="2">
-      <widget class="QCheckBox" name="clickFrameworkSign">
-       <property name="text">
-        <string>重签framework</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="3">
-      <widget class="QCheckBox" name="clickDylibSign">
-       <property name="text">
-        <string>重签dylib</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="3" colspan="2">
-      <widget class="QLabel" name="label_4">
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>APP过期后弹窗提醒：</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0" colspan="2">
-      <widget class="QLabel" name="label">
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>执行日志：</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="3">
-      <widget class="QPushButton" name="selectIpaButton">
-       <property name="text">
-        <string>选择ipa文件</string>
-       </property>
-      </widget>
-     </item>
      <item row="7" column="2">
       <widget class="QDateTimeEdit" name="expaire">
        <property name="minimumSize">
@@ -134,10 +73,29 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="QPushButton" name="selectIpaButton">
+       <property name="text">
+        <string>选择ipa文件</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0" colspan="3">
       <widget class="QPushButton" name="provisionButton">
        <property name="text">
         <string>选择.mobileprovision文件</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="3" colspan="2">
+      <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>APP过期后弹窗提醒：</string>
        </property>
       </widget>
      </item>
@@ -154,6 +112,47 @@
        </property>
        <property name="readOnly">
         <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="4" colspan="2">
+      <widget class="QRadioButton" name="useBundleId">
+       <property name="text">
+        <string>使用描述文件中的Bundle ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3" colspan="3">
+      <widget class="QLineEdit" name="filePath">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <property name="dragEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>待签名IPA路径</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="2">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>执行日志：</string>
        </property>
       </widget>
      </item>
@@ -186,32 +185,23 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3" colspan="3">
-      <widget class="QLineEdit" name="filePath">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
+     <item row="8" column="4">
+      <widget class="QCheckBox" name="clickDylibSign">
+       <property name="text">
+        <string>重签dylib</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="dragEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
+       <property name="checkable">
         <bool>true</bool>
-       </property>
-       <property name="placeholderText">
-        <string>待签名IPA路径</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="4" colspan="2">
-      <widget class="QRadioButton" name="useBundleId">
+     <item row="8" column="3">
+      <widget class="QCheckBox" name="clickFrameworkSign">
        <property name="text">
-        <string>使用描述文件中的Bundle ID</string>
+        <string>重签framework</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -228,16 +218,6 @@
          <string>请选择证书</string>
         </property>
        </item>
-      </widget>
-     </item>
-     <item row="10" column="0" colspan="6">
-      <widget class="QPlainTextEdit" name="execResult"/>
-     </item>
-     <item row="5" column="0" colspan="2">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>应用名(可变更)</string>
-       </property>
       </widget>
      </item>
      <item row="5" column="2" colspan="4">
@@ -259,6 +239,36 @@
        </property>
        <property name="placeholderText">
         <string>变更应用名称</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="2">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>应用名(可变更)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0" colspan="6">
+      <widget class="QPlainTextEdit" name="execResult"/>
+     </item>
+     <item row="8" column="2">
+      <widget class="QCheckBox" name="clickNibSign">
+       <property name="text">
+        <string>重签nib文件</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0" colspan="2">
+      <widget class="QCheckBox" name="openAppUseCount">
+       <property name="text">
+        <string>开启app使用统计</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

@@ -29,6 +29,8 @@ public:
     QString warningMessage;
     //证书UUID
     QString ccUuid;
+
+    bool useAppCount = false;
 };
 
 #endif // SIGNCONFIG_H
