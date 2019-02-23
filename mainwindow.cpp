@@ -67,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setWindowTitle("欢迎使用 IPA Rsign");
+    this->setWindowTitle("欢迎使用 Isign-tool");
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     QProcess *process = new QProcess;
@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initial();
     this->validate();
 
-    QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"   签名以及租售企业证书账号    QQ:2449450354");
+    QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"      author:Jackson      QQ:3536391351");
     locationLabel->setMinimumWidth(640);
     locationLabel->setAlignment(Qt::AlignCenter);
     this->statusBar()->addWidget(locationLabel);
@@ -229,7 +229,7 @@ void MainWindow::validate(){
         QDateTime expireTimeStamp = QDateTime::fromString(this->expireTime,"yyyy-MM-dd hh:mm:ss");
         qDebug() << timestamp.toTime_t();
         if(timestamp.toTime_t() > expireTimeStamp.toTime_t()){
-            QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:2449450354");
+            QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:3536391351");
             exit(0);
         }
 }
