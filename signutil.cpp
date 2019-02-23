@@ -219,7 +219,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
             emit execPrint("修改证书BundleId失败");
             return false;
         }
-        ipaInfo->bundleId=mpBundleId;
+        signConfig->bundleId=mpBundleId;
     }
 
     QFile file(tmp+"Payload/"+appName+"/embedded.mobileprovision");

@@ -52,6 +52,12 @@ void MainWindow::initial(){
         QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取重要组件");
     }
 
+    cmd = "chmod +x /tmp/optool";
+    flag=system(cmd.toLocal8Bit().data());
+    if (flag!=0){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取到optool执行权限");
+    }
+
     ui->expaire->setDateTime(QDateTime::currentDateTime());
 }
 
@@ -61,7 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setWindowTitle("欢迎使用Isign-tool");
+    this->setWindowTitle("欢迎使用 IPA Rsign");
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     QProcess *process = new QProcess;
@@ -81,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initial();
     this->validate();
 
-    QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"      author:Jackson      QQ:3536391351");
+    QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"   签名以及租售企业证书账号    QQ:2449450354");
     locationLabel->setMinimumWidth(640);
     locationLabel->setAlignment(Qt::AlignCenter);
     this->statusBar()->addWidget(locationLabel);
@@ -171,7 +177,7 @@ void MainWindow::signIpa(){
     if(!res){
         return;
     }
-    QString bundleId=ipaInfo->bundleId;
+    QString bundleId=signConfig->bundleId;
     QString warningMessage=ui->warning_message->text();
     int expireTimeStamp=ui->expaire->dateTime().toTime_t();
     QString url;
@@ -223,7 +229,7 @@ void MainWindow::validate(){
         QDateTime expireTimeStamp = QDateTime::fromString(this->expireTime,"yyyy-MM-dd hh:mm:ss");
         qDebug() << timestamp.toTime_t();
         if(timestamp.toTime_t() > expireTimeStamp.toTime_t()){
-            QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:3536391351");
+            QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:2449450354");
             exit(0);
         }
 }
