@@ -16,6 +16,8 @@ DialogSignRecord::DialogSignRecord(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tableWidget->setColumnCount(7);
+    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
+    setFixedSize(this->width(),this->height());
     QString device=Common::readSN();
     this->sn=device;
     QStringList ccNames=Common::readCert();
