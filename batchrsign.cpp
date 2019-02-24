@@ -9,6 +9,7 @@ BatchRSign::BatchRSign(QWidget *parent) :
     ui->setupUi(this);
     QStringList ccNames = Common::readCert();
     ui->ccNameComboBox->addItems(ccNames);
+    ui->expaire->setDateTime(QDateTime::currentDateTime());
 }
 
 BatchRSign::~BatchRSign()
