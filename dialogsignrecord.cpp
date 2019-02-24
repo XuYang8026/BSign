@@ -44,7 +44,7 @@ DialogSignRecord::~DialogSignRecord()
 
 void DialogSignRecord::cellChange(int row,int colum){
     qDebug() << "行："+QString::number(row,10)+" 列："+QString::number(colum,10);
-    QMessageBox::StandardButton flag=QMessageBox::information(NULL, "", "是否修改数据", QMessageBox::Yes, QMessageBox::No);
+    QMessageBox::StandardButton flag=QMessageBox::information(NULL, "", "是否修改数据",QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes);
     if(flag==QMessageBox::Yes){
         qDebug() << "yes";
         Http *http = new Http(NULL);
