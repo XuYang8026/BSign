@@ -175,7 +175,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     }
 
     //修改BundleId
-    if(signConfig->bundleId!=ipaInfo->bundleId){
+    if(!signConfig->bundleId.isEmpty()&&signConfig->bundleId!=ipaInfo->bundleId){
         cmd="plutil -replace CFBundleIdentifier -string "+signConfig->bundleId+" "+tmp+"Payload/"+appName+"/info.plist";
 //        qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
@@ -186,7 +186,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     }
 
     //修改Display Name
-    if(signConfig->displayName!=ipaInfo->deployAppName){
+    if(!signConfig->displayName.isEmpty()&&signConfig->displayName!=ipaInfo->deployAppName){
         cmd="plutil -replace CFBundleDisplayName -string "+signConfig->displayName+" "+tmp+"Payload/"+appName+"/info.plist";
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());

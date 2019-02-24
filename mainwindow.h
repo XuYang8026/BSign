@@ -22,6 +22,7 @@
 #include "common.h"
 #include "signutil.h"
 #include "signconfig.h"
+#include "batchrsign.h"
 
 namespace Ui {
 class MainWindow;
@@ -62,6 +63,7 @@ private slots:
     void setIpaInfo(IpaInfo *ipaInfo);
     void on_sign_record_clicked();
     void execPrint(QString content);
+    void on_batchRsignButton_clicked();
 };
 
 #endif // MAINWINDOW_H

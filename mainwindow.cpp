@@ -272,3 +272,10 @@ void MainWindow::execPrint(QString content){
 //    webView->show();
 //}
 
+
+void MainWindow::on_batchRsignButton_clicked()
+{
+    BatchRSign *batchRSign = new BatchRSign(this);
+    batchRSign->setWindowTitle("批量签名");
+    batchRSign->show();
+}

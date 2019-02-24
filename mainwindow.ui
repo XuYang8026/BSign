@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>897</width>
-    <height>609</height>
+    <width>895</width>
+    <height>607</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -274,12 +274,12 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>530</y>
-      <width>671</width>
+      <width>881</width>
       <height>35</height>
      </rect>
     </property>
@@ -308,6 +308,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="batchRsignButton">
+       <property name="text">
+        <string>使用批量签名</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>
@@ -316,7 +323,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>897</width>
+     <width>895</width>
      <height>22</height>
     </rect>
    </property>

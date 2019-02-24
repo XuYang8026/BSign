@@ -40,7 +40,8 @@ SOURCES += \
     ipainfo.cpp \
     signutil.cpp \
     signconfig.cpp \
-    test.cpp
+    test.cpp \
+    batchrsign.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -55,13 +56,15 @@ HEADERS += \
     ipainfo.h \
     signutil.h \
     signconfig.h \
-    test.h
+    test.h \
+    batchrsign.h
 
 FORMS += \
         mainwindow.ui \
     logindialog.ui \
     expirepage.ui \
-    dialogsignrecord.ui
+    dialogsignrecord.ui \
+    batchrsign.ui
 
 DISTFILES +=
 
