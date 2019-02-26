@@ -78,6 +78,9 @@ void SignUtil::readIpaInfo(QString filePath){
     QFileInfoList file_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
     for(QFileInfo fileInfo:file_list){
         QString floderName=fileInfo.fileName();
+        if(floderName=="__MACOSX"){
+            continue;
+        }
         QString cmd = "mv \""+tmp+floderName+"\" "+tmp+"Payload";
         system(cmd.toLocal8Bit().data());
     }
