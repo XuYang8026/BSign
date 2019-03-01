@@ -57,8 +57,13 @@ void MainWindow::initial(){
     if (flag!=0){
         QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取到optool执行权限");
     }
-
     ui->expaire->setDateTime(QDateTime::currentDateTime());
+    //初始化工作空间
+//    workspacePath=desktopPath+"/isgntool_workspace";
+//    QDir workspaceDir(workspacePath);
+//    if(!workspaceDir.exists()){
+//        workspaceDir.mkdir(workspacePath);
+//    }
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -70,16 +75,11 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowTitle("欢迎使用 Isign-tool");
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
-    QProcess *process = new QProcess;
-    QStringList shellOptions;
-    shellOptions << "-c";
-    shellOptions << "security find-identity -v | awk 'NR!=1{print p}{p=$0}' | awk -F '\"' '{print $2}'";
-    process->start("/bin/bash",shellOptions);
-    process->waitForFinished();
-    QString result = process->readAllStandardOutput();
-    qDebug() << result;
-    this->ccNames=result.split("\n");
-    this->ccNames.removeAt(ccNames.size()-1);
+
+    QString cmd = "cd ~/Desktop/;pwd";
+    desktopPath=Common::execShell(cmd);
+
+    this->ccNames=Common::readCert();
     ui->ccNames->addItems(this->ccNames);
 
     this->sn=readSN();

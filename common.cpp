@@ -16,7 +16,10 @@ QStringList Common::readCert(){
     process->start("/bin/bash",shellOptions);
     process->waitForFinished();
     QString result = process->readAllStandardOutput();
-    return result.split("\n");
+    process->close();
+    QStringList ccNamesList=result.split("\n");
+    ccNamesList.removeAt(ccNamesList.size()-1);
+    return ccNamesList;
 }
 //读取本地电脑序列号
 QString Common::readSN(){
@@ -30,4 +33,15 @@ QString Common::readSN(){
     return sn;
 }
 
+QString Common::execShell(QString cmd){
+    QProcess *process = new QProcess;
+    QStringList shellOptions;
+    shellOptions << "-c";
+    shellOptions << cmd;
+    process->start("/bin/bash",shellOptions);
+    process->waitForFinished();
+    QString result = process->readAllStandardOutput();
+    process->close();
+    return result.replace("\n","");
+}
 
