@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QString result = process->readAllStandardOutput();
     qDebug() << result;
     this->ccNames=result.split("\n");
+    this->ccNames.removeAt(ccNames.size()-1);
     ui->ccNames->addItems(this->ccNames);
 
     this->sn=readSN();
@@ -244,6 +245,19 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
     this->ui->bundleId->setText(ipaInfo->bundleId);
     this->ui->displayName->setText(ipaInfo->deployAppName);
     this->ipaInfo=ipaInfo;
+    Http *http = new Http(this);
+    QString respBody=http->get(HTTP_SERVER+"/appSign/search?bundleId="+ipaInfo->bundleId+"&device="+readSN());
+    QJsonParseError jsonError;
+    QJsonDocument parseDoc = QJsonDocument::fromJson(respBody.toLocal8Bit(),&jsonError);
+    if(parseDoc.isArray()){
+        QJsonArray jsonArray=parseDoc.array();
+        if(jsonArray.size()>0){
+            QMessageBox::warning(this, tr("QMessageBox::information()"),"发现当前应用包记录");
+            QJsonValue jsonValue=jsonArray.at(0);
+            QString ccName=jsonValue.toObject()["CcName"].toString();
+            ui->ccNames->setCurrentText(ccName);
+        }
+    }
 }
 
 
