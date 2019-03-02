@@ -6,23 +6,161 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>807</width>
-    <height>724</height>
+    <width>809</width>
+    <height>903</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>210</y>
+     <width>65</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>备注</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="startSign">
+   <property name="geometry">
+    <rect>
+     <x>142</x>
+     <y>630</y>
+     <width>94</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>开始签名</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="batchSelectFile">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>630</y>
+     <width>107</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>选择文件夹</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="execResult_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>240</y>
+     <width>791</width>
+     <height>101</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>359</y>
+     <width>80</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>执行日志：</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="execResult">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>390</y>
+     <width>791</width>
+     <height>231</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>90</y>
-     <width>781</width>
-     <height>631</height>
+     <y>10</y>
+     <width>791</width>
+     <height>80</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>选择证书：</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QComboBox" name="ccNameComboBox">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="selectMobileProvisionPath">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>选择描述文件</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="mobileProvisionPath">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string/>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>96</y>
+     <width>791</width>
+     <height>65</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <widget class="QCheckBox" name="setExpaire">
       <property name="text">
@@ -91,6 +229,9 @@
       <property name="checkable">
        <bool>true</bool>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item row="1" column="1">
@@ -111,6 +252,9 @@
       <property name="checkable">
        <bool>true</bool>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item row="1" column="3">
@@ -121,38 +265,97 @@
       <property name="checkable">
        <bool>true</bool>
       </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>172</y>
+     <width>791</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>特殊信息</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="specialInfo">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
       </property>
       <property name="text">
-       <string>执行日志：</string>
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="dragEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string>可用于唯一检索（例如 套餐信息 等等）</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="5">
-     <widget class="QPlainTextEdit" name="execResult"/>
-    </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="batchSelectFile">
+    <item row="0" column="2">
+     <widget class="QLabel" name="label_5">
       <property name="text">
-       <string>批量选择文件</string>
+       <string>联系信息</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
-     <widget class="QPushButton" name="startSign">
-      <property name="text">
-       <string>开始签名</string>
+    <item row="0" column="3">
+     <widget class="QLineEdit" name="connectInfo">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="dragEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="placeholderText">
+       <string/>
       </property>
      </widget>
     </item>
-    <item row="5" column="0">
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>670</y>
+     <width>791</width>
+     <height>225</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0">
      <widget class="QLabel" name="label_3">
       <property name="font">
        <font>
@@ -164,71 +367,10 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0" colspan="5">
+    <item row="1" column="0">
      <widget class="QPlainTextEdit" name="isSelectSignFileList">
       <property name="enabled">
        <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>781</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>选择证书：</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="selectMobileProvisionPath">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>选择描述文件</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1" colspan="2">
-     <widget class="QComboBox" name="ccNameComboBox">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1" colspan="2">
-     <widget class="QLineEdit" name="mobileProvisionPath">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="placeholderText">
-       <string/>
       </property>
      </widget>
     </item>

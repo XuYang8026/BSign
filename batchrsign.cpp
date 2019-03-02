@@ -20,9 +20,15 @@ BatchRSign::~BatchRSign()
 void BatchRSign::on_batchSelectFile_clicked()
 {
     ui->isSelectSignFileList->setPlainText("");
-    QStringList filePaths = QFileDialog::getOpenFileNames(this, tr("open file"), desktopPath,  tr("ipa(*.ipa)"));
-    this->signFilePaths=filePaths;
-    for(QString filePath:filePaths){
+    QString filePath=QFileDialog::getExistingDirectory(this, desktopPath);
+    QFileInfoList fileInfoList=GetFileList(filePath);
+//    this->signFilePaths=filePaths;
+    for(QFileInfo fileInfo:fileInfoList){
+        if(fileInfo.suffix()!="ipa"){
+            continue;
+        }
+        QString filePath=fileInfo.filePath();
+        this->signFilePaths.append(filePath);
         ui->isSelectSignFileList->appendPlainText(filePath);
     }
 }

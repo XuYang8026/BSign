@@ -58,12 +58,19 @@ void MainWindow::initial(){
         QMessageBox::warning(this, tr("QMessageBox::information()"),"未获取到optool执行权限");
     }
     ui->expaire->setDateTime(QDateTime::currentDateTime());
+
     //初始化工作空间
-//    workspacePath=desktopPath+"/isgntool_workspace";
-//    QDir workspaceDir(workspacePath);
-//    if(!workspaceDir.exists()){
-//        workspaceDir.mkdir(workspacePath);
-//    }
+    workspacePath=desktopPath+"/isgntool_workspace";
+    QDir workspaceDir(workspacePath);
+    if(!workspaceDir.exists()){
+        workspaceDir.mkdir(workspacePath);
+    }
+    for(QString ccName:this->ccNames){
+        QDir ccNameDir(workspacePath+"/"+ccName);
+        if(!ccNameDir.exists()){
+            ccNameDir.mkdir(workspacePath+"/"+ccName);
+        }
+    }
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -103,7 +110,8 @@ void MainWindow::on_selectIpaButton_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("ipa(*.ipa)"));
     qDebug() << "选择文件路径："+filePath;
-    ui->filePath->setText(filePath.trimmed());
+    ui->filePath->setText(filePath);
+     uiReset();
 
     if(filePath.trimmed()!=""){
         IThread *ithread = new IThread;
@@ -130,7 +138,7 @@ void MainWindow::readProcessData(){
 
 void MainWindow::signIpa(){
 
-    if(ui->filePath->text().isEmpty()||mobileProvisionPath.isEmpty()||ui->ccNames->currentText()=="请选择证书"||ui->ccNames->currentText().isEmpty()){
+    if(ui->filePath->text().isEmpty()||ui->provisionFilePath->text().isEmpty()||ui->ccNames->currentText()=="请选择证书"||ui->ccNames->currentText().isEmpty()){
         QMessageBox::warning(this, tr("QMessageBox::information()"),"ipa路径或mobileprovision路径或证书名称不能为空");
         return;
     }
@@ -146,7 +154,7 @@ void MainWindow::signIpa(){
     if(ui->useBundleId->isChecked()){
         signConfig->useMobileProvsionBundleId=true;
     }
-    signConfig->mobileProvisionPath=mobileProvisionPath;
+    signConfig->mobileProvisionPath=ui->provisionFilePath->text();
     signConfig->displayName=ui->displayName->text();
     signConfig->ccName=ui->ccNames->currentText();
     if(ui->setExpaire->isChecked()){
@@ -256,6 +264,36 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
             QJsonValue jsonValue=jsonArray.at(0);
             QString ccName=jsonValue.toObject()["CcName"].toString();
             ui->ccNames->setCurrentText(ccName);
+            QString expireTime=jsonValue.toObject()["ExpireTime"].toString();
+
+            if(expireTime!="0001-01-01 00:00:00"){
+                ui->setExpaire->setChecked(true);
+                ui->expaire->setDateTime(QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss"));
+            }
+
+            QString appName=jsonValue.toObject()["AppName"].toString();
+            ui->displayName->setText(appName);
+            //读取描述文件
+            QFileInfoList fileInfoList=GetFileList(workspacePath+"/"+ccName);
+            if(fileInfoList.size()<1){
+                QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件");
+            }
+            int isPush=jsonValue.toObject()["IsPush"].toInt();
+            for(QFileInfo fileInfo:fileInfoList){
+                if(isPush==1){
+                    QString baseName=fileInfo.baseName();
+                    QString pushFlag=baseName.mid(0,baseName.size()-5);
+                    if(pushFlag=="_push"){
+                        ui->provisionFilePath->setText(fileInfo.filePath());
+                        continue;
+                    }
+                }else{
+                    ui->provisionFilePath->setText(fileInfo.filePath());
+                    continue;
+                }
+            }
+
+
         }
     }
 }
@@ -292,4 +330,14 @@ void MainWindow::on_batchRsignButton_clicked()
     BatchRSign *batchRSign = new BatchRSign(this);
     batchRSign->setWindowTitle("批量签名");
     batchRSign->show();
+}
+
+
+void MainWindow::uiReset(){
+    ui->provisionFilePath->setText("");
+    ui->isPushMobileProvision->setChecked(false);
+    ui->ccNames->setCurrentText("请选择证书");
+    ui->useBundleId->setChecked(false);
+    ui->setExpaire->setChecked(false);
+
 }

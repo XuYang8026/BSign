@@ -49,10 +49,10 @@ private:
     Ui::MainWindow *ui;
     LoginDialog *loginDialog;
     QProcess *process = new QProcess(this);
-    QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     IpaInfo *ipaInfo;
     void initial();
     void validate();
+    void uiReset();
 
 private slots:
     void on_selectIpaButton_clicked();

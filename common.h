@@ -11,8 +11,8 @@ const QString libisigntoolhookFilePath = "/tmp/libisigntoolhook.dylib";
 const QString optoolFilePath = "/tmp/optool";
 const QString libisigntoolappcountFilePath="/tmp/libisigntoolappcount.dylib";
 
-const QString desktopPath="";
-const QString workspacePath="";
+static QString desktopPath;
+static QString workspacePath;
 
 class Common
 {

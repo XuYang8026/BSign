@@ -8,6 +8,7 @@
 #include "signutil.h"
 #include "signconfig.h"
 #include "http.h"
+#include "ifile.h"
 
 namespace Ui {
 class BatchRSign;
