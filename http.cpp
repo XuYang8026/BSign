@@ -55,3 +55,26 @@ void Http::loadError(QNetworkReply::NetworkError)    //传输中的错误输出
 {
      qDebug()<<"Error: "<<reply->error();
 }
+
+QString Http::post(QString url,QJsonObject jsonObject){
+    const QUrl qUrl = QUrl::fromUserInput(url+"?");
+    QJsonDocument document;
+    document.setObject(jsonObject);
+    QByteArray byte_array = document.toJson(QJsonDocument::Compact);
+    QString params="";
+    QStringList keys=jsonObject.keys();
+    for(QString key:keys){
+        params+=key+"="+jsonObject[key].toString()+"&";
+    }
+    qDebug() << "请求参数"+ params;
+    QNetworkRequest request = QNetworkRequest(qUrl);
+    QNetworkReply* reply = manager->post(request,params.toUtf8());
+    QEventLoop eventLoop;
+    connect(reply, &QNetworkReply::finished, &eventLoop, &QEventLoop::quit);
+    eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+    QByteArray replyData = reply->readAll();
+    reply->deleteLater();
+    reply = nullptr;
+    return replyData.data();
+    return "";
+}

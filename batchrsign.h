@@ -37,6 +37,8 @@ private slots:
 
     void on_selectMobileProvisionPath_clicked();
 
+    void on_ccNameComboBox_currentIndexChanged(const QString &arg1);
+
 private:
     Ui::BatchRSign *ui;
 };

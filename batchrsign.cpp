@@ -8,7 +8,10 @@ BatchRSign::BatchRSign(QWidget *parent) :
 {
     ui->setupUi(this);
     QStringList ccNames = Common::readCert();
-    ui->ccNameComboBox->addItems(ccNames);
+    QStringList ccNameList;
+    ccNameList.append("请选择证书");
+    ccNameList.append(ccNames);
+    ui->ccNameComboBox->addItems(ccNameList);
     ui->expaire->setDateTime(QDateTime::currentDateTime());
 }
 
@@ -57,15 +60,24 @@ void BatchRSign::on_startSign_clicked()
         QString bundleId=signUtil->ipaInfo->bundleId;
         QString warningMessage=ui->warning_message->text();
         int expireTimeStamp=ui->expaire->dateTime().toTime_t();
-        QString url;
+
+        QString url=HTTP_SERVER+"/appSign";
+        QJsonObject jsonObj;
+        jsonObj.insert("uuid",signConfig->ccUuid);
+        jsonObj.insert("bundleId",bundleId);
+        jsonObj.insert("device",Common::readSN());
+        jsonObj.insert("ccName",ui->ccNameComboBox->currentText());
+        jsonObj.insert("appName",signUtil->ipaInfo->deployAppName);
+        jsonObj.insert("isPush",ui->isPushMobileProvision->isChecked()?1:0);
+        jsonObj.insert("connectInfo",ui->connectInfo->text());
+        jsonObj.insert("specialInfo",ui->specialInfo->text());
         if(ui->setExpaire->isChecked()){
-            url=HTTP_SERVER+"/appSign?uuid="+signConfig->ccUuid+"&bundleId="+bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+Common::readSN()+"&ccName="+ui->ccNameComboBox->currentText()+"&appName="+signUtil->ipaInfo->deployAppName;
-        }else{
-            url=HTTP_SERVER+"/appSign?uuid="+signConfig->ccUuid+"&bundleId="+bundleId+"&device="+Common::readSN()+"&ccName="+ui->ccNameComboBox->currentText()+"&appName="+signUtil->ipaInfo->deployAppName;
+            jsonObj.insert("warningMessage",warningMessage);
+            jsonObj.insert("expireTime",QString::number(expireTimeStamp,10));
         }
         Http *http = new Http(NULL);
         qDebug() << "请求url："+url;
-        QString result=http->get(url);
+        QString result=http->post(url,jsonObj);
         if(result!="true"){
             QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
             return;
@@ -107,4 +119,17 @@ void BatchRSign::on_selectMobileProvisionPath_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("file(*.mobileprovision)"));
     ui->mobileProvisionPath->setText(filePath);
+}
+
+void BatchRSign::on_ccNameComboBox_currentIndexChanged(const QString &arg1)
+{
+    if(ui->ccNameComboBox->currentText()=="请选择证书"){
+        return;
+    }
+
+    QString mobileProvisionPath=Common::getMobileProvisionPath(arg1,ui->isPushMobileProvision->isChecked());
+    if(mobileProvisionPath.isEmpty()){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请手动选择");
+    }
+    ui->mobileProvisionPath->setText(mobileProvisionPath);
 }

@@ -1,6 +1,7 @@
 #include "common.h"
-#include "QDesktopWidget"
-#include "QApplication"
+
+QString desktopPath="";
+QString workspacePath="";
 
 Common::Common()
 {
@@ -43,5 +44,27 @@ QString Common::execShell(QString cmd){
     QString result = process->readAllStandardOutput();
     process->close();
     return result.replace("\n","");
+}
+
+QString Common::getMobileProvisionPath(QString cnName,bool isPush){
+    qDebug() << "工作空间："+workspacePath;
+    QFileInfoList fileInfoList=GetFileList(workspacePath+"/"+cnName);
+    if(fileInfoList.size()<1){
+        return "";
+    }
+    QString filePath;
+    for(QFileInfo fileInfo:fileInfoList){
+        if(isPush==1){
+            QString baseName=fileInfo.baseName();
+            QString pushFlag=baseName.mid(0,baseName.size()-5);
+            if(pushFlag=="_push"){
+                filePath = fileInfo.filePath();
+                continue;
+            }
+        }else{
+            filePath = fileInfo.filePath();
+        }
+    }
+    return filePath;
 }
 

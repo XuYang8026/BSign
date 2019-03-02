@@ -64,6 +64,7 @@ private slots:
     void on_sign_record_clicked();
     void execPrint(QString content);
     void on_batchRsignButton_clicked();
+    void on_ccNames_currentIndexChanged(const QString &arg1);
 };
 
 #endif // MAINWINDOW_H

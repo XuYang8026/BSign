@@ -1,10 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "ifile.h"
-#include "common.h"
-#include "QDesktopWidget"
-
 QString readSN(){
     QStringList snParams;
     snParams << "-c";
@@ -189,15 +185,23 @@ void MainWindow::signIpa(){
     QString bundleId=signConfig->bundleId;
     QString warningMessage=ui->warning_message->text();
     int expireTimeStamp=ui->expaire->dateTime().toTime_t();
-    QString url;
+    QString url=HTTP_SERVER+"/appSign";
+    QJsonObject jsonObj;
+    jsonObj.insert("uuid",signConfig->ccUuid);
+    jsonObj.insert("bundleId",bundleId);
+    jsonObj.insert("device",this->sn);
+    jsonObj.insert("ccName",ui->ccNames->currentText());
+    jsonObj.insert("appName",deployAppName);
+    jsonObj.insert("isPush",ui->isPushMobileProvision->isChecked()?1:0);
+    jsonObj.insert("connectInfo",ui->connectInfo->text());
+    jsonObj.insert("specialInfo",ui->specialInfo->text());
     if(ui->setExpaire->isChecked()){
-        url=HTTP_SERVER+"/appSign?uuid="+signConfig->ccUuid+"&bundleId="+bundleId+"&warningMessage="+warningMessage+"&expireTime="+QString::number(expireTimeStamp,10)+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+deployAppName;
-    }else{
-        url=HTTP_SERVER+"/appSign?uuid="+signConfig->ccUuid+"&bundleId="+bundleId+"&device="+this->sn+"&ccName="+ui->ccNames->currentText()+"&appName="+deployAppName;
+        jsonObj.insert("warningMessage",warningMessage);
+        jsonObj.insert("expireTime",QString::number(expireTimeStamp,10));
     }
     Http *http = new Http(NULL);
     qDebug() << "请求url："+url;
-    QString result=http->get(url);
+    QString result=http->post(url,jsonObj);
     if(result!="true"){
         QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
         return;
@@ -254,7 +258,10 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
     this->ui->displayName->setText(ipaInfo->deployAppName);
     this->ipaInfo=ipaInfo;
     Http *http = new Http(this);
-    QString respBody=http->get(HTTP_SERVER+"/appSign/search?bundleId="+ipaInfo->bundleId+"&device="+readSN());
+    QJsonObject jsonObject;
+    jsonObject.insert("bundleId",ipaInfo->bundleId);
+    jsonObject.insert("device",readSN());
+    QString respBody=http->post(HTTP_SERVER+"/appSign/search",jsonObject);
     QJsonParseError jsonError;
     QJsonDocument parseDoc = QJsonDocument::fromJson(respBody.toLocal8Bit(),&jsonError);
     if(parseDoc.isArray()){
@@ -273,26 +280,14 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
 
             QString appName=jsonValue.toObject()["AppName"].toString();
             ui->displayName->setText(appName);
+            int isPush=jsonValue.toObject()["IsPush"].toInt();
             //读取描述文件
-            QFileInfoList fileInfoList=GetFileList(workspacePath+"/"+ccName);
-            if(fileInfoList.size()<1){
+            bool push=isPush==1?true:false;
+            mobileProvisionPath=Common::getMobileProvisionPath(ccName,push);
+            if(mobileProvisionPath.isEmpty()){
                 QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件");
             }
-            int isPush=jsonValue.toObject()["IsPush"].toInt();
-            for(QFileInfo fileInfo:fileInfoList){
-                if(isPush==1){
-                    QString baseName=fileInfo.baseName();
-                    QString pushFlag=baseName.mid(0,baseName.size()-5);
-                    if(pushFlag=="_push"){
-                        ui->provisionFilePath->setText(fileInfo.filePath());
-                        continue;
-                    }
-                }else{
-                    ui->provisionFilePath->setText(fileInfo.filePath());
-                    continue;
-                }
-            }
-
+            ui->provisionFilePath->setText(mobileProvisionPath);
 
         }
     }
@@ -340,4 +335,17 @@ void MainWindow::uiReset(){
     ui->useBundleId->setChecked(false);
     ui->setExpaire->setChecked(false);
 
+}
+
+void MainWindow::on_ccNames_currentIndexChanged(const QString &arg1)
+{
+    if(ui->ccNames->currentText()=="请选择证书"){
+        return;
+    }
+
+    mobileProvisionPath=Common::getMobileProvisionPath(arg1,ui->isPushMobileProvision->isChecked());
+    if(mobileProvisionPath.isEmpty()){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请手动选择");
+    }
+    ui->provisionFilePath->setText(mobileProvisionPath);
 }

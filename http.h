@@ -13,6 +13,9 @@
 #include <QSslCertificate>
 #include <QByteArray>
 #include <QMessageBox>
+#include <QHash>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 //const QString HTTP_SERVER="https://isign.yz-ss.top";
 const QString HTTP_SERVER="http://127.0.0.1:8081";
@@ -27,6 +30,7 @@ public:
     QFile *file;
     Http(QObject *parent);
     QString get(QString url);
+    QString post(QString url,QJsonObject jsonObject);
     void getFileDownload(QString fileUrl,QString downFilePath);
 
 private slots:
