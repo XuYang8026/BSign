@@ -9,6 +9,9 @@
 #include "QDesktopWidget"
 #include "QApplication"
 #include "ifile.h"
+#include "model/appsign.h"
+#include "http.h"
+#include <QJsonArray>
 
 const QString libisigntoolhookFilePath = "/tmp/libisigntoolhook.dylib";
 const QString optoolFilePath = "/tmp/optool";
@@ -29,6 +32,8 @@ public:
     static QString execShell(QString cmd);
     //通过证书名称获取描述文件路径
     static QString getMobileProvisionPath(QString cnName,bool isPush);
+    //通过设备和bundleId获取签名信息
+    static AppSign getAppSign(QString bundleId);
 };
 
 #endif // COMMON_H

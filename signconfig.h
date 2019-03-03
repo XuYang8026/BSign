@@ -33,6 +33,8 @@ public:
     QString ccUuid;
 
     bool useAppCount = false;
+    //重签名后输出地址
+    QString outResignPath;
 };
 
 #endif // SIGNCONFIG_H

@@ -129,6 +129,9 @@ void SignUtil::readIpaInfo(QString filePath){
 }
 
 bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
+
+    Common::execShell("chmod -R 777  /tmp");
+
     QString tmp=ipaInfo->tmpPath;
     QString appName=ipaInfo->appName;
     QString bundleId=ipaInfo->bundleId;
@@ -322,7 +325,11 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
 
-    cmd="mv /tmp/\""+newIPA+"\" \""+ipaInfo->ipaPath+"/\"";
+    if(signConfig->outResignPath.isEmpty()){
+        cmd="mv /tmp/\""+newIPA+"\" \""+ipaInfo->ipaPath+"/\"";
+    }else{
+        cmd="mv /tmp/\""+newIPA+"\" \""+signConfig->outResignPath+"/\"";
+    }
     qDebug() << "执行命令："+cmd;
     system(cmd.toLocal8Bit().data());
     emit execPrint("签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);

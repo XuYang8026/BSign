@@ -3,5 +3,6 @@
         <file>libisigntoolappcount.dylib</file>
         <file>libisigntoolhook.dylib</file>
         <file>optool</file>
+        <file>loading.gif</file>
     </qresource>
 </RCC>

@@ -1,36 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BatchRSign</class>
- <widget class="QWidget" name="BatchRSign">
+ <class>BatchUpdate</class>
+ <widget class="QWidget" name="BatchUpdate">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>809</width>
-    <height>903</height>
+    <width>811</width>
+    <height>852</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label_7">
+  <widget class="QPlainTextEdit" name="execResult">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>210</y>
-     <width>65</width>
-     <height>19</height>
+     <x>12</x>
+     <y>330</y>
+     <width>791</width>
+     <height>231</height>
     </rect>
-   </property>
-   <property name="text">
-    <string>备注</string>
    </property>
   </widget>
   <widget class="QPlainTextEdit" name="remarks">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>240</y>
+     <y>150</y>
      <width>791</width>
      <height>101</height>
     </rect>
@@ -40,7 +37,7 @@
    <property name="geometry">
     <rect>
      <x>12</x>
-     <y>359</y>
+     <y>299</y>
      <width>80</width>
      <height>23</height>
     </rect>
@@ -54,21 +51,24 @@
     <string>执行日志：</string>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="execResult">
-   <property name="geometry">
-    <rect>
-     <x>12</x>
-     <y>390</y>
-     <width>791</width>
-     <height>231</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>96</y>
+     <y>120</y>
+     <width>65</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>备注</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>4</y>
      <width>791</width>
      <height>65</height>
     </rect>
@@ -127,7 +127,7 @@
        </size>
       </property>
       <property name="text">
-       <string>签名已到期</string>
+       <string/>
       </property>
       <property name="readOnly">
        <bool>false</bool>
@@ -143,7 +143,7 @@
        <bool>true</bool>
       </property>
       <property name="checked">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
      </widget>
     </item>
@@ -185,11 +185,42 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="layoutWidget_3">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>172</y>
+     <y>610</y>
+     <width>791</width>
+     <height>225</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>已选文件路径</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPlainTextEdit" name="isSelectSignFileList">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>80</y>
      <width>791</width>
      <height>32</height>
     </rect>
@@ -258,111 +289,29 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>670</y>
-     <width>791</width>
-     <height>225</height>
+     <y>260</y>
+     <width>651</width>
+     <height>30</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout_4">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>已选文件路径</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPlainTextEdit" name="isSelectSignFileList">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>6</y>
-     <width>791</width>
-     <height>81</height>
-    </rect>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#fc0107;&quot;&gt;以上信息在批量更新过程中默认读取历史记录信息，若无需修改请勿勾选和配置！！！&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QCheckBox" name="isPushMobileProvision">
-      <property name="text">
-       <string>是否推送证书</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QComboBox" name="ccNameComboBox">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="selectMobileProvisionPath">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>选择描述文件</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="mobileProvisionPath">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-      <property name="placeholderText">
-       <string/>
-      </property>
-     </widget>
-    </item>
-   </layout>
   </widget>
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>630</y>
+     <y>570</y>
      <width>791</width>
      <height>42</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout_5">
+   <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QPushButton" name="batchSelectFile">
       <property name="text">
@@ -371,9 +320,9 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QPushButton" name="selectOutResignButton">
+     <widget class="QPushButton" name="selectOutResignPathButton">
       <property name="text">
-       <string>选择输出目录</string>
+       <string>选择输出路径</string>
       </property>
      </widget>
     </item>

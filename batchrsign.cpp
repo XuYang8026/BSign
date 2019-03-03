@@ -7,6 +7,8 @@ BatchRSign::BatchRSign(QWidget *parent) :
     ui(new Ui::BatchRSign)
 {
     ui->setupUi(this);
+    setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
+    setFixedSize(this->width(),this->height());
     QStringList ccNames = Common::readCert();
     QStringList ccNameList;
     ccNameList.append("请选择证书");
@@ -25,7 +27,7 @@ void BatchRSign::on_batchSelectFile_clicked()
     ui->isSelectSignFileList->setPlainText("");
     QString filePath=QFileDialog::getExistingDirectory(this, desktopPath);
     QFileInfoList fileInfoList=GetFileList(filePath);
-//    this->signFilePaths=filePaths;
+    this->signFilePaths.clear();
     for(QFileInfo fileInfo:fileInfoList){
         if(fileInfo.suffix()!="ipa"){
             continue;
@@ -47,6 +49,8 @@ void BatchRSign::on_startSign_clicked()
         QMessageBox::warning(this, tr("QMessageBox::information()"),"请选择IPA文件");
         return;
     }
+    LoadingWait *loadingWait = new LoadingWait(this);
+    loadingWait->show();
     this->readCurrentSignConfig();
     for(QString filePath:signFilePaths){
         SignUtil *signUtil = new SignUtil(this);
@@ -55,6 +59,7 @@ void BatchRSign::on_startSign_clicked()
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
             ui->execResult->appendPlainText(filePath+" 文件签名失败！");
+            loadingWait->close();
             return;
         }
         QString bundleId=signUtil->ipaInfo->bundleId;
@@ -71,6 +76,7 @@ void BatchRSign::on_startSign_clicked()
         jsonObj.insert("isPush",ui->isPushMobileProvision->isChecked()?1:0);
         jsonObj.insert("connectInfo",ui->connectInfo->text());
         jsonObj.insert("specialInfo",ui->specialInfo->text());
+        jsonObj.insert("remark",ui->remarks->document()->toPlainText());
         if(ui->setExpaire->isChecked()){
             jsonObj.insert("warningMessage",warningMessage);
             jsonObj.insert("expireTime",QString::number(expireTimeStamp,10));
@@ -80,9 +86,11 @@ void BatchRSign::on_startSign_clicked()
         QString result=http->post(url,jsonObj);
         if(result!="true"){
             QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
+            loadingWait->close();
             return;
         }
     }
+    loadingWait->close();
 }
 
 SignConfig * BatchRSign::readCurrentSignConfig(){
@@ -132,4 +140,10 @@ void BatchRSign::on_ccNameComboBox_currentIndexChanged(const QString &arg1)
         QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请手动选择");
     }
     ui->mobileProvisionPath->setText(mobileProvisionPath);
+}
+
+void BatchRSign::on_selectOutResignButton_clicked()
+{
+    QString filePath=QFileDialog::getExistingDirectory(this, desktopPath);
+    ui->outResignPath->setText(filePath);
 }

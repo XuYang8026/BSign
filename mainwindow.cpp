@@ -104,12 +104,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_selectIpaButton_clicked()
 {
+
     QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("ipa(*.ipa)"));
     qDebug() << "选择文件路径："+filePath;
     ui->filePath->setText(filePath);
-     uiReset();
-
+    uiReset();
     if(filePath.trimmed()!=""){
+        loadingWait = new LoadingWait(this);
+        loadingWait->content="正在读取IPA包信息";
+        loadingWait->show();
         IThread *ithread = new IThread;
         ithread->filePath=filePath.trimmed();
         connect(ithread,SIGNAL(send(IpaInfo*)),this,SLOT(setIpaInfo(IpaInfo*)));
@@ -176,9 +179,12 @@ void MainWindow::signIpa(){
 
     SignUtil *signUtil = new SignUtil(this);
     connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
+    LoadingWait *loadingWait = new LoadingWait(this);
+    loadingWait->content="正在重签名，请稍后";
+    loadingWait->show();
     bool res=signUtil->sign(ipaInfo,signConfig);
     ui->filePath->setText("");
-
+    loadingWait->close();
     if(!res){
         return;
     }
@@ -192,9 +198,11 @@ void MainWindow::signIpa(){
     jsonObj.insert("device",this->sn);
     jsonObj.insert("ccName",ui->ccNames->currentText());
     jsonObj.insert("appName",deployAppName);
-    jsonObj.insert("isPush",ui->isPushMobileProvision->isChecked()?1:0);
+    int isPush = ui->isPushMobileProvision->isChecked()?1:0;
+    jsonObj.insert("isPush",QString::number(isPush));
     jsonObj.insert("connectInfo",ui->connectInfo->text());
     jsonObj.insert("specialInfo",ui->specialInfo->text());
+    jsonObj.insert("remark",ui->remarks->document()->toPlainText());
     if(ui->setExpaire->isChecked()){
         jsonObj.insert("warningMessage",warningMessage);
         jsonObj.insert("expireTime",QString::number(expireTimeStamp,10));
@@ -209,42 +217,42 @@ void MainWindow::signIpa(){
 }
 
 void MainWindow::validate(){
-        //    获取当前时间
-        Http *iHttp = new Http(NULL);
-        QString respData = iHttp->get(HTTP_SERVER+"/deviceInfo?device="+this->sn).trimmed();
+    //    获取当前时间
+    Http *iHttp = new Http(NULL);
+    QString respData = iHttp->get(HTTP_SERVER+"/deviceInfo?device="+this->sn).trimmed();
 
-        QJsonParseError jsonError;
-        QJsonDocument parseDoc = QJsonDocument::fromJson(respData.toLocal8Bit(),&jsonError);
-        if(jsonError.error != QJsonParseError::NoError){
+    QJsonParseError jsonError;
+    QJsonDocument parseDoc = QJsonDocument::fromJson(respData.toLocal8Bit(),&jsonError);
+    if(jsonError.error != QJsonParseError::NoError){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"无效数据");
+        exit(0);
+    }
+    if(parseDoc.isObject()){
+        QJsonObject jsonObj = parseDoc.object();
+        QJsonValue jsonTime=jsonObj.take("time");
+        this->currentTime=jsonTime.toString();
+        qDebug() << "系统时间:"+currentTime;
+        QJsonValue jsonExpireTime=jsonObj.take("expireTime");
+        this->expireTime=jsonExpireTime.toString();
+        qDebug() << "有效时间:"+expireTime;
+        QJsonValue jsonSign=jsonObj.take("sign");
+        QString sign=jsonSign.toString();
+        qDebug() << "sign:"+sign;
+        imd5 md5;
+        qDebug() << md5.encode(expireTime,"44a160d3f98c8a913ca192c7a6222790");
+        if(md5.encode(expireTime,"44a160d3f98c8a913ca192c7a6222790")!=sign){
             QMessageBox::warning(this, tr("QMessageBox::information()"),"无效数据");
             exit(0);
         }
-        if(parseDoc.isObject()){
-            QJsonObject jsonObj = parseDoc.object();
-            QJsonValue jsonTime=jsonObj.take("time");
-            this->currentTime=jsonTime.toString();
-            qDebug() << "系统时间:"+currentTime;
-            QJsonValue jsonExpireTime=jsonObj.take("expireTime");
-            this->expireTime=jsonExpireTime.toString();
-            qDebug() << "有效时间:"+expireTime;
-            QJsonValue jsonSign=jsonObj.take("sign");
-            QString sign=jsonSign.toString();
-            qDebug() << "sign:"+sign;
-            imd5 md5;
-            qDebug() << md5.encode(expireTime,"44a160d3f98c8a913ca192c7a6222790");
-            if(md5.encode(expireTime,"44a160d3f98c8a913ca192c7a6222790")!=sign){
-                QMessageBox::warning(this, tr("QMessageBox::information()"),"无效数据");
-                exit(0);
-            }
-        }
+    }
 
-        QDateTime timestamp = QDateTime::fromString(this->currentTime,"yyyy-MM-dd hh:mm:ss");
-        QDateTime expireTimeStamp = QDateTime::fromString(this->expireTime,"yyyy-MM-dd hh:mm:ss");
-        qDebug() << timestamp.toTime_t();
-        if(timestamp.toTime_t() > expireTimeStamp.toTime_t()){
-            QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:3536391351");
-            exit(0);
-        }
+    QDateTime timestamp = QDateTime::fromString(this->currentTime,"yyyy-MM-dd hh:mm:ss");
+    QDateTime expireTimeStamp = QDateTime::fromString(this->expireTime,"yyyy-MM-dd hh:mm:ss");
+    qDebug() << timestamp.toTime_t();
+    if(timestamp.toTime_t() > expireTimeStamp.toTime_t()){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:3536391351");
+        exit(0);
+    }
 }
 
 
@@ -257,40 +265,35 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
     this->ui->bundleId->setText(ipaInfo->bundleId);
     this->ui->displayName->setText(ipaInfo->deployAppName);
     this->ipaInfo=ipaInfo;
-    Http *http = new Http(this);
-    QJsonObject jsonObject;
-    jsonObject.insert("bundleId",ipaInfo->bundleId);
-    jsonObject.insert("device",readSN());
-    QString respBody=http->post(HTTP_SERVER+"/appSign/search",jsonObject);
-    QJsonParseError jsonError;
-    QJsonDocument parseDoc = QJsonDocument::fromJson(respBody.toLocal8Bit(),&jsonError);
-    if(parseDoc.isArray()){
-        QJsonArray jsonArray=parseDoc.array();
-        if(jsonArray.size()>0){
-            QMessageBox::warning(this, tr("QMessageBox::information()"),"发现当前应用包记录");
-            QJsonValue jsonValue=jsonArray.at(0);
-            QString ccName=jsonValue.toObject()["CcName"].toString();
-            ui->ccNames->setCurrentText(ccName);
-            QString expireTime=jsonValue.toObject()["ExpireTime"].toString();
 
-            if(expireTime!="0001-01-01 00:00:00"){
-                ui->setExpaire->setChecked(true);
-                ui->expaire->setDateTime(QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss"));
-            }
+    AppSign appSign=Common::getAppSign(ipaInfo->bundleId);
+    if(appSign.id>0){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"发现当前应用包记录");
+        ui->ccNames->setCurrentText(appSign.ccName);
 
-            QString appName=jsonValue.toObject()["AppName"].toString();
-            ui->displayName->setText(appName);
-            int isPush=jsonValue.toObject()["IsPush"].toInt();
-            //读取描述文件
-            bool push=isPush==1?true:false;
-            mobileProvisionPath=Common::getMobileProvisionPath(ccName,push);
-            if(mobileProvisionPath.isEmpty()){
-                QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件");
-            }
-            ui->provisionFilePath->setText(mobileProvisionPath);
-
+        QString expireTime=appSign.expireTime;
+        if(expireTime!="0001-01-01 00:00:00"){
+            ui->setExpaire->setChecked(true);
+            ui->expaire->setDateTime(QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss"));
         }
+        QString appName=appSign.appName;
+        QString ccName=appSign.ccName;
+        ui->displayName->setText(appName);
+        int isPush=appSign.isPush;
+        ui->isPushMobileProvision->setChecked(isPush==1?true:false);
+        //读取描述文件
+        bool push=isPush==1?true:false;
+        mobileProvisionPath=Common::getMobileProvisionPath(ccName,push);
+        if(mobileProvisionPath.isEmpty()){
+            QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件");
+        }
+        ui->provisionFilePath->setText(mobileProvisionPath);
+        ui->warning_message->setText(appSign.warningMessage);
+        ui->remarks->setPlainText(appSign.remarks);
+        ui->connectInfo->setText(appSign.connectInfo);
+        ui->specialInfo->setText(appSign.specialInfo);
     }
+    loadingWait->close();
 }
 
 
@@ -334,7 +337,7 @@ void MainWindow::uiReset(){
     ui->ccNames->setCurrentText("请选择证书");
     ui->useBundleId->setChecked(false);
     ui->setExpaire->setChecked(false);
-
+    ui->remarks->setPlainText("");
 }
 
 void MainWindow::on_ccNames_currentIndexChanged(const QString &arg1)
@@ -348,4 +351,11 @@ void MainWindow::on_ccNames_currentIndexChanged(const QString &arg1)
         QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请手动选择");
     }
     ui->provisionFilePath->setText(mobileProvisionPath);
+}
+
+void MainWindow::on_batchUpdateRsignButton_clicked()
+{
+    BatchUpdate *batchUpdate = new BatchUpdate(this);
+    batchUpdate->setWindowTitle("批量更新");
+    batchUpdate->show();
 }

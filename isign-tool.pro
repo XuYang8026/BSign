@@ -41,7 +41,10 @@ SOURCES += \
     signutil.cpp \
     signconfig.cpp \
     test.cpp \
-    batchrsign.cpp
+    batchrsign.cpp \
+    batchupdate.cpp \
+    model/appsign.cpp \
+    loadingwait.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -57,14 +60,19 @@ HEADERS += \
     signutil.h \
     signconfig.h \
     test.h \
-    batchrsign.h
+    batchrsign.h \
+    batchupdate.h \
+    model/appsign.h \
+    loadingwait.h
 
 FORMS += \
         mainwindow.ui \
     logindialog.ui \
     expirepage.ui \
     dialogsignrecord.ui \
-    batchrsign.ui
+    batchrsign.ui \
+    batchupdate.ui \
+    loadingwait.ui
 
 DISTFILES +=
 

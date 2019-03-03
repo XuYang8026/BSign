@@ -23,6 +23,8 @@
 #include "signutil.h"
 #include "signconfig.h"
 #include "batchrsign.h"
+#include "batchupdate.h"
+#include "loadingwait.h"
 
 namespace Ui {
 class MainWindow;
@@ -44,6 +46,7 @@ public:
     QStringList ccNames;
     QString optoolPath = "/tmp/optool";
     QString libisigntooldylibPath = "/tmp/libisigntoolhook.dylib";
+    LoadingWait *loadingWait;
 
 private:
     Ui::MainWindow *ui;
@@ -65,6 +68,7 @@ private slots:
     void execPrint(QString content);
     void on_batchRsignButton_clicked();
     void on_ccNames_currentIndexChanged(const QString &arg1);
+    void on_batchUpdateRsignButton_clicked();
 };
 
 #endif // MAINWINDOW_H

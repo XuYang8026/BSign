@@ -9,7 +9,7 @@
 #include "signconfig.h"
 #include "http.h"
 #include "ifile.h"
-
+#include "loadingwait.h"
 namespace Ui {
 class BatchRSign;
 }
@@ -38,6 +38,8 @@ private slots:
     void on_selectMobileProvisionPath_clicked();
 
     void on_ccNameComboBox_currentIndexChanged(const QString &arg1);
+
+    void on_selectOutResignButton_clicked();
 
 private:
     Ui::BatchRSign *ui;
