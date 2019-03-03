@@ -4,13 +4,14 @@
 #include <QDesktopWidget>
 
 LoadingWait::LoadingWait(QWidget *parent) :
-    QWidget(parent),
+    QDialog(parent),
     ui(new Ui::LoadingWait)
 {
     ui->setupUi(this);
-    this->raise();
+    setAttribute (Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_TranslucentBackground);//背景透明
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::Dialog);
+//    setWindowModality(Qt::ApplicationModal);
     QMovie *movie = new QMovie(":/loading.gif");
     ui->wait_gif->setMovie(movie);
     movie->start();

@@ -49,8 +49,9 @@ void BatchRSign::on_startSign_clicked()
         QMessageBox::warning(this, tr("QMessageBox::information()"),"请选择IPA文件");
         return;
     }
-    LoadingWait *loadingWait = new LoadingWait(this);
-    loadingWait->show();
+//    LoadingWait *loadingWait = new LoadingWait(this);
+    LoadingWait loadingWait;
+    loadingWait.show();
     this->readCurrentSignConfig();
     for(QString filePath:signFilePaths){
         SignUtil *signUtil = new SignUtil(this);
@@ -59,7 +60,7 @@ void BatchRSign::on_startSign_clicked()
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
             ui->execResult->appendPlainText(filePath+" 文件签名失败！");
-            loadingWait->close();
+            loadingWait.close();
             return;
         }
         QString bundleId=signUtil->ipaInfo->bundleId;
@@ -86,11 +87,11 @@ void BatchRSign::on_startSign_clicked()
         QString result=http->post(url,jsonObj);
         if(result!="true"){
             QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
-            loadingWait->close();
+            loadingWait.close();
             return;
         }
     }
-    loadingWait->close();
+    loadingWait.close();
 }
 
 SignConfig * BatchRSign::readCurrentSignConfig(){

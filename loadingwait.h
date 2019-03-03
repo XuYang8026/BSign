@@ -3,12 +3,13 @@
 
 #include <QWidget>
 #include <QDialog>
+#include <QThread>
 
 namespace Ui {
 class LoadingWait;
 }
 
-class LoadingWait : public QWidget
+class LoadingWait : public QDialog
 {
     Q_OBJECT
 
