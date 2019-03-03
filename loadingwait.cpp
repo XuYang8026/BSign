@@ -11,7 +11,6 @@ LoadingWait::LoadingWait(QWidget *parent) :
     this->raise();
     setAttribute(Qt::WA_TranslucentBackground);//背景透明
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowCloseButtonHint | Qt::Dialog);
-//    setWindowModality(Qt::WindowModal);
     QMovie *movie = new QMovie(":/loading.gif");
     ui->wait_gif->setMovie(movie);
     movie->start();
