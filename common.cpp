@@ -20,6 +20,12 @@ QStringList Common::readCert(){
     process->close();
     QStringList ccNamesList=result.split("\n");
     ccNamesList.removeAt(ccNamesList.size()-1);
+    for(QString ccName:ccNamesList){
+        QString cName=ccName.mid(0,20);
+        if(cName!="iPhone Distribution:"){
+            ccNamesList.removeOne(ccName);
+        }
+    }
     return ccNamesList;
 }
 //读取本地电脑序列号

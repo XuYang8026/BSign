@@ -57,20 +57,21 @@ void BatchRSign::on_startSign_clicked()
     int successNum=0;
     ui->execResult->appendPlainText("开始签名...");
     for(QString filePath:signFilePaths){
+        ui->execResult->appendPlainText("");
+        ui->execResult->appendPlainText("");
         ui->execResult->appendPlainText("正在进行 "+filePath+" 签名");
         SignUtil *signUtil = new SignUtil(this);
         signUtil->readIpaInfo(filePath);
 
         AppSign appSign=Common::getAppSign(signUtil->ipaInfo->bundleId);
         if(appSign.id>0){
-            QMessageBox::warning(this, tr(""),filePath+" 已存在签名记录，跳过处理");
-            ui->execResult->appendPlainText(filePath+" 文件签名失败！");
+            ui->execResult->appendHtml("<span style='color:red'>"+filePath+" 已存在签名记录，跳过处理</span>");
             continue;
         }
         connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
-            ui->execResult->appendPlainText(filePath+" 文件签名失败！");
+            ui->execResult->appendHtml("<span style='color:red'>"+filePath+" 文件签名失败！</span>");
             continue;
         }
         QString bundleId=signUtil->ipaInfo->bundleId;
@@ -96,7 +97,7 @@ void BatchRSign::on_startSign_clicked()
         qDebug() << "请求url："+url;
         QString result=http->post(url,jsonObj);
         if(result!="true"){
-            ui->execResult->appendPlainText(filePath+" 文件签名失败！");
+            ui->execResult->appendHtml("<span style='color:red'>"+filePath+" 文件签名失败！</span>");
             continue;
         }
         successNum++;
