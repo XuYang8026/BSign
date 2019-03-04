@@ -54,15 +54,18 @@ QString Common::getMobileProvisionPath(QString cnName,bool isPush){
     }
     QString filePath;
     for(QFileInfo fileInfo:fileInfoList){
-        if(isPush==1){
-            QString baseName=fileInfo.baseName();
-            QString pushFlag=baseName.mid(0,baseName.size()-5);
+        QString baseName=fileInfo.baseName();
+        QString pushFlag=baseName.mid(baseName.size()-5);
+        if(isPush){
             if(pushFlag=="_push"){
                 filePath = fileInfo.filePath();
-                continue;
+                break;
             }
         }else{
-            filePath = fileInfo.filePath();
+            if(pushFlag!="_push"){
+                filePath = fileInfo.filePath();
+                break;
+            }
         }
     }
     return filePath;
@@ -77,11 +80,11 @@ AppSign Common::getAppSign(QString bundleId){
     QJsonParseError jsonError;
     QJsonDocument parseDoc = QJsonDocument::fromJson(respBody.toLocal8Bit(),&jsonError);
     AppSign appSign;
+    appSign.id=0;
     if(parseDoc.isArray()){
         QJsonArray jsonArray=parseDoc.array();
 
         if(jsonArray.size()==0){
-            appSign.id=0;
             return appSign;
         }
 

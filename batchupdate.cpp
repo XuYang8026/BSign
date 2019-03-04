@@ -20,6 +20,9 @@ void BatchUpdate::on_batchSelectFile_clicked()
     ui->isSelectSignFileList->setPlainText("");
     this->signFilePaths.clear();
     QString filePath=QFileDialog::getExistingDirectory(this, desktopPath);
+    if(filePath==""){
+        return;
+    }
     QFileInfoList fileInfoList=GetFileList(filePath);
     for(QFileInfo fileInfo:fileInfoList){
         if(fileInfo.suffix()!="ipa"){
@@ -67,6 +70,7 @@ void BatchUpdate::on_startSign_clicked()
     int successNum=0;
     ui->execResult->appendPlainText("开始签名...");
     for(QString filePath:signFilePaths){
+        ui->execResult->appendPlainText("正在进行 "+filePath+" 签名");
         SignUtil *signUtil = new SignUtil(this);
         signUtil->readIpaInfo(filePath);
         AppSign appSign=Common::getAppSign(signUtil->ipaInfo->bundleId);

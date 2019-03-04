@@ -25,9 +25,13 @@ BatchRSign::~BatchRSign()
 void BatchRSign::on_batchSelectFile_clicked()
 {
     ui->isSelectSignFileList->setPlainText("");
-    QString filePath=QFileDialog::getExistingDirectory(this, desktopPath);
-    QFileInfoList fileInfoList=GetFileList(filePath);
     this->signFilePaths.clear();
+    QString filePath=QFileDialog::getExistingDirectory(this, desktopPath);
+
+    if(filePath==""){
+        return;
+    }
+    QFileInfoList fileInfoList=GetFileList(filePath);
     for(QFileInfo fileInfo:fileInfoList){
         if(fileInfo.suffix()!="ipa"){
             continue;
@@ -53,8 +57,15 @@ void BatchRSign::on_startSign_clicked()
     int successNum=0;
     ui->execResult->appendPlainText("开始签名...");
     for(QString filePath:signFilePaths){
+        ui->execResult->appendPlainText("正在进行 "+filePath+" 签名");
         SignUtil *signUtil = new SignUtil(this);
         signUtil->readIpaInfo(filePath);
+
+        AppSign appSign=Common::getAppSign(signUtil->ipaInfo->bundleId);
+        if(appSign.id>0){
+            QMessageBox::warning(this, tr(""),filePath+" 已存在签名记录，跳过处理");
+            continue;
+        }
         connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
@@ -157,4 +168,17 @@ void BatchRSign::on_batchSelectIPAFile_clicked()
         this->signFilePaths.append(filePath);
     }
     this->signFilePaths=filePaths;
+}
+
+void BatchRSign::on_isPushMobileProvision_stateChanged(int arg1)
+{
+    QString ccName=ui->ccNameComboBox->currentText();
+    if(ccName=="请选择证书"|| ccName.isEmpty()){
+        return;
+    }
+    mobileProvisionPath=Common::getMobileProvisionPath(ccName,ui->isPushMobileProvision->isChecked());
+    if(mobileProvisionPath.isEmpty()){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件\n请手动选择");
+    }
+    ui->mobileProvisionPath->setText(mobileProvisionPath);
 }

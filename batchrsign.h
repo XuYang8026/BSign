@@ -24,7 +24,7 @@ public:
     QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     QStringList signFilePaths;
     SignConfig *signConfig;
-
+    QString mobileProvisionPath;
     SignConfig * readCurrentSignConfig();
 
 private slots:
@@ -42,6 +42,8 @@ private slots:
     void on_selectOutResignButton_clicked();
 
     void on_batchSelectIPAFile_clicked();
+
+    void on_isPushMobileProvision_stateChanged(int arg1);
 
 private:
     Ui::BatchRSign *ui;
