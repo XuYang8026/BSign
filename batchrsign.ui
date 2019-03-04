@@ -127,7 +127,7 @@
        </size>
       </property>
       <property name="text">
-       <string>签名已到期</string>
+       <string>签名已到期，请续费后是使用</string>
       </property>
       <property name="readOnly">
        <bool>false</bool>

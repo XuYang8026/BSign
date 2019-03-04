@@ -359,3 +359,22 @@ void MainWindow::on_batchUpdateRsignButton_clicked()
     batchUpdate->setWindowTitle("批量更新");
     batchUpdate->show();
 }
+
+void MainWindow::on_isPushMobileProvision_stateChanged(int arg1)
+{
+    QString ccName=ui->ccNames->currentText();
+    if(ccName=="请选择证书"|| ccName.isEmpty()){
+        return;
+    }
+    mobileProvisionPath=Common::getMobileProvisionPath(ccName,ui->isPushMobileProvision->isChecked());
+    if(mobileProvisionPath.isEmpty()){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件\n请手动选择");
+    }
+    ui->provisionFilePath->setText(mobileProvisionPath);
+}
+
+void MainWindow::on_supplement_sign_button_clicked()
+{
+    SupplementSign *supplementSign = new SupplementSign(this);
+    supplementSign->show();
+}

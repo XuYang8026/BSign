@@ -17,8 +17,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-//const QString HTTP_SERVER="https://isign.yz-ss.top";
-const QString HTTP_SERVER="http://127.0.0.1:8081";
+const QString HTTP_SERVER="https://isign.yz-ss.top";
+//const QString HTTP_SERVER="http://127.0.0.1:8081";
 //const QString HTTP_SERVER="http://qian.whbtsj.com";
 
 class Http:public QObject

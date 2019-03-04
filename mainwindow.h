@@ -25,6 +25,7 @@
 #include "batchrsign.h"
 #include "batchupdate.h"
 #include "loadingwait.h"
+#include "supplementsign.h"
 
 namespace Ui {
 class MainWindow;
@@ -69,6 +70,8 @@ private slots:
     void on_batchRsignButton_clicked();
     void on_ccNames_currentIndexChanged(const QString &arg1);
     void on_batchUpdateRsignButton_clicked();
+    void on_isPushMobileProvision_stateChanged(int arg1);
+    void on_supplement_sign_button_clicked();
 };
 
 #endif // MAINWINDOW_H
