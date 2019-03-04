@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>930</width>
-    <height>833</height>
+    <height>819</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -445,85 +445,71 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="supplement_sign_button">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>730</y>
-      <width>151</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>批量补签</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="signButton">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>698</y>
-      <width>129</width>
-      <height>35</height>
+      <y>710</y>
+      <width>911</width>
+      <height>72</height>
      </rect>
     </property>
-    <property name="text">
-     <string>签名/更新/补签</string>
-    </property>
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="signButton">
+       <property name="text">
+        <string>签名/更新</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="batchRsignButton">
+       <property name="text">
+        <string>批量签名</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="batchUpdateRsignButton">
+       <property name="text">
+        <string>批量更新</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="batch_supplement_sign_button">
+       <property name="text">
+        <string>批量补签</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="supplement_sign_button">
+       <property name="text">
+        <string>补签</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="sign_record">
+       <property name="text">
+        <string>签名记录</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <widget class="QPushButton" name="clearLog">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
+   <widget class="QLabel" name="flag">
     <property name="geometry">
      <rect>
-      <x>748</x>
-      <y>698</y>
-      <width>94</width>
-      <height>35</height>
+      <x>480</x>
+      <y>140</y>
+      <width>61</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>清除日志</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="batchRsignButton">
-    <property name="geometry">
-     <rect>
-      <x>195</x>
-      <y>698</y>
-      <width>151</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>批量签名</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="batchUpdateRsignButton">
-    <property name="geometry">
-     <rect>
-      <x>379</x>
-      <y>698</y>
-      <width>94</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>批量更新</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="sign_record">
-    <property name="geometry">
-     <rect>
-      <x>564</x>
-      <y>698</y>
-      <width>94</width>
-      <height>35</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>签名记录</string>
+     <string/>
     </property>
    </widget>
   </widget>

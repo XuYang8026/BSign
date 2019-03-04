@@ -81,6 +81,7 @@ AppSign Common::getAppSign(QString bundleId){
         QJsonArray jsonArray=parseDoc.array();
 
         if(jsonArray.size()==0){
+            appSign.id=0;
             return appSign;
         }
 

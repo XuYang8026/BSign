@@ -45,7 +45,8 @@ SOURCES += \
     batchupdate.cpp \
     model/appsign.cpp \
     loadingwait.cpp \
-    supplementsign.cpp
+    supplementsign.cpp \
+    batchsupplementsign.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -65,7 +66,8 @@ HEADERS += \
     batchupdate.h \
     model/appsign.h \
     loadingwait.h \
-    supplementsign.h
+    supplementsign.h \
+    batchsupplementsign.h
 
 FORMS += \
         mainwindow.ui \
@@ -75,7 +77,8 @@ FORMS += \
     batchrsign.ui \
     batchupdate.ui \
     loadingwait.ui \
-    supplementsign.ui
+    supplementsign.ui \
+    batchsupplementsign.ui
 
 DISTFILES +=
 

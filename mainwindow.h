@@ -72,6 +72,7 @@ private slots:
     void on_batchUpdateRsignButton_clicked();
     void on_isPushMobileProvision_stateChanged(int arg1);
     void on_supplement_sign_button_clicked();
+    void on_batch_supplement_sign_button_clicked();
 };
 
 #endif // MAINWINDOW_H

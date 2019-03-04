@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "batchsupplementsign.h"
 
 QString readSN(){
     QStringList snParams;
@@ -78,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowTitle("欢迎使用 Isign-tool Pro");
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
-
+    ui->flag->setStyleSheet("color:red;");
     QString cmd = "cd ~/Desktop/;pwd";
     desktopPath=Common::execShell(cmd);
 
@@ -110,9 +111,6 @@ void MainWindow::on_selectIpaButton_clicked()
     ui->filePath->setText(filePath);
     uiReset();
     if(filePath.trimmed()!=""){
-        loadingWait = new LoadingWait(this);
-        loadingWait->content="正在读取IPA包信息";
-        loadingWait->show();
         IThread *ithread = new IThread;
         ithread->filePath=filePath.trimmed();
         connect(ithread,SIGNAL(send(IpaInfo*)),this,SLOT(setIpaInfo(IpaInfo*)));
@@ -179,12 +177,8 @@ void MainWindow::signIpa(){
 
     SignUtil *signUtil = new SignUtil(this);
     connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
-    LoadingWait *loadingWait = new LoadingWait(this);
-    loadingWait->content="正在重签名，请稍后";
-    loadingWait->show();
     bool res=signUtil->sign(ipaInfo,signConfig);
     ui->filePath->setText("");
-    loadingWait->close();
     if(!res){
         return;
     }
@@ -268,9 +262,8 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
 
     AppSign appSign=Common::getAppSign(ipaInfo->bundleId);
     if(appSign.id>0){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"发现当前应用包记录");
         ui->ccNames->setCurrentText(appSign.ccName);
-
+        ui->flag->setText("更新");
         QString expireTime=appSign.expireTime;
         if(expireTime!="0001-01-01 00:00:00"){
             ui->setExpaire->setChecked(true);
@@ -292,8 +285,9 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
         ui->remarks->setPlainText(appSign.remarks);
         ui->connectInfo->setText(appSign.connectInfo);
         ui->specialInfo->setText(appSign.specialInfo);
+    }else{
+        ui->flag->setText("新增");
     }
-    loadingWait->close();
 }
 
 
@@ -338,6 +332,12 @@ void MainWindow::uiReset(){
     ui->useBundleId->setChecked(false);
     ui->setExpaire->setChecked(false);
     ui->remarks->setPlainText("");
+    ui->warning_message->setText(WARNING_MESSAGE);
+    ui->connectInfo->setText("");
+    ui->specialInfo->setText("");
+    ui->displayName->setText("");
+    ui->flag->setText("");
+    ui->bundleId->setText("");
 }
 
 void MainWindow::on_ccNames_currentIndexChanged(const QString &arg1)
@@ -376,5 +376,11 @@ void MainWindow::on_isPushMobileProvision_stateChanged(int arg1)
 void MainWindow::on_supplement_sign_button_clicked()
 {
     SupplementSign *supplementSign = new SupplementSign(this);
+    supplementSign->show();
+}
+
+void MainWindow::on_batch_supplement_sign_button_clicked()
+{
+    BatchSupplementSign *supplementSign = new BatchSupplementSign(this);
     supplementSign->show();
 }

@@ -16,6 +16,7 @@
 const QString libisigntoolhookFilePath = "/tmp/libisigntoolhook.dylib";
 const QString optoolFilePath = "/tmp/optool";
 const QString libisigntoolappcountFilePath="/tmp/libisigntoolappcount.dylib";
+const QString WARNING_MESSAGE="签名已到期，请续费后使用";
 
 extern QString desktopPath;
 extern QString workspacePath;

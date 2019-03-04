@@ -23,7 +23,7 @@ DialogSignRecord::DialogSignRecord(QWidget *parent) :
     QStringList ccNames=Common::readCert();
     ui->ccNames->addItems(ccNames);
     QStringList header;
-    header  << "bundle id" << "证书名称" << "过期时间" << "过期提示语" << "签名时间"<< "app名称" << "备注" << "推送签名" << "联系信息" << "特殊信息" <<"更新时间";
+    header  << "bundle id" << "证书名称" << "过期时间" << "过期提示语" << "签名时间"<< "app名称" << "备注" << "是否推送" << "联系信息" << "特殊信息" <<"更新时间";
     ui->tableWidget->setHorizontalHeaderLabels(header);
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -47,69 +47,68 @@ void DialogSignRecord::cellChange(int row,int colum){
     if(colum==0||colum==1){
         return;
     }
-    QMessageBox::StandardButton flag=QMessageBox::information(NULL, "", "是否修改数据",QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes);
-    if(flag==QMessageBox::Yes){
-        qDebug() << "yes";
-        Http *http = new Http(NULL);
-        int id=this->jsonArray.at(row).toObject()["Id"].toInt();
-        QString idStr = QString::number(id,10);
-        QString expireTimeStampStr;
-        QString warningMessage;
-        QString remarks;
-        QString connectInfo;
-        QString specialInfo;
-        QString appName;
-        if(colum==2){
-            QString expireTime=ui->tableWidget->item(row,colum)->text();
-            qDebug() << "expireTime:"+expireTime;
-            uint expireTimeStamp=QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss").toTime_t();
-            expireTimeStampStr=QString::number(expireTimeStamp);
-        }
-        if(colum==3){
-            warningMessage=ui->tableWidget->item(row,colum)->text();
-            qDebug() << "warningMessage:"+warningMessage;
-        }
+//    QMessageBox::StandardButton flag=QMessageBox::information(NULL, "", "是否修改数据",QMessageBox::Yes|QMessageBox::No,QMessageBox::Yes);
+//    if(flag==QMessageBox::Yes){
 
-        if(colum==5){
-            appName = ui->tableWidget->item(row,colum)->text();
-            qDebug() << "appName:"+appName;
-        }
-
-        if(colum==6){
-            remarks = ui->tableWidget->item(row,colum)->text();
-            qDebug() << "remarks:"+remarks;
-        }
-
-        if(colum==8){
-            connectInfo = ui->tableWidget->item(row,colum)->text();
-            qDebug() << "connectInfo:"+connectInfo;
-        }
-        if(colum==9){
-            specialInfo = ui->tableWidget->item(row,colum)->text();
-            qDebug() << "specialInfo:"+specialInfo;
-        }
-
-        imd5 imd5;
-        QString sign=imd5.encode(idStr,salt);
-        QString url = HTTP_SERVER+"/appSign/update";
-        qDebug() << "url ==> "+url;
-        QJsonObject jsonObject;
-        jsonObject["id"]=idStr;
-        jsonObject["expireTime"]=expireTimeStampStr;
-        jsonObject["warningMessage"]=warningMessage;
-        jsonObject["remarks"]=remarks;
-        jsonObject["sign"]=sign;
-        jsonObject["connectInfo"]=connectInfo;
-        jsonObject["specialInfo"]=specialInfo;
-        jsonObject["appName"]=appName;
-        QString result=http->post(url,jsonObject);
-        if(result=="true"){
-            QMessageBox::information(NULL, "", "数据修改成功");
-            return;
-        }
-        QMessageBox::information(NULL, "", "数据修改失败");
-
+//    }
+    Http *http = new Http(NULL);
+    int id=this->jsonArray.at(row).toObject()["Id"].toInt();
+    QString idStr = QString::number(id,10);
+    QString expireTimeStampStr;
+    QString warningMessage;
+    QString remarks;
+    QString connectInfo;
+    QString specialInfo;
+    QString appName;
+    if(colum==2){
+        QString expireTime=ui->tableWidget->item(row,colum)->text();
+        qDebug() << "expireTime:"+expireTime;
+        uint expireTimeStamp=QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss").toTime_t();
+        expireTimeStampStr=QString::number(expireTimeStamp);
     }
+    if(colum==3){
+        warningMessage=ui->tableWidget->item(row,colum)->text();
+        qDebug() << "warningMessage:"+warningMessage;
+    }
+
+    if(colum==5){
+        appName = ui->tableWidget->item(row,colum)->text();
+        qDebug() << "appName:"+appName;
+    }
+
+    if(colum==6){
+        remarks = ui->tableWidget->item(row,colum)->text();
+        qDebug() << "remarks:"+remarks;
+    }
+
+    if(colum==8){
+        connectInfo = ui->tableWidget->item(row,colum)->text();
+        qDebug() << "connectInfo:"+connectInfo;
+    }
+    if(colum==9){
+        specialInfo = ui->tableWidget->item(row,colum)->text();
+        qDebug() << "specialInfo:"+specialInfo;
+    }
+
+    imd5 imd5;
+    QString sign=imd5.encode(idStr,salt);
+    QString url = HTTP_SERVER+"/appSign/update";
+    qDebug() << "url ==> "+url;
+    QJsonObject jsonObject;
+    jsonObject["id"]=idStr;
+    jsonObject["expireTime"]=expireTimeStampStr;
+    jsonObject["warningMessage"]=warningMessage;
+    jsonObject["remarks"]=remarks;
+    jsonObject["sign"]=sign;
+    jsonObject["connectInfo"]=connectInfo;
+    jsonObject["specialInfo"]=specialInfo;
+    jsonObject["appName"]=appName;
+    QString result=http->post(url,jsonObject);
+    if(result=="true"){
+        QMessageBox::information(NULL, "", "数据修改成功");
+        return;
+    }
+    QMessageBox::information(NULL, "", "数据修改失败");
 }
 
 void DialogSignRecord::on_search_clicked()
@@ -126,6 +125,7 @@ void DialogSignRecord::on_search_clicked()
     jsonObject["device"]=this->sn;
     jsonObject["ccName"]=ccName;
     jsonObject["displayName"]=ui->appName->text();
+    jsonObject["connectInfo"]=ui->connectInfo->text();
     QString respData=http->post(url,jsonObject);
     QJsonParseError jsonError;
     QJsonDocument parseDoc = QJsonDocument::fromJson(respData.toLocal8Bit(),&jsonError);
@@ -146,7 +146,9 @@ void DialogSignRecord::tableDataReload(){
         item0->setText(obj["BundleId"].toString());
         ui->tableWidget->setItem(row,0,item0);
         QTableWidgetItem *item1=new QTableWidgetItem();
-        item1->setText(obj["CcName"].toString());
+        QString ccName=obj["CcName"].toString();
+        ccName=ccName.mid(21);
+        item1->setText(ccName);
         ui->tableWidget->setItem(row,1,item1);
         QTableWidgetItem *item2=new QTableWidgetItem();
         QString expireTime=obj["ExpireTime"].toString();
@@ -193,7 +195,12 @@ void DialogSignRecord::tableDataReload(){
         ui->tableWidget->setItem(row,9,item9);
         QTableWidgetItem *item10=new QTableWidgetItem();
         item10->setFlags(Qt::ItemIsEnabled);
-        item10->setText(obj["UpdateTime"].toString());
+        QString updateTime = obj["UpdateTime"].toString();
+        if(updateTime=="0001-01-01 00:00:00"){
+            item10->setText("");
+        }else{
+            item10->setText(updateTime);
+        }
         ui->tableWidget->setItem(row,10,item10);
     }
     connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChange(int,int)));
