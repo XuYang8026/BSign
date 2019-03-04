@@ -49,10 +49,9 @@ void BatchRSign::on_startSign_clicked()
         QMessageBox::warning(this, tr("QMessageBox::information()"),"请选择IPA文件");
         return;
     }
-//    LoadingWait *loadingWait = new LoadingWait(this);
-    LoadingWait loadingWait;
-    loadingWait.show();
     this->readCurrentSignConfig();
+    int successNum=0;
+    ui->execResult->appendPlainText("开始签名...");
     for(QString filePath:signFilePaths){
         SignUtil *signUtil = new SignUtil(this);
         signUtil->readIpaInfo(filePath);
@@ -60,7 +59,6 @@ void BatchRSign::on_startSign_clicked()
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
             ui->execResult->appendPlainText(filePath+" 文件签名失败！");
-            loadingWait.close();
             return;
         }
         QString bundleId=signUtil->ipaInfo->bundleId;
@@ -87,11 +85,11 @@ void BatchRSign::on_startSign_clicked()
         QString result=http->post(url,jsonObj);
         if(result!="true"){
             QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
-            loadingWait.close();
             return;
         }
+        successNum++;
     }
-    loadingWait.close();
+    ui->execResult->appendPlainText("批量签名 共"+QString::number(signFilePaths.size())+"个，成功"+QString::number(successNum)+"个");
 }
 
 SignConfig * BatchRSign::readCurrentSignConfig(){
@@ -147,4 +145,16 @@ void BatchRSign::on_selectOutResignButton_clicked()
 {
     QString filePath=QFileDialog::getExistingDirectory(this, desktopPath);
     ui->outResignPath->setText(filePath);
+}
+
+void BatchRSign::on_batchSelectIPAFile_clicked()
+{
+    ui->isSelectSignFileList->setPlainText("");
+    this->signFilePaths.clear();
+    QStringList filePaths = QFileDialog::getOpenFileNames(this, tr("open file"), "",  tr("file(*.ipa)"));
+    for(QString filePath:filePaths){
+        ui->isSelectSignFileList->appendPlainText(filePath);
+        this->signFilePaths.append(filePath);
+    }
+    this->signFilePaths=filePaths;
 }

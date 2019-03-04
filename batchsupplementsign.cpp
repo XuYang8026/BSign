@@ -26,6 +26,7 @@ BatchSupplementSign::~BatchSupplementSign()
 void BatchSupplementSign::on_batchSelectFiles_clicked()
 {
     ui->isSelectSignFileList->setPlainText("");
+    this->signFilePaths.clear();
     QStringList filePaths = QFileDialog::getOpenFileNames(this, tr("open file"), "",  tr("file(*.ipa)"));
     for(QString filePath:filePaths){
         ui->isSelectSignFileList->appendPlainText(filePath);
@@ -78,6 +79,8 @@ void BatchSupplementSign::on_startSign_clicked()
         return;
     }
     this->readCurrentSignConfig();
+    int successNum=0;
+    ui->execResult->appendPlainText("开始签名...");
     for(QString filePath:signFilePaths){
         SignUtil *signUtil = new SignUtil(this);
         signUtil->readIpaInfo(filePath);
@@ -120,7 +123,9 @@ void BatchSupplementSign::on_startSign_clicked()
             QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
             return;
         }
+        successNum++;
     }
+    ui->execResult->appendPlainText("批量签名 共"+QString::number(signFilePaths.size())+"个，成功"+QString::number(successNum)+"个");
 }
 
 SignConfig * BatchSupplementSign::readCurrentSignConfig(){

@@ -41,6 +41,8 @@ private slots:
 
     void on_selectOutResignButton_clicked();
 
+    void on_batchSelectIPAFile_clicked();
+
 private:
     Ui::BatchRSign *ui;
 };

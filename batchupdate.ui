@@ -320,13 +320,20 @@
      </widget>
     </item>
     <item row="0" column="1">
+     <widget class="QPushButton" name="batchSelectIPAFile">
+      <property name="text">
+       <string>批量选择IPA文件</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
      <widget class="QPushButton" name="selectOutResignPathButton">
       <property name="text">
        <string>选择输出路径</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
+    <item row="0" column="3">
      <widget class="QLineEdit" name="outResignPath">
       <property name="minimumSize">
        <size>
@@ -348,7 +355,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="3">
+    <item row="0" column="4">
      <widget class="QPushButton" name="startSign">
       <property name="text">
        <string>开始签名</string>

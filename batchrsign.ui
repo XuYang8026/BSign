@@ -357,7 +357,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>630</y>
+     <y>629</y>
      <width>791</width>
      <height>42</height>
     </rect>
@@ -371,13 +371,20 @@
      </widget>
     </item>
     <item row="0" column="1">
+     <widget class="QPushButton" name="batchSelectIPAFile">
+      <property name="text">
+       <string>批量选择IPA文件</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
      <widget class="QPushButton" name="selectOutResignButton">
       <property name="text">
        <string>选择输出目录</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
+    <item row="0" column="3">
      <widget class="QLineEdit" name="outResignPath">
       <property name="minimumSize">
        <size>
@@ -399,7 +406,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="3">
+    <item row="0" column="4">
      <widget class="QPushButton" name="startSign">
       <property name="text">
        <string>开始签名</string>

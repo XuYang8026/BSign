@@ -27,7 +27,7 @@ bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QStrin
         emit execPrint("植入代码重签名失败");
         return false;
     }
-    emit execPrint("开始注入代码");
+    qDebug() << "开始注入代码";
     fileInfo=QFileInfo(machOFilePath);
     cmd="cd "+machOAbstractPath+";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t "+fileInfo.fileName();
 //        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
@@ -37,7 +37,7 @@ bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QStrin
         emit execPrint("代码注入失败！");
         return false;
     }
-    emit execPrint("代码注入成功");
+    qDebug() << "代码注入成功";
     return true;
 }
 
