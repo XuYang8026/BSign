@@ -16,7 +16,7 @@ public:
 
     bool useMobileProvsionBundleId = false;
     //是否是推送证书描述文件
-    bool isPushMobileProvsionBundleId = false;
+    bool isPushMobileProvsion = false;
 
     bool signNib = false;
 

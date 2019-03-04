@@ -23,6 +23,7 @@ class BatchUpdate : public QDialog
 public:
     explicit BatchUpdate(QWidget *parent = 0);
     ~BatchUpdate();
+    SignConfig *signConfig;
     QStringList signFilePaths;
     SignConfig * readCurrentSignConfig(QString ccName,QString mobileProvision);
 

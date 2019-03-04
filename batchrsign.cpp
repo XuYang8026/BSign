@@ -64,13 +64,14 @@ void BatchRSign::on_startSign_clicked()
         AppSign appSign=Common::getAppSign(signUtil->ipaInfo->bundleId);
         if(appSign.id>0){
             QMessageBox::warning(this, tr(""),filePath+" 已存在签名记录，跳过处理");
+            ui->execResult->appendPlainText(filePath+" 文件签名失败！");
             continue;
         }
         connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
             ui->execResult->appendPlainText(filePath+" 文件签名失败！");
-            return;
+            continue;
         }
         QString bundleId=signUtil->ipaInfo->bundleId;
         QString warningMessage=ui->warning_message->text();
@@ -95,8 +96,8 @@ void BatchRSign::on_startSign_clicked()
         qDebug() << "请求url："+url;
         QString result=http->post(url,jsonObj);
         if(result!="true"){
-            QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
-            return;
+            ui->execResult->appendPlainText(filePath+" 文件签名失败！");
+            continue;
         }
         successNum++;
     }

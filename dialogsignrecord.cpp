@@ -27,6 +27,9 @@ DialogSignRecord::DialogSignRecord(QWidget *parent) :
     ui->tableWidget->setHorizontalHeaderLabels(header);
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    QHeaderView *headerGoods=ui->tableWidget->horizontalHeader();
+    headerGoods->setSortIndicatorShown(true);
+    connect(headerGoods,SIGNAL(sectionClicked(int)),this,SLOT(sortByColumn(int)));
     Http *http = new Http(NULL);
     QString respData = http->get(HTTP_SERVER+"/appSign/record?device="+device);
     QJsonParseError jsonError;
@@ -204,4 +207,11 @@ void DialogSignRecord::tableDataReload(){
         ui->tableWidget->setItem(row,10,item10);
     }
     connect(ui->tableWidget,SIGNAL(cellChanged(int,int)),this,SLOT(cellChange(int,int)));
+}
+
+void DialogSignRecord::sortByColumn(int column){
+    static bool bSortAsc = true;
+    Qt::SortOrder order = bSortAsc ? (Qt::AscendingOrder) : (Qt::DescendingOrder);
+    ui->tableWidget->sortItems(column,order);
+    bSortAsc=!bSortAsc;
 }

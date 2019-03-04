@@ -174,7 +174,9 @@ void MainWindow::signIpa(){
     if(ui->openAppUseCount->isChecked()){
         signConfig->useAppCount=true;
     }
-
+    if(ui->isPushMobileProvision->isChecked()){
+        signConfig->isPushMobileProvsion=true;
+    }
     SignUtil *signUtil = new SignUtil(this);
     connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
     bool res=signUtil->sign(ipaInfo,signConfig);

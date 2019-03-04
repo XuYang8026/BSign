@@ -268,7 +268,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         QString specialFile = findSpecialFile->readAllStandardOutput().trimmed();
         if(!specialFile.isEmpty()){
             QStringList specialFileList= specialFile.split("\n");
-            emit execPrint("重签以下文件：");
+            qDebug() << "重签以下文件：";
             for(QString fi : specialFileList){
                 cmd="/usr/bin/codesign --force --sign \""+signConfig->ccName+"\" \""+fi+"\"";
                 qDebug() << "重签名命令："+cmd;
@@ -277,8 +277,6 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
                     emit execPrint(fi+"重签名失败");
                     return false;
                 }
-                QStringList fiList=fi.split("/");
-                emit execPrint(fiList[fiList.size()-1]);
             }
         }
     }

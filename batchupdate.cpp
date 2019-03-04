@@ -37,10 +37,6 @@ void BatchUpdate::on_batchSelectFile_clicked()
 SignConfig * BatchUpdate::readCurrentSignConfig(QString ccName,QString mobileProvision){
     SignConfig *signConfig = new SignConfig;
     signConfig->ccName=ccName;
-    if(ui->setExpaire->isChecked()){
-        signConfig->expireTime=QString::number(ui->expaire->dateTime().toTime_t(),10);
-        signConfig->warningMessage=ui->warning_message->text();
-    }
     if(ui->clickNibSign->isChecked()){
         signConfig->signNib=true;
     }
@@ -57,6 +53,7 @@ SignConfig * BatchUpdate::readCurrentSignConfig(QString ccName,QString mobilePro
         signConfig->useAppCount=true;
     }
     signConfig->mobileProvisionPath=mobileProvision;
+    this->signConfig=signConfig;
     return signConfig;
 }
 
@@ -76,12 +73,12 @@ void BatchUpdate::on_startSign_clicked()
         AppSign appSign=Common::getAppSign(signUtil->ipaInfo->bundleId);
         bool isPush=appSign.isPush==1?true:false;
         QString mobileProvisionPath=Common::getMobileProvisionPath(appSign.ccName,isPush);
-        SignConfig *signConfig=this->readCurrentSignConfig(appSign.ccName,mobileProvisionPath);
+        this->readCurrentSignConfig(appSign.ccName,mobileProvisionPath);
         connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
             ui->execResult->appendPlainText(filePath+" 文件签名失败！");
-            return;
+            continue;
         }
         QString bundleId=signUtil->ipaInfo->bundleId;
 
@@ -97,30 +94,13 @@ void BatchUpdate::on_startSign_clicked()
         jsonObj.insert("specialInfo",appSign.specialInfo);
         jsonObj.insert("warningMessage",appSign.warningMessage);
         jsonObj.insert("expireTime",appSign.expireTime);
-        jsonObj.insert("remarks",appSign.remarks);
-        if(ui->setExpaire->isChecked()){
-            QString warningMessage=ui->warning_message->text();
-            int expireTimeStamp=ui->expaire->dateTime().toTime_t();
-            jsonObj.insert("warningMessage",warningMessage);
-            jsonObj.insert("expireTime",QString::number(expireTimeStamp,10));
-        }
-
-        if(!ui->connectInfo->text().isEmpty()){
-            jsonObj.insert("connectInfo",ui->connectInfo->text());
-        }
-        if(!ui->specialInfo->text().isEmpty()){
-            jsonObj.insert("specialInfo",ui->specialInfo->text());
-        }
-        QString remarks=ui->remarks->document()->toPlainText();
-        if(!remarks.isEmpty()){
-            jsonObj.insert("remark",remarks);
-        }
+        jsonObj.insert("remark",appSign.remarks);
         Http *http = new Http(NULL);
         qDebug() << "请求url："+url;
         QString result=http->post(url,jsonObj);
         if(result!="true"){
-            QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
-            return;
+            ui->execResult->appendPlainText(filePath+" 文件签名失败！");
+            continue;
         }
         successNum++;
     }

@@ -25,6 +25,7 @@ private:
 private slots:
     void cellChange(int row,int colum);
     void on_search_clicked();
+    void sortByColumn(int);
 };
 
 #endif // DIALOGSIGNRECORD_H

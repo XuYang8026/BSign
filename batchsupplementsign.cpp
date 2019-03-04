@@ -15,7 +15,6 @@ BatchSupplementSign::BatchSupplementSign(QWidget *parent) :
     ccNameList.append("请选择证书");
     ccNameList.append(ccNames);
     ui->ccNameComboBox->addItems(ccNameList);
-    ui->expaire->setDateTime(QDateTime::currentDateTime());
 }
 
 BatchSupplementSign::~BatchSupplementSign()
@@ -94,40 +93,36 @@ void BatchSupplementSign::on_startSign_clicked()
 
         if(appSign.id<=0){
             QMessageBox::warning(this, tr("QMessageBox::information()"),filePath+" 未读取到签名记录 不能执行补签操作");
+            ui->execResult->appendPlainText(filePath+" 未读取到签名记录 不能执行补签操作");
             continue;
         }
 
         connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
+        readCurrentSignConfig();
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
             ui->execResult->appendPlainText(filePath+" 文件签名失败！");
-            return;
+            continue;
         }
-        QString bundleId=signUtil->ipaInfo->bundleId;
-        QString warningMessage=ui->warning_message->text();
-        int expireTimeStamp=ui->expaire->dateTime().toTime_t();
-
         QString url=HTTP_SERVER+"/appSign";
         QJsonObject jsonObj;
         jsonObj.insert("uuid",signConfig->ccUuid);
-        jsonObj.insert("bundleId",bundleId);
+        jsonObj.insert("bundleId",appSign.bundleId);
         jsonObj.insert("device",Common::readSN());
         jsonObj.insert("ccName",ui->ccNameComboBox->currentText());
-        jsonObj.insert("appName",signUtil->ipaInfo->deployAppName);
-        jsonObj.insert("isPush",ui->isPushMobileProvision->isChecked()?1:0);
-        jsonObj.insert("connectInfo",ui->connectInfo->text());
-        jsonObj.insert("specialInfo",ui->specialInfo->text());
-        jsonObj.insert("remark",ui->remarks->document()->toPlainText());
-        if(ui->setExpaire->isChecked()){
-            jsonObj.insert("warningMessage",warningMessage);
-            jsonObj.insert("expireTime",QString::number(expireTimeStamp,10));
-        }
+        jsonObj.insert("appName",appSign.appName);
+        jsonObj.insert("isPush",signConfig->isPushMobileProvsion?"1":"0");
+        jsonObj.insert("connectInfo",appSign.connectInfo);
+        jsonObj.insert("specialInfo",appSign.specialInfo);
+        jsonObj.insert("warningMessage",appSign.warningMessage);
+        jsonObj.insert("expireTime",appSign.expireTime);
+        jsonObj.insert("remark",appSign.remarks);
         Http *http = new Http(NULL);
         qDebug() << "请求url："+url;
         QString result=http->post(url,jsonObj);
         if(result!="true"){
-            QMessageBox::about(NULL, tr(""),"签名失败，请重新尝试");
-            return;
+            ui->execResult->appendPlainText(filePath+" 文件签名失败！");
+            continue;
         }
         successNum++;
     }
@@ -137,10 +132,6 @@ void BatchSupplementSign::on_startSign_clicked()
 SignConfig * BatchSupplementSign::readCurrentSignConfig(){
     SignConfig *signConfig = new SignConfig;
     signConfig->ccName=ui->ccNameComboBox->currentText();
-    if(ui->setExpaire->isChecked()){
-        signConfig->expireTime=QString::number(ui->expaire->dateTime().toTime_t(),10);
-        signConfig->warningMessage=ui->warning_message->text();
-    }
     if(ui->clickNibSign->isChecked()){
         signConfig->signNib=true;
     }
@@ -156,8 +147,12 @@ SignConfig * BatchSupplementSign::readCurrentSignConfig(){
     if(ui->openAppUseCount->isChecked()){
         signConfig->useAppCount=true;
     }
+    if(ui->isPushMobileProvision->isChecked()){
+        signConfig->isPushMobileProvsion=true;
+    }
     signConfig->mobileProvisionPath=ui->mobileProvisionPath->text();
     this->signConfig=signConfig;
+    return signConfig;
 }
 
 void BatchSupplementSign::on_isPushMobileProvision_stateChanged(int arg1)
