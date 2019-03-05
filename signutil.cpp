@@ -5,14 +5,14 @@ bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QStrin
     QString dylibFileName=fileInfo.fileName();
     fileInfo=QFileInfo(machOFilePath);
     QString machOAbstractPath=fileInfo.absolutePath();
-    QString cmd="cp "+dylibFilePath+" "+machOAbstractPath+"/"+dylibFileName;
+    QString cmd="cp \""+dylibFilePath+"\" \""+machOAbstractPath+"/"+dylibFileName+"\"";
     qDebug() << "执行命令："+cmd;
     int flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
         emit execPrint("植入代码迁移失败");
         return false;
     }
-    cmd="chmod +x "+machOFilePath;
+    cmd="chmod +x \""+machOFilePath+"\"";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
@@ -29,7 +29,7 @@ bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QStrin
     }
     qDebug() << "开始注入代码";
     fileInfo=QFileInfo(machOFilePath);
-    cmd="cd "+machOAbstractPath+";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t "+fileInfo.fileName();
+    cmd="cd "+machOAbstractPath+";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t \""+fileInfo.fileName()+"\"";
 //        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
@@ -139,7 +139,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     QString ipaName=ipaInfo->ipaName;
     QString deployAppName=ipaInfo->deployAppName;
 
-    emit execPrint("machOFileName is "+machOFileName);
+    qDebug() << "machOFileName is "+machOFileName;
     //删除原来签名文件
     QString cmd="rm -rf "+tmp+"Payload/"+appName+"/_CodeSignature";
     qDebug() << "执行命令："+cmd;
