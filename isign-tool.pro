@@ -82,5 +82,7 @@ FORMS += \
 
 DISTFILES +=
 
+ICON = Icon.icns
+
 RESOURCES += \
     dylib.qrc

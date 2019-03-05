@@ -76,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setWindowTitle("欢迎使用 Isign-tool Pro");
+    this->setWindowTitle("欢迎使用 BSign 公测版");
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     ui->flag->setStyleSheet("color:red;");
@@ -215,8 +215,13 @@ void MainWindow::signIpa(){
 void MainWindow::validate(){
     //    获取当前时间
     Http *iHttp = new Http(NULL);
-    QString respData = iHttp->get(HTTP_SERVER+"/deviceInfo?device="+this->sn).trimmed();
-
+    QJsonObject paramObj;
+    paramObj["device"]=this->sn;
+//    paramObj["app_version"]=APP_VERSION;
+    imd5 md5;
+    QString sign=md5.encode(this->sn+APP_VERSION,"44a160d3f98c8a913ca192c7a6222790");
+    paramObj["sign"]=sign;
+    QString respData = iHttp->post(HTTP_SERVER+"/deviceInfo",paramObj);
     QJsonParseError jsonError;
     QJsonDocument parseDoc = QJsonDocument::fromJson(respData.toLocal8Bit(),&jsonError);
     if(jsonError.error != QJsonParseError::NoError){

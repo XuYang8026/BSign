@@ -94,7 +94,7 @@ void BatchSupplementSign::on_startSign_clicked()
         AppSign appSign=Common::getAppSign(signUtil->ipaInfo->bundleId);
 
         if(appSign.id<=0){
-            ui->execResult->appendHtml("<span style='color:red'>"+filePath+" 未读取到签名记录 不能执行补签操作</span>");
+            ui->execResult->appendHtml("<span style='color:red'>"+filePath+" 未读取到签名记录 跳过补签操作</span>");
             continue;
         }
 

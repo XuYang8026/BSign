@@ -205,7 +205,7 @@ void SupplementSign::setIpaInfo(IpaInfo *ipaInfo){
         ui->connectInfo->setText(appSign.connectInfo);
         ui->specialInfo->setText(appSign.specialInfo);
     }else{
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未查询到当前应用包的签名记录");
+        ui->execResult->appendHtml("<span style='color:red'>当前是补签页面,未读取到签名记录 不能执行补签操作</span>");
         ui->supplementSignButton->setEnabled(false);
     }
 }
