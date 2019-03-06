@@ -54,7 +54,7 @@ QString Common::execShell(QString cmd){
 
 QString Common::getMobileProvisionPath(QString cnName,bool isPush){
     qDebug() << "工作空间："+workspacePath;
-    QFileInfoList fileInfoList=GetFileList(workspacePath+"/"+cnName);
+    QFileInfoList fileInfoList=GetFileList(workspacePath+"/"+cnName.mid(21));
     if(fileInfoList.size()<1){
         return "";
     }

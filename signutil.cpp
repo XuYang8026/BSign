@@ -29,7 +29,7 @@ bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QStrin
     }
     qDebug() << "开始注入代码";
     fileInfo=QFileInfo(machOFilePath);
-    cmd="cd "+machOAbstractPath+";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t \""+fileInfo.fileName()+"\"";
+    cmd="cd \""+machOAbstractPath+"\";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t \""+fileInfo.fileName()+"\"";
 //        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
@@ -237,7 +237,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         file.close();
     }
 
-    cmd="cp \""+signConfig->mobileProvisionPath+"\" "+tmp+"Payload/"+appName+"/embedded.mobileprovision";
+    cmd="cp \""+signConfig->mobileProvisionPath+"\" \""+tmp+"Payload/"+appName+"/embedded.mobileprovision\"";
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
         emit execPrint("复制mobileprovision文件失败");
@@ -296,7 +296,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         }
     }
 
-    cmd="/usr/bin/codesign -f --entitlements \"" + tmp+"entitlements.plist\""+ " -s \"" + signConfig->ccName + "\" " + tmp+"Payload/"+appName;
+    cmd="/usr/bin/codesign -f --entitlements \"" + tmp+"entitlements.plist\""+ " -s \"" + signConfig->ccName + "\" \"" + tmp+"Payload/"+appName+"\"";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){

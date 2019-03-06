@@ -63,6 +63,7 @@ void MainWindow::initial(){
         workspaceDir.mkdir(workspacePath);
     }
     for(QString ccName:this->ccNames){
+        ccName=ccName.mid(21);
         QDir ccNameDir(workspacePath+"/"+ccName);
         if(!ccNameDir.exists()){
             ccNameDir.mkdir(workspacePath+"/"+ccName);
@@ -275,6 +276,7 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
         if(expireTime!="0001-01-01 00:00:00"){
             ui->setExpaire->setChecked(true);
             ui->expaire->setDateTime(QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss"));
+            ui->warning_message->setText(appSign.warningMessage);
         }
         QString appName=appSign.appName;
         QString ccName=appSign.ccName;
@@ -390,4 +392,12 @@ void MainWindow::on_batch_supplement_sign_button_clicked()
 {
     BatchSupplementSign *supplementSign = new BatchSupplementSign(this);
     supplementSign->show();
+}
+
+void MainWindow::on_setExpaire_stateChanged(int arg1)
+{
+    qDebug() << arg1;
+    if(arg1==2){
+        ui->warning_message->setText(WARNING_MESSAGE);
+    }
 }
