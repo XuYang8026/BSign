@@ -19,7 +19,7 @@
 
 //const QString HTTP_SERVER="https://isign.yz-ss.top";
 //const QString HTTP_SERVER="http://127.0.0.1:8080";
-//const QString HTTP_SERVER="http://qian.whbtsj.com";
+const QString HTTP_SERVER="https://www.bsign.tk";
 
 class Http:public QObject
 {
