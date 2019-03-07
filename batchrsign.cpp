@@ -76,8 +76,6 @@ void BatchRSign::on_startSign_clicked()
         }
         QString bundleId=signUtil->ipaInfo->bundleId;
         QString warningMessage=ui->warning_message->text();
-        int expireTimeStamp=ui->expaire->dateTime().toTime_t();
-
         QString url=HTTP_SERVER+"/appSign";
         QJsonObject jsonObj;
         jsonObj.insert("uuid",signConfig->ccUuid);
@@ -91,7 +89,8 @@ void BatchRSign::on_startSign_clicked()
         jsonObj.insert("remark",ui->remarks->document()->toPlainText());
         if(ui->setExpaire->isChecked()){
             jsonObj.insert("warningMessage",warningMessage);
-            jsonObj.insert("expireTime",QString::number(expireTimeStamp,10));
+            QString expireTime=ui->expaire->dateTime().toString("yyyy-MM-dd hh:mm:ss");
+            jsonObj.insert("expireTime",expireTime);
         }
         Http *http = new Http(NULL);
         qDebug() << "请求url："+url;
