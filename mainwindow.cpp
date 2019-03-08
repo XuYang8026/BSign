@@ -278,9 +278,12 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
             ui->expaire->setDateTime(QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss"));
             ui->warning_message->setText(appSign.warningMessage);
         }
-        QString appName=appSign.appName;
+
         QString ccName=appSign.ccName;
-        ui->displayName->setText(appName);
+
+//        QString appName=appSign.appName;
+//        ui->displayName->setText(appName);
+
         int isPush=appSign.isPush;
         ui->isPushMobileProvision->setChecked(isPush==1?true:false);
         //读取描述文件
