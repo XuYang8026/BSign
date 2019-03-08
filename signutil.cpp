@@ -58,7 +58,7 @@ QString SignUtil::findSpecialFileQprocessParamsHandle(QString params,QString par
 
 void SignUtil::readIpaInfo(QString filePath){
     QDateTime time = QDateTime::currentDateTime();   //获取当前时间
-    int timeT = time.toTime_t();
+    uint timeT = time.toTime_t();
     QString tmp = "/tmp/"+QString::number(timeT,10)+"/";
     QDir tmpDir(tmp);
     if(!tmpDir.exists()){

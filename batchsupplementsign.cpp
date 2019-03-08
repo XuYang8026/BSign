@@ -111,8 +111,8 @@ void BatchSupplementSign::on_startSign_clicked()
         jsonObj.insert("bundleId",appSign.bundleId);
         jsonObj.insert("device",Common::readSN());
         jsonObj.insert("ccName",ui->ccNameComboBox->currentText());
-        jsonObj.insert("appName",appSign.appName);
-        jsonObj.insert("isPush",signConfig->isPushMobileProvsion?"1":"0");
+        jsonObj.insert("appName",signUtil->ipaInfo->deployAppName);
+        jsonObj.insert("isPush",ui->isPushMobileProvision->isChecked()?"1":"0");
         jsonObj.insert("connectInfo",appSign.connectInfo);
         jsonObj.insert("specialInfo",appSign.specialInfo);
         jsonObj.insert("warningMessage",appSign.warningMessage);

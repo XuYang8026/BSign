@@ -91,7 +91,7 @@ void BatchUpdate::on_startSign_clicked()
         jsonObj.insert("device",Common::readSN());
         jsonObj.insert("ccName",appSign.ccName);
         jsonObj.insert("appName",signUtil->ipaInfo->deployAppName);
-        jsonObj.insert("isPush",appSign.isPush);
+        jsonObj.insert("isPush",QString::number(appSign.isPush));
         jsonObj.insert("connectInfo",appSign.connectInfo);
         jsonObj.insert("specialInfo",appSign.specialInfo);
         jsonObj.insert("warningMessage",appSign.warningMessage);
