@@ -7,6 +7,8 @@
 
 QFileInfoList GetFileList(QString path);
 
+bool CopyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist);
+
 class IFile
 {
 public:

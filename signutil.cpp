@@ -5,16 +5,15 @@ bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QStrin
     QString dylibFileName=fileInfo.fileName();
     fileInfo=QFileInfo(machOFilePath);
     QString machOAbstractPath=fileInfo.absolutePath();
-    QString cmd="cp \""+dylibFilePath+"\" \""+machOAbstractPath+"/"+dylibFileName+"\"";
-    qDebug() << "执行命令："+cmd;
-    int flag=system(cmd.toLocal8Bit().data());
-    if(flag!=0){
+
+    bool copyResult=CopyFileToPath(dylibFilePath,machOAbstractPath+"/"+dylibFileName,true);
+    if(!copyResult){
         emit execPrint("植入代码迁移失败");
         return false;
     }
-    cmd="chmod +x \""+machOFilePath+"\"";
+    QString cmd="chmod +x \""+machOFilePath+"\"";
     qDebug() << "执行命令："+cmd;
-    flag=system(cmd.toLocal8Bit().data());
+    int flag=system(cmd.toLocal8Bit().data());
     if(flag!=0){
         emit execPrint("签名失败！");
         return false;
