@@ -105,7 +105,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_selectIpaButton_clicked()
 {
 
-    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("ipa(*.ipa)"));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), "",  tr("ipa(*.ipa)"));
     qDebug() << "选择文件路径："+filePath;
     ui->filePath->setText(filePath);
     uiReset();
@@ -122,7 +122,7 @@ void MainWindow::on_selectIpaButton_clicked()
 void MainWindow::on_provisionButton_clicked()
 {
 
-    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), "",  tr("file(*.mobileprovision)"));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), workspacePath,  tr("file(*.mobileprovision)"));
     qDebug() << "选择文件路径："+filePath;
     this->mobileProvisionPath=filePath;
     ui->provisionFilePath->setText(filePath);

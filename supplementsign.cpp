@@ -66,7 +66,7 @@ void SupplementSign::on_isPushMobileProvision_stateChanged(int arg1)
 
 void SupplementSign::on_selectIpaButton_clicked()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("file(*.ipa)"));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), "",  tr("file(*.ipa)"));
     ui->filePath->setText(filePath);
     uiReset();
     if(filePath.trimmed()!=""){
@@ -169,7 +169,7 @@ void SupplementSign::on_supplementSignButton_clicked()
 
 void SupplementSign::on_provisionButton_clicked()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("file(*.mobileprovision)"));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), workspacePath,  tr("file(*.mobileprovision)"));
     ui->provisionFilePath->setText(filePath);
 }
 

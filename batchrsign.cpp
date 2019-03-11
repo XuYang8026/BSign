@@ -136,7 +136,7 @@ void BatchRSign::execPrint(QString content){
 
 void BatchRSign::on_selectMobileProvisionPath_clicked()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), desktopPath,  tr("file(*.mobileprovision)"));
+    QString filePath = QFileDialog::getOpenFileName(this, tr("open file"), workspacePath,  tr("file(*.mobileprovision)"));
     ui->mobileProvisionPath->setText(filePath);
 }
 
