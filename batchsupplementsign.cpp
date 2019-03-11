@@ -164,7 +164,7 @@ void BatchSupplementSign::on_isPushMobileProvision_stateChanged(int arg1)
     }
     mobileProvisionPath=Common::getMobileProvisionPath(ccName,ui->isPushMobileProvision->isChecked());
     if(mobileProvisionPath.isEmpty()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件\n请手动选择");
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件\n请将描述文件复制到"+workspacePath+"/"+ccName.mid(21)+"目录下或手动选择");
     }
     ui->mobileProvisionPath->setText(mobileProvisionPath);
 }
@@ -176,7 +176,7 @@ void BatchSupplementSign::on_ccNameComboBox_currentIndexChanged(const QString &a
     }
     mobileProvisionPath=Common::getMobileProvisionPath(arg1,ui->isPushMobileProvision->isChecked());
     if(mobileProvisionPath.isEmpty()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请手动选择");
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请将描述文件复制到"+workspacePath+"/"+arg1.mid(21)+"目录下或手动选择");
     }
     ui->mobileProvisionPath->setText(mobileProvisionPath);
 }

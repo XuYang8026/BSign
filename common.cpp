@@ -1,7 +1,8 @@
 #include "common.h"
+#include <QStandardPaths>
 
-QString desktopPath="";
-QString workspacePath="";
+QString desktopPath=QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);;
+QString workspacePath=desktopPath+"/bsign_workspace";
 
 Common::Common()
 {

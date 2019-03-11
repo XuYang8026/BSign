@@ -57,7 +57,6 @@ void MainWindow::initial(){
     ui->expaire->setDateTime(QDateTime::currentDateTime());
 
     //初始化工作空间
-    workspacePath=desktopPath+"/isgntool_workspace";
     QDir workspaceDir(workspacePath);
     if(!workspaceDir.exists()){
         workspaceDir.mkdir(workspacePath);
@@ -77,12 +76,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setWindowTitle("欢迎使用 BSign 公测版");
+    this->setWindowTitle("欢迎使用 BSign V1.0");
     setWindowFlags(windowFlags()&~Qt::WindowMaximizeButtonHint);    // 禁止最大化按钮
     setFixedSize(this->width(),this->height());                     // 禁止拖动窗口大小
     ui->flag->setStyleSheet("color:red;");
-    QString cmd = "cd ~/Desktop/;pwd";
-    desktopPath=Common::execShell(cmd);
+    qDebug() << desktopPath;
 
     this->ccNames=Common::readCert();
     ui->ccNames->addItems(this->ccNames);
@@ -360,7 +358,7 @@ void MainWindow::on_ccNames_currentIndexChanged(const QString &arg1)
 
     mobileProvisionPath=Common::getMobileProvisionPath(arg1,ui->isPushMobileProvision->isChecked());
     if(mobileProvisionPath.isEmpty()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请手动选择");
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请将描述文件复制到"+workspacePath+"/"+arg1.mid(21)+"目录下或手动选择");
     }
     ui->provisionFilePath->setText(mobileProvisionPath);
 }
@@ -380,7 +378,7 @@ void MainWindow::on_isPushMobileProvision_stateChanged(int arg1)
     }
     mobileProvisionPath=Common::getMobileProvisionPath(ccName,ui->isPushMobileProvision->isChecked());
     if(mobileProvisionPath.isEmpty()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件\n请手动选择");
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+ccName+"相关描述文件\n请将描述文件复制到"+workspacePath+"/"+ccName.mid(21)+"目录下或手动选择");
     }
     ui->provisionFilePath->setText(mobileProvisionPath);
 }
