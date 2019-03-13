@@ -302,8 +302,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         emit execPrint("签名失败！");
         return false;
     }
-
-    QString newIPA=ipaName.split(".")[0]+"_resigned.ipa";
+    QString newIPA=ipaName.mid(0,ipaName.length()-4)+"_BResigned.ipa";
     QFile isResigned(ipaInfo->ipaPath+"/"+newIPA);
     if(isResigned.exists()){
         qDebug() << "delete old sign package";
