@@ -257,6 +257,9 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     if(signConfig->signDylib){
         execParam=findSpecialFileQprocessParamsHandle(execParam,"*.dylib");
     }
+
+    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.appex");
+
     if(!execParam.isEmpty()){
         QStringList execParams;
         execParams << "-c";
