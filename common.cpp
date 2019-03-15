@@ -21,13 +21,14 @@ QStringList Common::readCert(){
     process->close();
     QStringList ccNamesList=result.split("\n");
     ccNamesList.removeAt(ccNamesList.size()-1);
+    QStringList ccNames;
     for(QString ccName:ccNamesList){
         QString cName=ccName.mid(0,20);
-        if(cName!="iPhone Distribution:"){
-            ccNamesList.removeOne(ccName);
+        if(cName =="iPhone Distribution:"){
+            ccNames.append(ccName);
         }
     }
-    return ccNamesList;
+    return ccNames;
 }
 //读取本地电脑序列号
 QString Common::readSN(){

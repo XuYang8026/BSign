@@ -63,7 +63,7 @@ private slots:
     void on_provisionButton_clicked();
     void readProcessData();
     void signIpa();
-    void on_clearLog_clicked();
+//    void on_clearLog_clicked();
     void setIpaInfo(IpaInfo *ipaInfo);
     void on_sign_record_clicked();
     void execPrint(QString content);

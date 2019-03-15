@@ -256,10 +256,10 @@ void MainWindow::validate(){
 }
 
 
-void MainWindow::on_clearLog_clicked()
-{
-    ui->execResult->setPlainText("");
-}
+//void MainWindow::on_clearLog_clicked()
+//{
+//    ui->execResult->setPlainText("");
+//}
 
 void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
     this->ui->bundleId->setText(ipaInfo->bundleId);
