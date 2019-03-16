@@ -113,8 +113,8 @@ void MainWindow::on_selectIpaButton_clicked()
         IThread *ithread = new IThread;
         ithread->filePath=filePath.trimmed();
         connect(ithread,SIGNAL(send(IpaInfo*)),this,SLOT(setIpaInfo(IpaInfo*)));
+        connect(ithread,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
         ithread->start();
-
     }
 }
 
@@ -265,7 +265,8 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
     this->ui->bundleId->setText(ipaInfo->bundleId);
     this->ui->displayName->setText(ipaInfo->deployAppName);
     this->ipaInfo=ipaInfo;
-
+    ui->thirdFileList->clear();
+    ui->thirdFileList->addItems(ipaInfo->thirdInjectionInfoList);
     AppSign appSign=Common::getAppSign(ipaInfo->bundleId);
     if(appSign.id>0){
         ui->ccNames->setCurrentText(appSign.ccName);
@@ -401,4 +402,23 @@ void MainWindow::on_setExpaire_stateChanged(int arg1)
     if(arg1==2){
         ui->warning_message->setText(WARNING_MESSAGE);
     }
+}
+
+void MainWindow::on_thirdFileList_currentIndexChanged(const QString &arg1)
+{
+
+}
+
+void MainWindow::on_thirdFileList_currentIndexChanged(int index)
+{
+    QString text=ui->thirdFileList->itemText(index);
+    qDebug() << text;
+
+    if(text=="选择第三方文件卸载" || text.isEmpty() || text.indexOf("已卸载")>=0){
+        return;
+    }
+
+    QString machOFilePath=ipaInfo->tmpPath+"Payload/"+ipaInfo->appName+"/"+ipaInfo->machOFileName;
+    SignUtil::uninstallThirdInjection(machOFilePath,text);
+    ui->thirdFileList->setItemText(index,text+" 已卸载");
 }

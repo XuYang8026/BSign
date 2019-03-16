@@ -43,6 +43,7 @@ QString Common::readSN(){
 }
 
 QString Common::execShell(QString cmd){
+    qDebug() << "执行shell命令："+cmd;
     QProcess *process = new QProcess;
     QStringList shellOptions;
     shellOptions << "-c";

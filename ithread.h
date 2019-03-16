@@ -23,6 +23,7 @@ public:
     void run();
 signals:
     void send(IpaInfo *ipaInfo);
+    void execPrint(QString execInfo);
 };
 
 #endif // ITHREAD_H

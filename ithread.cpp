@@ -1,8 +1,10 @@
 #include "ithread.h"
+#include "signutil.h"
 
 IThread::IThread(){}
 
 void IThread::run(){
+    emit execPrint("正在读取IPA信息...");
     QDateTime time = QDateTime::currentDateTime();   //获取当前时间
     int timeT = time.toTime_t();
     QString tmp = "/tmp/"+QString::number(timeT,10)+"/";
@@ -71,7 +73,11 @@ void IThread::run(){
     ipaInfo->ipaPath=fileInfo.absolutePath();
     ipaInfo->machOFileName=machOFileName;
     ipaInfo->tmpPath=tmp;
+
+    QString machOFilePath=tmp+"/Payload/"+appName+"/"+machOFileName;
+    QStringList thirdInjectionList=SignUtil::readThirdInjection(machOFilePath);
+    ipaInfo->thirdInjectionInfoList=thirdInjectionList;
+    emit execPrint("IPA信息读取完成");
     emit send(ipaInfo);
-//    this->wait();
 }
 

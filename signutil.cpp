@@ -334,3 +334,24 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     emit execPrint("签名完成！新包地址："+ipaInfo->ipaPath+"/"+newIPA);
     return true;
 }
+
+QStringList SignUtil::readThirdInjection(QString machOFilePath){
+    QString shell="otool -L "+machOFilePath+" | grep -e @executable_path -e @rpath | awk '!a[$0]++'";
+    QString result=Common::execShell(shell);
+    QStringList list=result.split("\t");
+    list.removeOne("");
+    QStringList stringList;
+    stringList.append("选择第三方文件卸载");
+    for(QString info:list){
+        int index=info.lastIndexOf("(compatibility");
+        QString injectionInfo=info.mid(0,index-1);
+        stringList.append(injectionInfo);
+    }
+    return stringList;
+}
+
+bool SignUtil::uninstallThirdInjection(QString machOFilePath,QString path){
+    QString shell=optoolFilePath+" uninstall -p \""+path+"\" -t \""+machOFilePath+"\"";
+    Common::execShell(shell);
+    return true;
+}

@@ -74,6 +74,8 @@ private slots:
     void on_supplement_sign_button_clicked();
     void on_batch_supplement_sign_button_clicked();
     void on_setExpaire_stateChanged(int arg1);
+    void on_thirdFileList_currentIndexChanged(const QString &arg1);
+    void on_thirdFileList_currentIndexChanged(int index);
 };
 
 #endif // MAINWINDOW_H
