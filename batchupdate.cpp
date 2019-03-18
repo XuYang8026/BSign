@@ -76,6 +76,10 @@ void BatchUpdate::on_startSign_clicked()
         bool isPush=appSign.isPush==1?true:false;
         QString mobileProvisionPath=Common::getMobileProvisionPath(appSign.ccName,isPush);
         this->readCurrentSignConfig(appSign.ccName,mobileProvisionPath);
+
+        signConfig->expireTime=appSign.expireTime;
+        signConfig->useAppCount=true;
+
         connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){

@@ -100,6 +100,10 @@ void BatchSupplementSign::on_startSign_clicked()
 
         connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
         readCurrentSignConfig();
+
+        signConfig->expireTime=appSign.expireTime;
+        signConfig->useAppCount=true;
+
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
             ui->execResult->appendPlainText(filePath+" 文件签名失败！");
