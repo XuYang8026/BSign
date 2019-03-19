@@ -122,6 +122,7 @@ void BatchSupplementSign::on_startSign_clicked()
         jsonObj.insert("warningMessage",appSign.warningMessage);
         jsonObj.insert("expireTime",appSign.expireTime);
         jsonObj.insert("remark",appSign.remarks);
+        jsonObj.insert("warningType",QString::number(appSign.warningType));
         Http *http = new Http(NULL);
         qDebug() << "请求url："+url;
         QString result=http->post(url,jsonObj);

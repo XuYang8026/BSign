@@ -157,6 +157,8 @@ void SupplementSign::on_supplementSignButton_clicked()
         jsonObj.insert("warningMessage",warningMessage);
         QString expireTime=ui->expaire->dateTime().toString("yyyy-MM-dd hh:mm:ss");
         jsonObj.insert("expireTime",expireTime);
+        QString warningType=ui->alterType->isChecked()?"1":"2";
+        jsonObj.insert("warningType",warningType);
     }
     Http *http = new Http(NULL);
     qDebug() << "请求url："+url;
@@ -187,6 +189,11 @@ void SupplementSign::setIpaInfo(IpaInfo *ipaInfo){
         if(expireTime!="0001-01-01 00:00:00"){
             ui->setExpaire->setChecked(true);
             ui->expaire->setDateTime(QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss"));
+        }
+        if(appSign.warningType==1){
+            ui->alterType->setChecked(true);
+        }else{
+            ui->exitType->setChecked(true);
         }
         QString appName=appSign.appName;
         QString ccName=appSign.ccName;

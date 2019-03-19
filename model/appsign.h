@@ -21,7 +21,8 @@ public:
     QString connectInfo;
     QString specialInfo;
     QString updateTime;
-
+    //提示类型 1=弹窗 2=闪退
+    int warningType;
 
 };
 

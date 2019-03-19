@@ -113,6 +113,7 @@ AppSign Common::getAppSign(QString bundleId){
         appSign.connectInfo = jsonObject["ConnectInfo"].toString();
         appSign.specialInfo = jsonObject["SpecialInfo"].toString();
         appSign.updateTime = jsonObject["UpdateTime"].toString();
+        appSign.warningType = jsonObject["WarningType"].toInt();
     }
     return appSign;
 }

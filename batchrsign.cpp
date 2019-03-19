@@ -91,6 +91,8 @@ void BatchRSign::on_startSign_clicked()
             jsonObj.insert("warningMessage",warningMessage);
             QString expireTime=ui->expaire->dateTime().toString("yyyy-MM-dd hh:mm:ss");
             jsonObj.insert("expireTime",expireTime);
+            QString warningType=ui->alterType->isChecked()?"1":"2";
+            jsonObj.insert("warningType",warningType);
         }
         Http *http = new Http(NULL);
         qDebug() << "请求url："+url;

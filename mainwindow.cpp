@@ -201,6 +201,8 @@ void MainWindow::signIpa(){
         jsonObj.insert("warningMessage",warningMessage);
         QString expireTime=ui->expaire->dateTime().toString("yyyy-MM-dd hh:mm:ss");
         jsonObj.insert("expireTime",expireTime);
+        QString warningType=ui->alterType->isChecked()?"1":"2";
+        jsonObj.insert("warningType",warningType);
     }
     Http *http = new Http(NULL);
     qDebug() << "请求url："+url;
@@ -277,7 +279,11 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
             ui->expaire->setDateTime(QDateTime::fromString(expireTime,"yyyy-MM-dd hh:mm:ss"));
             ui->warning_message->setText(appSign.warningMessage);
         }
-
+        if(appSign.warningType==1){
+            ui->alterType->setChecked(true);
+        }else{
+            ui->exitType->setChecked(true);
+        }
         QString ccName=appSign.ccName;
 
 //        QString appName=appSign.appName;
@@ -296,6 +302,7 @@ void MainWindow::setIpaInfo(IpaInfo *ipaInfo){
         ui->remarks->setPlainText(appSign.remarks);
         ui->connectInfo->setText(appSign.connectInfo);
         ui->specialInfo->setText(appSign.specialInfo);
+
     }else{
         ui->flag->setText("新增");
     }
