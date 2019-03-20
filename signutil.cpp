@@ -93,7 +93,9 @@ void SignUtil::readIpaInfo(QString filePath){
     p->waitForFinished();
     QString machOFileName = p->readAllStandardOutput().trimmed();
     qDebug() << "machOFileName:"+machOFileName;
-    QString appName= machOFileName+".app";
+    QString appPath=Common::execShell("find "+tmp+"Payload -name *.app");
+    QStringList list=appPath.split("/");
+    QString appName= list.at(list.size()-1);
     qDebug() << "appName:"+appName;
     QStringList bundleIdParams;
     bundleIdParams << "-c";
@@ -118,12 +120,17 @@ void SignUtil::readIpaInfo(QString filePath){
 
     IpaInfo *ipaInfo = new IpaInfo;
     ipaInfo->appName=appName;
+    ipaInfo->appPath=appPath;
     ipaInfo->deployAppName=deployAppName;
     ipaInfo->bundleId=bundleId.trimmed();
     ipaInfo->ipaName=ipaName;
     ipaInfo->ipaPath=fileInfo.absolutePath();
     ipaInfo->machOFileName=machOFileName;
     ipaInfo->tmpPath=tmp;
+
+    QString machOFilePath=tmp+"/Payload/"+appName+"/"+machOFileName;
+    QStringList thirdInjectionList=SignUtil::readThirdInjection(machOFilePath);
+    ipaInfo->thirdInjectionInfoList=thirdInjectionList;
     this->ipaInfo=ipaInfo;
 }
 
@@ -285,14 +292,14 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     //特殊文件重签名 end
 
     if (!signConfig->expireTime.isEmpty()){
-        bool injection=dylibInjection(libisigntoolhookFilePath,tmp+"Payload/"+appName+"/"+appName.split(".")[0],signConfig->ccName);
+        bool injection=dylibInjection(libisigntoolhookFilePath,tmp+"Payload/"+appName+"/"+ipaInfo->machOFileName,signConfig->ccName);
         if(!injection){
             return false;
         }
     }
 
     if(signConfig->useAppCount){
-        bool injection=dylibInjection(libisigntoolappcountFilePath,tmp+"Payload/"+appName+"/"+appName.split(".")[0],signConfig->ccName);
+        bool injection=dylibInjection(libisigntoolappcountFilePath,tmp+"Payload/"+appName+"/"+ipaInfo->machOFileName,signConfig->ccName);
         if(!injection){
             return false;
         }

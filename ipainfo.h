@@ -10,6 +10,7 @@ public:
     IpaInfo();
     QString machOFileName;
     QString appName;
+    QString appPath;
     QString ipaPath;
     QString ipaName;
     QString tmpPath;
