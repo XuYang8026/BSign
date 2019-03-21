@@ -84,19 +84,17 @@ void SignUtil::readIpaInfo(QString filePath){
         system(cmd.toLocal8Bit().data());
     }
 
-    QString plistPath=tmp+"Payload/*.app/Info.plist";
-    QStringList matchOParams;
-    matchOParams << "-c";
-    matchOParams << "plutil -convert xml1 -o - "+plistPath+" | grep -A1 Exec|tail -n1 | cut -f2 -d\\> | cut -f1 -d\\<";
-    QProcess *p = new QProcess;
-    p->start("/bin/bash",matchOParams);
-    p->waitForFinished();
-    QString machOFileName = p->readAllStandardOutput().trimmed();
-    qDebug() << "machOFileName:"+machOFileName;
     QString appPath=Common::execShell("find "+tmp+"Payload -name *.app");
     QStringList list=appPath.split("/");
     QString appName= list.at(list.size()-1);
     qDebug() << "appName:"+appName;
+
+    QString plistPath=tmp+"Payload/"+appName+"/Info.plist";
+    cmd="/usr/libexec/PlistBuddy -c 'print :CFBundleExecutable' \""+plistPath+"\"";
+    QString machOFileName = Common::execShell(cmd).trimmed();
+    qDebug() << "machOFileName:"+machOFileName;
+
+    QProcess *p = new QProcess;
     QStringList bundleIdParams;
     bundleIdParams << "-c";
     bundleIdParams << "/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" "+plistPath;
