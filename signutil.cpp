@@ -94,23 +94,12 @@ void SignUtil::readIpaInfo(QString filePath){
     QString machOFileName = Common::execShell(cmd).trimmed();
     qDebug() << "machOFileName:"+machOFileName;
 
-    QProcess *p = new QProcess;
-    QStringList bundleIdParams;
-    bundleIdParams << "-c";
-    bundleIdParams << "/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" "+plistPath;
-    p->start("/bin/bash",bundleIdParams);
-    p->waitForFinished();
-    QString bundleId = p->readAllStandardOutput();
+    cmd = "/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" \""+plistPath+"\"";
+    QString bundleId = Common::execShell(cmd).trimmed();
 //    system(("rm -rf "+tmp).toLocal8Bit().data());
     //读取应用打包名称
-    QStringList deployAppNameParams;
-    deployAppNameParams << "-c";
-    deployAppNameParams << "/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' "+tmp+"Payload/*.app/Info.plist";
-    p->start("/bin/bash",deployAppNameParams);
-    p->waitForFinished();
-    QString deployAppName=p->readAllStandardOutput().trimmed();
-    p->close();
-    delete p;
+    cmd="/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' \""+tmp+"Payload/"+appName+"/Info.plist\"";
+    QString deployAppName=Common::execShell(cmd).trimmed();
 
     if(deployAppName.isEmpty()){
         deployAppName=appName.split(".")[0];
