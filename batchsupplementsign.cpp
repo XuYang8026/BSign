@@ -103,6 +103,15 @@ void BatchSupplementSign::on_startSign_clicked()
 
         signConfig->expireTime=appSign.expireTime;
         signConfig->useAppCount=true;
+        signConfig->isPushMobileProvsion=appSign.isPush;
+        if(appSign.isPush){
+            QString mobileProvisionPath = Common::getMobileProvisionPath(signConfig->ccName,true);
+            if(mobileProvisionPath.isEmpty()){
+                ui->execResult->appendHtml("<span style='color:red'>证书："+signConfig->ccName+" 未读取到推送描述文件 "+filePath+" 跳过补签操作</span>");
+                continue;
+            }
+            signConfig->mobileProvisionPath=mobileProvisionPath;
+        }
 
         bool res=signUtil->sign(signUtil->ipaInfo,signConfig);
         if(!res){
@@ -116,7 +125,7 @@ void BatchSupplementSign::on_startSign_clicked()
         jsonObj.insert("device",Common::readSN());
         jsonObj.insert("ccName",ui->ccNameComboBox->currentText());
         jsonObj.insert("appName",signUtil->ipaInfo->deployAppName);
-        jsonObj.insert("isPush",ui->isPushMobileProvision->isChecked()?"1":"0");
+        jsonObj.insert("isPush",QString::number(appSign.isPush));
         jsonObj.insert("connectInfo",appSign.connectInfo);
         jsonObj.insert("specialInfo",appSign.specialInfo);
         jsonObj.insert("warningMessage",appSign.warningMessage);

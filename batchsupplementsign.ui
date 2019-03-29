@@ -115,6 +115,9 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QCheckBox" name="isPushMobileProvision">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>是否推送证书</string>
       </property>
