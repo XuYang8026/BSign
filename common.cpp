@@ -64,6 +64,10 @@ QString Common::getMobileProvisionPath(QString cnName,bool isPush){
     QString filePath;
     for(QFileInfo fileInfo:fileInfoList){
         QString baseName=fileInfo.baseName();
+        QString suffix=fileInfo.suffix();
+        if(suffix!="mobileprovision"){
+            continue;
+        }
         QString pushFlag=baseName.mid(baseName.size()-5);
         if(isPush){
             if(pushFlag=="_push"){
