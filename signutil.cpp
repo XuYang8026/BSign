@@ -84,7 +84,7 @@ void SignUtil::readIpaInfo(QString filePath){
         system(cmd.toLocal8Bit().data());
     }
 
-    QString appPath=Common::execShell("find "+tmp+"Payload -name *.app");
+    QString appPath=Common::execShell("find "+tmp+"Payload -name \"*.app\"");
     QStringList list=appPath.split("/");
     QString appName= list.at(list.size()-1);
     qDebug() << "appName:"+appName;
