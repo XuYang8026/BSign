@@ -253,11 +253,10 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     }
 
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.appex");
-    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.png");
-    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.mp3");
+    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.app");
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.so");
-    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.txt");
-    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.css");
+    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.pvr");
+    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.0");
     if(!execParam.isEmpty()){
         QStringList execParams;
         execParams << "-c";
