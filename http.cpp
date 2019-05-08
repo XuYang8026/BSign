@@ -64,7 +64,7 @@ QString Http::post(QString url,QJsonObject jsonObject){
     QString params="";
     QStringList keys=jsonObject.keys();
     for(QString key:keys){
-        params+=key+"="+jsonObject[key].toString()+"&";
+        params+=key+"="+jsonObject[key].toString().toUtf8().toPercentEncoding()+"&";
     }
     qDebug() << "请求参数"+ params;
     QNetworkRequest request = QNetworkRequest(qUrl);
@@ -76,5 +76,4 @@ QString Http::post(QString url,QJsonObject jsonObject){
     reply->deleteLater();
     reply = nullptr;
     return replyData.data();
-    return "";
 }
