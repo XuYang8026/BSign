@@ -175,8 +175,8 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
 
     //修改BundleId
     if(!signConfig->bundleId.isEmpty()&&signConfig->bundleId!=ipaInfo->bundleId){
-        cmd="plutil -replace CFBundleIdentifier -string "+signConfig->bundleId+" "+tmp+"Payload/"+appName+"/info.plist";
-//        qDebug() << "执行命令："+cmd;
+        cmd="plutil -replace CFBundleIdentifier -string \""+signConfig->bundleId+"\" \""+tmp+"Payload/"+appName+"/Info.plist\"";
+        qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
             emit execPrint("修改BundleId失败");
