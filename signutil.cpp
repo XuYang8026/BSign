@@ -256,6 +256,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.app");
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.so");
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.pvr");
+    execParam=findSpecialFileQprocessParamsHandle(execParam,"*.vis");
     if(!execParam.isEmpty()){
         QStringList execParams;
         execParams << "-c";
