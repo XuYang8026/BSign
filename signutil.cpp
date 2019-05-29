@@ -157,7 +157,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     QString uuid = uuidProcess->readAllStandardOutput().trimmed();
     qDebug() << "UUID ====> "+uuid;
     signConfig->ccUuid=uuid;
-    cmd="echo "+uuid+" > "+tmp+"Payload/"+appName+"/uuid";
+    cmd="echo "+uuid+" > "+tmp+"Payload/\""+appName+"\"/uuid";
     qDebug() << "执行命令："+cmd;
     flag = system(cmd.toLocal8Bit().data());
     if(flag!=0){
