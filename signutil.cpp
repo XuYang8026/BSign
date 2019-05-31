@@ -28,7 +28,7 @@ bool SignUtil::dylibInjection(QString dylibFilePath,QString machOFilePath,QStrin
     }
     qDebug() << "开始注入代码";
     fileInfo=QFileInfo(machOFilePath);
-    cmd="cd \""+machOAbstractPath+"\";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t \""+fileInfo.fileName()+"\"";
+    cmd="cd \""+machOAbstractPath+"\";"+"/tmp/optool install -c load -p \"@executable_path/"+dylibFileName+"\" -t \"./"+fileInfo.fileName()+"\"";
 //        cmd="cd "+tmp+"Payload/"+this->appName+";yololib "+machOFileName+" libisigntoolhook.dylib";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
