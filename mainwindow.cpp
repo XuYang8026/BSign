@@ -91,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initial();
     this->validate();
 
+    this->setAcceptDrops(true);
     QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"      author:Jackson      QQ:3536391351");
     locationLabel->setMinimumWidth(640);
     locationLabel->setAlignment(Qt::AlignCenter);
@@ -134,7 +135,7 @@ void MainWindow::readProcessData(){
 
 void MainWindow::signIpa(){
 
-    if(ui->filePath->text().isEmpty()||ui->provisionFilePath->text().isEmpty()||ui->ccNames->currentText()=="请选择证书"||ui->ccNames->currentText().isEmpty()){
+    if(ui->filePath->toPlainText().isEmpty()||ui->provisionFilePath->toPlainText().isEmpty()||ui->ccNames->currentText()=="请选择证书"||ui->ccNames->currentText().isEmpty()){
         QMessageBox::warning(this, tr("QMessageBox::information()"),"ipa路径或mobileprovision路径或证书名称不能为空");
         return;
     }
@@ -150,7 +151,7 @@ void MainWindow::signIpa(){
     if(ui->useBundleId->isChecked()){
         signConfig->useMobileProvsionBundleId=true;
     }
-    signConfig->mobileProvisionPath=ui->provisionFilePath->text();
+    signConfig->mobileProvisionPath=ui->provisionFilePath->toPlainText();
     signConfig->displayName=ui->displayName->text();
     signConfig->ccName=ui->ccNames->currentText();
     if(ui->setExpaire->isChecked()){
@@ -428,4 +429,47 @@ void MainWindow::on_thirdFileList_currentIndexChanged(int index)
     QString machOFilePath=ipaInfo->tmpPath+"Payload/"+ipaInfo->appName+"/"+ipaInfo->machOFileName;
     SignUtil::uninstallThirdInjection(machOFilePath,text);
     ui->thirdFileList->setItemText(index,text+" 已卸载");
+}
+//当用户拖动文件到窗口部件上时候，就会触发dragEnterEvent事件
+void MainWindow::dragEnterEvent(QDragEnterEvent *e)
+{
+    if(e->mimeData()->hasFormat("text/uri-list")) //只能打开文本文件
+        e->acceptProposedAction(); //可以在这个窗口部件上拖放对象
+}
+
+void MainWindow::dropEvent(QDropEvent *e){
+    QList<QUrl> urls = e->mimeData()->urls();
+    if(urls.isEmpty())
+        return ;
+    QString filePath = urls.first().toLocalFile();
+    QFileInfo fileInfo(filePath);
+    QString fileSuffix=fileInfo.suffix();
+    if(fileSuffix!="ipa"&&fileSuffix!="IPA"&&fileSuffix!="mobileprovision"){
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"请选择ipa或mobileprovision文件");
+        return;
+    }
+
+    if(fileSuffix=="ipa"||fileSuffix=="IPA"){
+        ui->filePath->setText(filePath);
+        uiReset();
+        if(filePath.trimmed()!=""){
+            IThread *ithread = new IThread;
+            ithread->filePath=filePath;
+            connect(ithread,SIGNAL(send(IpaInfo*)),this,SLOT(setIpaInfo(IpaInfo*)));
+            connect(ithread,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
+            ithread->start();
+        }
+    }
+
+    if(fileSuffix=="mobileprovision"){
+        ui->provisionFilePath->setText(filePath);
+    }
+
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event){
+    qDebug()<<"鼠标 press";
+}
+void MainWindow::mouseMoveEvent(QMouseEvent *event){
+    qDebug()<<"鼠标 move";
 }

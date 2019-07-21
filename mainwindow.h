@@ -9,6 +9,8 @@
 #include <QDir>
 #include "QMessageBox"
 #include "QStandardPaths"
+#include <QDragEnterEvent>
+#include <QMimeData>
 #include "http.h"
 #include "logindialog.h"
 #include "imd5.h"
@@ -57,6 +59,12 @@ private:
     void initial();
     void validate();
     void uiReset();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 private slots:
     void on_selectIpaButton_clicked();
