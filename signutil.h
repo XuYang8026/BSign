@@ -30,6 +30,9 @@ public:
     QString findSpecialFileQprocessParamsHandle(QString params,QString param);
     //注入第三方库
     bool dylibInjection(QString dylibPath,QString machOFilePath,QString ccName);
+    //以.app文件作为相对路径注入
+    bool dylibInjectionForAppRelativePath(QString relativePath,QString appPath,QString machOFilePath,QString ccName);
+
     //读取第三方注入信息
     static QStringList readThirdInjection(QString machOFilePath);
     //卸载第三方注入的库

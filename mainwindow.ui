@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>930</width>
-    <height>819</height>
+    <width>934</width>
+    <height>812</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -24,7 +24,7 @@
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>379</y>
+      <y>530</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -42,9 +42,9 @@
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>410</y>
+      <y>560</y>
       <width>911</width>
-      <height>301</height>
+      <height>141</height>
      </rect>
     </property>
    </widget>
@@ -52,7 +52,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>309</y>
+      <y>460</y>
       <width>32</width>
       <height>23</height>
      </rect>
@@ -70,103 +70,11 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>340</y>
+      <y>490</y>
       <width>911</width>
       <height>31</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>9</x>
-      <y>4</y>
-      <width>911</width>
-      <height>126</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0" colspan="2">
-      <widget class="QPushButton" name="selectIpaButton">
-       <property name="text">
-        <string>选择ipa文件</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLineEdit" name="filePath">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="dragEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="placeholderText">
-        <string>待签名IPA路径</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0" colspan="2">
-      <widget class="QPushButton" name="provisionButton">
-       <property name="text">
-        <string>选择.mobileprovision文件</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="provisionFilePath">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-       <property name="placeholderText">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="ccNames">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <item>
-        <property name="text">
-         <string>请选择证书</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="QCheckBox" name="isPushMobileProvision">
-       <property name="text">
-        <string>是否推送证书</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -214,7 +122,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>280</y>
+      <y>430</y>
       <width>911</width>
       <height>32</height>
      </rect>
@@ -343,7 +251,7 @@
       <x>10</x>
       <y>130</y>
       <width>911</width>
-      <height>31</height>
+      <height>36</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -486,80 +394,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QCheckBox" name="openAppUseCount">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>252</y>
-      <width>126</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>开启app使用统计</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="clickNibSign">
-    <property name="geometry">
-     <rect>
-      <x>161</x>
-      <y>252</y>
-      <width>96</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>重签nib文件</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="clickFrameworkSign">
-    <property name="geometry">
-     <rect>
-      <x>258</x>
-      <y>252</y>
-      <width>116</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>重签framework</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="clickDylibSign">
-    <property name="geometry">
-     <rect>
-      <x>375</x>
-      <y>252</y>
-      <width>81</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>重签dylib</string>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -637,13 +472,242 @@
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>7</y>
+      <width>911</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="selectIpaButton">
+       <property name="text">
+        <string>选择ipa文件</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QTextEdit" name="filePath">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>拖拽IPA到此窗口</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="isPushMobileProvision">
+       <property name="text">
+        <string>是否推送证书</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="ccNames">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>请选择证书</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="provisionButton">
+       <property name="text">
+        <string>选择.mobileprovision文件</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QTextEdit" name="provisionFilePath">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>拖拽描述文件到此窗口</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTextEdit" name="injectionFilePaths">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>320</y>
+      <width>911</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>false</bool>
+    </property>
+    <property name="placeholderText">
+     <string>拖拽文件到此窗口，支持多文件拖拽</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>911</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_7">
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="openAppUseCount">
+       <property name="text">
+        <string>开启app使用统计</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QCheckBox" name="clickNibSign">
+       <property name="text">
+        <string>重签nib文件</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QCheckBox" name="clickFrameworkSign">
+       <property name="text">
+        <string>重签framework</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QCheckBox" name="clickDylibSign">
+       <property name="text">
+        <string>重签dylib</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="label_7">
+       <property name="font">
+        <font>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>自定义文件重签</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QLineEdit" name="signFileNames">
+       <property name="placeholderText">
+        <string>输入文件名称，多个文件请用空格分隔</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="injectionPositionButton">
+    <property name="geometry">
+     <rect>
+      <x>122</x>
+      <y>280</y>
+      <width>124</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>选择注入位置 </string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="injectionPosition">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>284</y>
+      <width>541</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>284</y>
+      <width>101</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>自定义库注入 </string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="injection">
+    <property name="geometry">
+     <rect>
+      <x>248</x>
+      <y>280</y>
+      <width>124</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>注入</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>930</width>
+     <width>934</width>
      <height>22</height>
     </rect>
    </property>
