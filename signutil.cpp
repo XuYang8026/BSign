@@ -290,8 +290,9 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.so");
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.pvr");
     execParam=findSpecialFileQprocessParamsHandle(execParam,"*.vis");
-    if(signConfig->signFileNames!=NULL){
-        for(QString name:*signConfig->signFileNames){
+    if(!signConfig->signFileNames.isEmpty()){
+        QStringList fileNames=signConfig->signFileNames.replace("\n","").split(" ");
+        for(QString name:fileNames){
             execParam=findSpecialFileQprocessParamsHandle(execParam,name);
         }
     }

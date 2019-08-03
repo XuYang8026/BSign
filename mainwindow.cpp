@@ -185,10 +185,7 @@ void MainWindow::signIpa(){
     SignUtil *signUtil = new SignUtil(this);
     connect(signUtil,SIGNAL(execPrint(QString)),this,SLOT(execPrint(QString)));
     QString signFileNames=ui->signFileNames->text();
-    if(!signFileNames.isEmpty()){
-        QStringList fileNames=signFileNames.split(" ");
-        signConfig->signFileNames=&fileNames;
-    }
+    signConfig->signFileNames=signFileNames;
 
     bool res=signUtil->sign(ipaInfo,signConfig);
     ui->filePath->setText("");
