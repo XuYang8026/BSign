@@ -36,9 +36,7 @@ public:
     //重签名后输出地址
     QString outResignPath;
     //重签名文件名
-    QStringList *signFileNames=NULL;
-    //第三方库路径
-    QStringList *thirdLibPaths=NULL;
+    QString signFileNames;
 };
 
 #endif // SIGNCONFIG_H
