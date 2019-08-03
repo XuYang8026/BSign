@@ -13,7 +13,7 @@
 #include "http.h"
 #include <QJsonArray>
 
-const QString APP_VERSION="2.0";
+const QString APP_VERSION="3.0";
 const QString WARNING_MESSAGE="签名已到期，请续费后使用";
 
 extern QString libisigntoolhookFilePath;
