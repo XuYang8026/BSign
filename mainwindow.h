@@ -28,6 +28,7 @@
 #include "batchupdate.h"
 #include "loadingwait.h"
 #include "supplementsign.h"
+#include "ifile.h"
 
 namespace Ui {
 class MainWindow;
@@ -84,6 +85,8 @@ private slots:
     void on_setExpaire_stateChanged(int arg1);
     void on_thirdFileList_currentIndexChanged(const QString &arg1);
     void on_thirdFileList_currentIndexChanged(int index);
+    void on_injectionPositionButton_clicked();
+    void on_injection_clicked();
 };
 
 #endif // MAINWINDOW_H

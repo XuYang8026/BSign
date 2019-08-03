@@ -3,6 +3,9 @@
 
 QString desktopPath=QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);;
 QString workspacePath=desktopPath+"/bsign_workspace";
+QString libisigntoolhookFilePath = workspacePath+"/sign/libisigntoolhook.dylib";
+QString optoolFilePath =workspacePath+"/sign/optool";
+QString libisigntoolappcountFilePath=workspacePath+"/sign/libisigntoolappcount.dylib";
 
 Common::Common()
 {
