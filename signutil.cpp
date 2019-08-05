@@ -208,7 +208,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
 
     //修改BundleId
     if(!signConfig->bundleId.isEmpty()&&signConfig->bundleId!=ipaInfo->bundleId){
-        cmd="plutil -replace CFBundleIdentifier -string \""+signConfig->bundleId+"\" \""+ipaInfo->ipaPath+"/Info.plist\"";
+        cmd="plutil -replace CFBundleIdentifier -string \""+signConfig->bundleId+"\" \""+ipaInfo->appPath+"/Info.plist\"";
         qDebug() << "执行命令："+cmd;
         flag = system(cmd.toLocal8Bit().data());
         if(flag!=0){
