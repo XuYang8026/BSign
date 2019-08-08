@@ -234,7 +234,7 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         QProcess *p = new QProcess;
         QStringList args;
         args.append("-c");
-        args.append("/usr/libexec/PlistBuddy "+ipaInfo->tmpPath+"entitlements.plist "+"-c print | grep application-identifier | awk '{print $3}'");
+        args.append("/usr/libexec/PlistBuddy "  +ipaInfo->tmpPath+"entitlements.plist "+"-c print | grep application-identifier | awk '{print $3}'");
         p->start("/bin/bash",args);
         p->waitForFinished();
         //读取证书BundleID
