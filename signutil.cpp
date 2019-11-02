@@ -206,6 +206,14 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         return false;
     }
 
+//    cmd="cp "+ipaInfo->tmpPath+"entitlements.plist \""+ipaInfo->appPath+"/entitlements.plist\"";
+//    qDebug() << "执行命令："+cmd;
+//    flag = system(cmd.toLocal8Bit().data());
+//    if(flag!=0){
+//        emit execPrint("生成plist文件失败");
+//        return false;
+//    }
+
     //修改BundleId
     if(!signConfig->bundleId.isEmpty()&&signConfig->bundleId!=ipaInfo->bundleId){
         cmd="plutil -replace CFBundleIdentifier -string \""+signConfig->bundleId+"\" \""+ipaInfo->appPath+"/Info.plist\"";
