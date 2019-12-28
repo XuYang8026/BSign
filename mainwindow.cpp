@@ -24,10 +24,16 @@ QString findSpecialFileQprocessParamsHandle(QString params,QString param){
 
 void MainWindow::initial(){
 
+    //清空工作空间中sign文件夹的内容
+    const QString removePath=workspacePath+"/sign";
+    Common::deleteDirectory(removePath);
+
     QDir signWorkSpace(workspacePath+"/sign");
     if(!signWorkSpace.exists()){
         signWorkSpace.mkdir(workspacePath+"/sign");
     }
+
+
 
     //授予可执行权限
     QString cmd = "rm -rf "+libisigntoolappcountFilePath+" "+optoolFilePath+" "+libisigntoolhookFilePath;
@@ -67,7 +73,6 @@ void MainWindow::initial(){
         workspaceDir.mkdir(workspacePath);
     }
     for(QString ccName:this->ccNames){
-        ccName=ccName.mid(21);
         QDir ccNameDir(workspacePath+"/"+ccName);
         if(!ccNameDir.exists()){
             ccNameDir.mkdir(workspacePath+"/"+ccName);
@@ -378,7 +383,9 @@ void MainWindow::on_ccNames_currentIndexChanged(const QString &arg1)
 
     mobileProvisionPath=Common::getMobileProvisionPath(arg1,ui->isPushMobileProvision->isChecked());
     if(mobileProvisionPath.isEmpty()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请将描述文件复制到"+workspacePath+"/"+arg1.mid(21)+"目录下或手动选择");
+        QString path=arg1;
+        path=path.replace(QRegExp(":"), "/");
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"未读取到"+arg1+"相关描述文件\n请将描述文件复制到"+workspacePath+"/"+path+"目录下或手动选择");
     }
     ui->provisionFilePath->setText(mobileProvisionPath);
 }

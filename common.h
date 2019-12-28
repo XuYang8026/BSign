@@ -37,6 +37,8 @@ public:
     static QString getMobileProvisionPath(QString cnName,bool isPush);
     //通过设备和bundleId获取签名信息
     static AppSign getAppSign(QString bundleId);
+
+    static bool deleteDirectory(const QString &path);
 };
 
 #endif // COMMON_H

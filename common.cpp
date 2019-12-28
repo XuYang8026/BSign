@@ -61,7 +61,8 @@ QString Common::execShell(QString cmd){
 
 QString Common::getMobileProvisionPath(QString cnName,bool isPush){
     qDebug() << "工作空间："+workspacePath;
-    QFileInfoList fileInfoList=GetFileList(workspacePath+"/"+cnName.mid(21));
+    cnName=cnName.replace(QRegExp("/"), ":");
+    QFileInfoList fileInfoList=GetFileList(workspacePath+"/"+cnName);
     if(fileInfoList.size()<1){
         return "";
     }
@@ -124,5 +125,26 @@ AppSign Common::getAppSign(QString bundleId){
         appSign.warningType = jsonObject["WarningType"].toInt();
     }
     return appSign;
+}
+
+bool Common::deleteDirectory(const QString &path)
+{
+    if (path.isEmpty())
+        return false;
+
+    QDir dir(path);
+    if(!dir.exists())
+        return true;
+
+    dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
+    QFileInfoList fileList = dir.entryInfoList();
+    foreach (QFileInfo fi, fileList)
+    {
+        if (fi.isFile())
+            fi.dir().remove(fi.fileName());
+        else
+            deleteDirectory(fi.absoluteFilePath());
+    }
+    return dir.rmpath(dir.absolutePath());
 }
 
