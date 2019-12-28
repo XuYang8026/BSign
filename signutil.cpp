@@ -129,7 +129,6 @@ void SignUtil::readIpaInfo(QString filePath){
 
     cmd = "/usr/libexec/PlistBuddy -c \"Print CFBundleIdentifier\" \""+plistPath+"\"";
     QString bundleId = Common::execShell(cmd).trimmed();
-//    system(("rm -rf "+tmp).toLocal8Bit().data());
     //读取应用打包名称
     cmd="/usr/libexec/PlistBuddy -c 'Print :CFBundleDisplayName' \""+tmp+"Payload/"+appName+"/Info.plist\"";
     QString deployAppName=Common::execShell(cmd).trimmed();
@@ -205,14 +204,6 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
         emit execPrint("生成plist文件失败");
         return false;
     }
-
-//    cmd="cp "+ipaInfo->tmpPath+"entitlements.plist \""+ipaInfo->appPath+"/entitlements.plist\"";
-//    qDebug() << "执行命令："+cmd;
-//    flag = system(cmd.toLocal8Bit().data());
-//    if(flag!=0){
-//        emit execPrint("生成plist文件失败");
-//        return false;
-//    }
 
     //修改BundleId
     if(!signConfig->bundleId.isEmpty()&&signConfig->bundleId!=ipaInfo->bundleId){
@@ -326,21 +317,6 @@ bool SignUtil::sign(IpaInfo *ipaInfo,SignConfig *signConfig){
             }
         }
     }
-    //特殊文件重签名 end
-    if (!signConfig->expireTime.isEmpty()){
-        bool injection=dylibInjection(libisigntoolhookFilePath,ipaInfo->appPath+"/"+ipaInfo->machOFileName,signConfig->ccName);
-        if(!injection){
-            return false;
-        }
-    }
-
-    if(signConfig->useAppCount){
-        bool injection=dylibInjection(libisigntoolappcountFilePath,ipaInfo->appPath+"/"+ipaInfo->machOFileName,signConfig->ccName);
-        if(!injection){
-            return false;
-        }
-    }
-
     cmd="/usr/bin/codesign -f --entitlements \"" + ipaInfo->tmpPath+"entitlements.plist\""+ " -s \"" + signConfig->ccName + "\" \"" + ipaInfo->appPath+"\"";
     qDebug() << "执行命令："+cmd;
     flag=system(cmd.toLocal8Bit().data());
@@ -386,7 +362,7 @@ QStringList SignUtil::readThirdInjection(QString machOFilePath){
     QStringList list=result.split("\t");
     list.removeOne("");
     QStringList stringList;
-    stringList.append("选择第三方文件卸载");
+    stringList.append("第三方动态库卸载");
     for(QString info:list){
         int index=info.lastIndexOf("(compatibility");
         QString injectionInfo=info.mid(0,index-1);

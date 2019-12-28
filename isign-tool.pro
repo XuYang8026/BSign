@@ -29,56 +29,26 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    http.cpp \
-    logindialog.cpp \
-    expirepage.cpp \
-    imd5.cpp \
     ithread.cpp \
-    dialogsignrecord.cpp \
     ifile.cpp \
     common.cpp \
     ipainfo.cpp \
     signutil.cpp \
     signconfig.cpp \
-    test.cpp \
-    batchrsign.cpp \
-    batchupdate.cpp \
-    model/appsign.cpp \
-    loadingwait.cpp \
-    supplementsign.cpp \
-    batchsupplementsign.cpp
+    model/appsign.cpp
 
 HEADERS += \
         mainwindow.h \
-    http.h \
-    logindialog.h \
-    expirepage.h \
-    imd5.h \
     ithread.h \
-    dialogsignrecord.h \
     ifile.h \
     common.h \
     ipainfo.h \
     signutil.h \
     signconfig.h \
-    test.h \
-    batchrsign.h \
-    batchupdate.h \
-    model/appsign.h \
-    loadingwait.h \
-    supplementsign.h \
-    batchsupplementsign.h
+    model/appsign.h
 
 FORMS += \
-        mainwindow.ui \
-    logindialog.ui \
-    expirepage.ui \
-    dialogsignrecord.ui \
-    batchrsign.ui \
-    batchupdate.ui \
-    loadingwait.ui \
-    supplementsign.ui \
-    batchsupplementsign.ui
+        mainwindow.ui
 
 DISTFILES +=
 

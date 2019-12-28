@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>934</width>
-    <height>812</height>
+    <width>933</width>
+    <height>615</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -24,7 +24,7 @@
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>530</y>
+      <y>350</y>
       <width>80</width>
       <height>23</height>
      </rect>
@@ -42,37 +42,9 @@
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>560</y>
+      <y>380</y>
       <width>911</width>
       <height>141</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>460</y>
-      <width>32</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>备注</string>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="remarks">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>490</y>
-      <width>911</width>
-      <height>31</height>
      </rect>
     </property>
    </widget>
@@ -81,7 +53,7 @@
      <rect>
       <x>10</x>
       <y>170</y>
-      <width>651</width>
+      <width>701</width>
       <height>36</height>
      </rect>
     </property>
@@ -113,133 +85,6 @@
       <widget class="QRadioButton" name="useBundleId">
        <property name="text">
         <string>使用描述文件中的Bundle ID</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>430</y>
-      <width>911</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_5">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>特殊信息</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="specialInfo">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="dragEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>false</bool>
-       </property>
-       <property name="placeholderText">
-        <string>可用于唯一检索（例如 套餐信息 等等）</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>联系信息</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLineEdit" name="connectInfo">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-       <property name="dragEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>false</bool>
-       </property>
-       <property name="placeholderText">
-        <string/>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>710</y>
-      <width>911</width>
-      <height>72</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_6">
-     <item row="0" column="0">
-      <widget class="QPushButton" name="signButton">
-       <property name="text">
-        <string>签名/更新</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QPushButton" name="batchRsignButton">
-       <property name="text">
-        <string>批量签名</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="batchUpdateRsignButton">
-       <property name="text">
-        <string>批量更新</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="batch_supplement_sign_button">
-       <property name="text">
-        <string>批量补签</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="supplement_sign_button">
-       <property name="text">
-        <string>补签</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QPushButton" name="sign_record">
-       <property name="text">
-        <string>签名记录</string>
        </property>
       </widget>
      </item>
@@ -297,19 +142,6 @@
       </widget>
      </item>
      <item row="0" column="2">
-      <widget class="QLabel" name="flag">
-       <property name="maximumSize">
-        <size>
-         <width>40</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
       <widget class="QComboBox" name="thirdFileList">
        <property name="minimumSize">
         <size>
@@ -318,156 +150,13 @@
         </size>
        </property>
        <property name="currentText">
-        <string>选择第三方文件卸载</string>
+        <string>第三方动态库卸载</string>
        </property>
        <item>
         <property name="text">
-         <string>选择第三方文件卸载</string>
+         <string>第三方动态库卸载</string>
         </property>
        </item>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QGroupBox" name="groupBox">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>210</y>
-      <width>221</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>0</width>
-      <height>20</height>
-     </size>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="title">
-     <string>提示类型</string>
-    </property>
-    <widget class="QRadioButton" name="exitType">
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>0</y>
-       <width>61</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>闪退</string>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="alterType">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>-1</y>
-       <width>61</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>弹窗</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>210</y>
-      <width>601</width>
-      <height>39</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_4">
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="setExpaire">
-       <property name="text">
-        <string>设置过期时间</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QDateTimeEdit" name="expaire">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="specialValueText">
-        <string/>
-       </property>
-       <property name="keyboardTracking">
-        <bool>true</bool>
-       </property>
-       <property name="displayFormat">
-        <string>yyyy-MM-dd hh:mm:ss</string>
-       </property>
-       <property name="calendarPopup">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_4">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>弹窗提醒：</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLineEdit" name="warning_message">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>签名已到期，请续费后使用</string>
-       </property>
-       <property name="readOnly">
-        <bool>false</bool>
-       </property>
       </widget>
      </item>
     </layout>
@@ -477,8 +166,8 @@
      <rect>
       <x>9</x>
       <y>7</y>
-      <width>911</width>
-      <height>121</height>
+      <width>901</width>
+      <height>131</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -547,7 +236,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>320</y>
+      <y>250</y>
       <width>911</width>
       <height>101</height>
      </rect>
@@ -559,91 +248,11 @@
      <string>拖拽文件到此窗口，支持多文件拖拽</string>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>250</y>
-      <width>911</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_7">
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="openAppUseCount">
-       <property name="text">
-        <string>开启app使用统计</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QCheckBox" name="clickNibSign">
-       <property name="text">
-        <string>重签nib文件</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QCheckBox" name="clickFrameworkSign">
-       <property name="text">
-        <string>重签framework</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QCheckBox" name="clickDylibSign">
-       <property name="text">
-        <string>重签dylib</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QLabel" name="label_7">
-       <property name="font">
-        <font>
-         <pointsize>16</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>自定义文件重签</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <widget class="QLineEdit" name="signFileNames">
-       <property name="placeholderText">
-        <string>输入文件名称，多个文件请用空格分隔</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="injectionPositionButton">
     <property name="geometry">
      <rect>
       <x>122</x>
-      <y>280</y>
+      <y>210</y>
       <width>124</width>
       <height>35</height>
      </rect>
@@ -652,29 +261,11 @@
      <string>选择注入位置 </string>
     </property>
    </widget>
-   <widget class="QLabel" name="injectionPosition">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>284</y>
-      <width>541</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
       <x>12</x>
-      <y>284</y>
+      <y>214</y>
       <width>101</width>
       <height>23</height>
      </rect>
@@ -692,7 +283,7 @@
     <property name="geometry">
      <rect>
       <x>248</x>
-      <y>280</y>
+      <y>210</y>
       <width>124</width>
       <height>35</height>
      </rect>
@@ -701,13 +292,26 @@
      <string>注入</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="signButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>530</y>
+      <width>911</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>立即签名</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>934</width>
+     <width>933</width>
      <height>22</height>
     </rect>
    </property>

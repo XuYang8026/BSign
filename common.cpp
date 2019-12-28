@@ -3,9 +3,7 @@
 
 QString desktopPath=QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);;
 QString workspacePath=desktopPath+"/bsign_workspace";
-QString libisigntoolhookFilePath = workspacePath+"/sign/libisigntoolhook.dylib";
 QString optoolFilePath =workspacePath+"/sign/optool";
-QString libisigntoolappcountFilePath=workspacePath+"/sign/libisigntoolappcount.dylib";
 
 Common::Common()
 {
@@ -87,44 +85,6 @@ QString Common::getMobileProvisionPath(QString cnName,bool isPush){
         }
     }
     return filePath;
-}
-
-AppSign Common::getAppSign(QString bundleId){
-    Http *http = new Http(NULL);
-    QJsonObject jsonObject;
-    jsonObject.insert("bundleId",bundleId);
-    jsonObject.insert("device",readSN());
-    QString respBody=http->post(HTTP_SERVER+"/appSign/search",jsonObject);
-    QJsonParseError jsonError;
-    QJsonDocument parseDoc = QJsonDocument::fromJson(respBody.toLocal8Bit(),&jsonError);
-    AppSign appSign;
-    appSign.id=0;
-    if(parseDoc.isArray()){
-        QJsonArray jsonArray=parseDoc.array();
-
-        if(jsonArray.size()==0){
-            return appSign;
-        }
-
-        QJsonObject jsonObject=jsonArray.at(0).toObject();
-        appSign.id = jsonObject["Id"].toInt();
-        appSign.device =jsonObject["Device"].toString();
-        appSign.uuid = jsonObject["Uuid"].toString();
-        appSign.ccName = jsonObject["CcName"].toString();
-        appSign.appName = jsonObject["AppName"].toString();
-        appSign.bundleId = jsonObject["BundleId"].toString();
-        QString expireTime=jsonObject["ExpireTime"].toString();
-        appSign.expireTime = expireTime.isEmpty()||expireTime=="0001-01-01 00:00:00"?"":expireTime;
-        appSign.warningMessage = jsonObject["WarningMessage"].toString();
-        appSign.remarks = jsonObject["Remarks"].toString();
-        appSign.createTime =jsonObject["CreateTime"].toString();
-        appSign.isPush = jsonObject["IsPush"].toInt();
-        appSign.connectInfo = jsonObject["ConnectInfo"].toString();
-        appSign.specialInfo = jsonObject["SpecialInfo"].toString();
-        appSign.updateTime = jsonObject["UpdateTime"].toString();
-        appSign.warningType = jsonObject["WarningType"].toInt();
-    }
-    return appSign;
 }
 
 bool Common::deleteDirectory(const QString &path)

@@ -11,23 +11,14 @@
 #include "QStandardPaths"
 #include <QDragEnterEvent>
 #include <QMimeData>
-#include "http.h"
-#include "logindialog.h"
-#include "imd5.h"
-#include "expirepage.h"
 #include "QJsonParseError"
 #include "QJsonDocument"
 #include "QJsonObject"
 #include "ithread.h"
-#include "dialogsignrecord.h"
 #include "ipainfo.h"
 #include "common.h"
 #include "signutil.h"
 #include "signconfig.h"
-#include "batchrsign.h"
-#include "batchupdate.h"
-#include "loadingwait.h"
-#include "supplementsign.h"
 #include "ifile.h"
 
 namespace Ui {
@@ -50,11 +41,11 @@ public:
     QStringList ccNames;
     QString optoolPath = "/tmp/optool";
     QString libisigntooldylibPath = "/tmp/libisigntoolhook.dylib";
-    LoadingWait *loadingWait;
+    //注入位置
+    QString injectionPositionPath;
 
 private:
     Ui::MainWindow *ui;
-    LoginDialog *loginDialog;
     QProcess *process = new QProcess(this);
     IpaInfo *ipaInfo;
     void initial();
@@ -72,21 +63,15 @@ private slots:
     void on_provisionButton_clicked();
     void readProcessData();
     void signIpa();
-//    void on_clearLog_clicked();
     void setIpaInfo(IpaInfo *ipaInfo);
-    void on_sign_record_clicked();
     void execPrint(QString content);
-    void on_batchRsignButton_clicked();
     void on_ccNames_currentIndexChanged(const QString &arg1);
-    void on_batchUpdateRsignButton_clicked();
     void on_isPushMobileProvision_stateChanged(int arg1);
-    void on_supplement_sign_button_clicked();
-    void on_batch_supplement_sign_button_clicked();
-    void on_setExpaire_stateChanged(int arg1);
     void on_thirdFileList_currentIndexChanged(const QString &arg1);
     void on_thirdFileList_currentIndexChanged(int index);
     void on_injectionPositionButton_clicked();
     void on_injection_clicked();
+
 };
 
 #endif // MAINWINDOW_H
