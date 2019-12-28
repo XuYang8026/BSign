@@ -15,6 +15,7 @@
 
 const QString APP_VERSION="3.0";
 const QString WARNING_MESSAGE="签名已到期，请续费后使用";
+const QString QQ="3469427753";
 
 extern QString libisigntoolhookFilePath;
 extern QString optoolFilePath;

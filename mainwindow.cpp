@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->validate();
 
     this->setAcceptDrops(true);
-    QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"      author:Jackson      QQ:3536391351");
+    QLabel *locationLabel = new QLabel("序列号："+sn+"    有效期："+this->expireTime+"      author:Jackson      QQ:"+QQ);
     locationLabel->setMinimumWidth(640);
     locationLabel->setAlignment(Qt::AlignCenter);
     this->statusBar()->addWidget(locationLabel);
@@ -261,7 +261,7 @@ void MainWindow::validate(){
     QDateTime expireTimeStamp = QDateTime::fromString(this->expireTime,"yyyy-MM-dd hh:mm:ss");
     qDebug() << timestamp.toTime_t();
     if(timestamp.toTime_t() > expireTimeStamp.toTime_t()){
-        QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:3536391351");
+        QMessageBox::warning(this, tr("QMessageBox::information()"),"软件已过期\n请联系QQ:"+QQ);
         exit(0);
     }
 }
